@@ -32,8 +32,6 @@ paths = [
     PATH_TRAIN_ADD_FINAL
 ]
 
-print(paths)
-
 
 if __name__ == '__main__':
     # Проверка существования дирректорий
