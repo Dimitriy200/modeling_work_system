@@ -31,17 +31,19 @@ paths = [
     PATH_TRAIN_ADD_FINAL,
     PATH_LOG
 ]
+ 
+[os.mkdir(path) for path in paths if not os.path.isdir(path)]
+
+logging.basicConfig(
+    level = logging.INFO,
+    filename =  base_logs_path.joinpath('logs.log'),
+    filemode = "w",
+    format = "%(asctime)s %(levelname)s %(message)s"
+)
+main_logger = logging.getLogger(__name__)
 
 
 if __name__ == '__main__':
-    # Проверка существования дирректорий
-    [os.mkdir(path) for path in paths if not os.path.isdir(path)]
-
-    logging.basicConfig(
-        level = logging.INFO,
-        filename =  base_logs_path.joinpath('logs.log'),
-        filemode = "w",
-        format = "%(asctime)s %(levelname)s %(message)s"
-    )
-
+    # Проверка существования дирректорий. Создаем если нет
     logging.info("CONFIG COMPLETE")
+
