@@ -31,7 +31,7 @@ paths = [
     PATH_TRAIN_ADD_FINAL,
     PATH_LOG
 ]
- 
+
 [os.mkdir(path) for path in paths if not os.path.isdir(path)]
 
 logging.basicConfig(
