@@ -1,13 +1,26 @@
-
 # ------------------------------------------------------
-# Файл конфигурации путей и преременных проекта
+#   Файл конфигурации путей и преременных проекта
 # ------------------------------------------------------
 
 import os
 import logging
+import pickle
+import json
+import sys
+import pandas as pd
+
+from dotenv import load_dotenv
+
+from sklearn.impute import SimpleImputer, KNNImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from numpy import genfromtxt
+from sklearn.model_selection import train_test_split
+from typing import Dict, List, Any
 
 from pathlib import Path
-from dotenv import load_dotenv
+parent_dir = Path(__file__).parent
+sys.path.append(str(parent_dir))
 
 
 load_dotenv()
