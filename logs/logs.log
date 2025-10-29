@@ -1,6 +1,6 @@
-2025-10-29 15:06:15,405 INFO CSV files found: 4
-2025-10-29 15:06:15,455 INFO Writed csv file train_FD001.csv: (20631, 26)
-2025-10-29 15:06:15,547 INFO Writed csv file train_FD002.csv: (53759, 26)
-2025-10-29 15:06:15,593 INFO Writed csv file train_FD003.csv: (24720, 26)
-2025-10-29 15:06:15,692 INFO Writed csv file train_FD004.csv: (61249, 26)
-2025-10-29 15:06:15,700 INFO Combined DF paams: (160359, 27)
+2025-10-29 15:31:18,905 INFO CSV files found: 4
+2025-10-29 15:31:18,931 INFO Writed csv file train_FD001.csv: (20631, 26)
+2025-10-29 15:31:18,995 INFO Writed csv file train_FD002.csv: (53759, 26)
+2025-10-29 15:31:19,029 INFO Writed csv file train_FD003.csv: (24720, 26)
+2025-10-29 15:31:19,104 INFO Writed csv file train_FD004.csv: (61249, 26)
+2025-10-29 15:31:19,112 INFO Combined DF paams: (160359, 27)

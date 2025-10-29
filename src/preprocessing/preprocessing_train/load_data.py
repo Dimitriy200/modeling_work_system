@@ -37,9 +37,18 @@ class LoadDataTrain:
                 continue
     
     # =============================================================================
-    def data_raw_load(self, directory_path: str) -> pd.DataFrame:
+    def data_raw_load(
+            self, 
+            directory_input_path: str,
+            /,
+            directory_out_path: str = None
         
-        csv_files = list(Path(directory_path).glob("*.csv"))
+        ) -> pd.DataFrame | None:
+        '''
+        Загрузчик, обединяющий исходные данные из csv в единый набор данных
+        '''
+        
+        csv_files = list(Path(directory_input_path).glob("*.csv"))
         logging.info(f"CSV files found: {len(csv_files)}")
 
         if not csv_files:
@@ -48,7 +57,7 @@ class LoadDataTrain:
 
         # Генератор для чтения файлов
         data_frames = []
-        for df, filename in self.read_csv_generator(directory_path):
+        for df, filename in self.read_csv_generator(directory_input_path):
             logging.info(f"Writed csv file {filename}: {df.shape}")
             df['source_file'] = filename
             data_frames.append(df)
@@ -56,5 +65,10 @@ class LoadDataTrain:
         combined_df = pd.concat(data_frames, ignore_index=False)
         logging.info(f"Combined DF paams: {combined_df.shape}")
 
-        return combined_df
+        if directory_out_path is None:
+            return combined_df
+        else:
+            file_name_out = os.path.join(directory_out_path, 'combined_df.csv')
+            combined_df.to_csv(path_or_buf = file_name_out)
+            return None
     # =============================================================================
