@@ -1,16 +1,31 @@
-import sys
+# ======================================================
+#   КЛАСС ДЛЯ ПРОЕДОБРАБОТКИ ДАННЫХ.
+# 
+#   ТУТ НОРМАЛИЗАЦИЯ И СТАНДАРТИЗАЦИЯ ДАННЫХ.
+#   ОБУЧЕНИЕ PIPELINE
+#   ДАЛЕЕ ПРОИСХОДИТ РАЗДЕЛЕНИЕ ДАННЫХ НА НОРМАЛЬНЫЕ И АНОМАЛЬНЫЕ.
+#   
+# ======================================================
+import pandas as pd
 
 from typing import Dict, List, Any
-
-from pathlib import Path
-parent_dir = Path(__file__).parent.parent.parent
-sys.path.append(str(parent_dir))
-import config
+from sklearn.pipeline import Pipeline
 
 
-print(parent_dir)
-
-class Preeprocess:
-    def __init__(self):
-        pass
-        # self.pipeline = 
+class Preprocess:
+    
+    def __init__(self, pipeline: Pipeline  = None):
+        
+        if pipeline is None:
+            self.pipeline = Pipeline()
+        else:
+            self.pipeline = pipeline
+    
+    # ======================================================
+    def fit_pipeline(pipeline: Pipeline, dtaframe: pd.DataFrame):
+        '''
+        Пайплайн должен обучатья только на полном наборе данных
+        '''
+        return pipeline.fit(dtaframe)
+    
+    # ======================================================

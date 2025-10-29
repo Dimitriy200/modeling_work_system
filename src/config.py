@@ -1,6 +1,6 @@
-# ------------------------------------------------------
+# ======================================================
 #   Файл конфигурации путей и преременных проекта
-# ------------------------------------------------------
+# ======================================================
 
 import os
 import logging
@@ -33,6 +33,7 @@ PATH_TRAIN_FINAL = os.getenv('PATH_TRAIN_FINAL')
 PATH_TRAIN_ADD_RAW = os.getenv('PATH_TRAIN_ADD_RAW')
 PATH_TRAIN_ADD_FINAL = os.getenv('PATH_TRAIN_ADD_FINAL')
 PATH_LOG = os.getenv("PATH_LOG")
+PATH_PIPELINE = Path("PATH_PIPELINES")
 
 base_logs_path = Path(PATH_LOG)
 
@@ -42,7 +43,8 @@ paths = [
     PATH_TRAIN_FINAL,
     PATH_TRAIN_ADD_RAW,
     PATH_TRAIN_ADD_FINAL,
-    PATH_LOG
+    PATH_LOG,
+    PATH_PIPELINE
 ]
 
 [os.mkdir(path) for path in paths if not os.path.isdir(path)]
@@ -59,4 +61,3 @@ main_logger = logging.getLogger(__name__)
 if __name__ == '__main__':
     # Проверка существования дирректорий. Создаем если нет
     logging.info("CONFIG COMPLETE")
-
