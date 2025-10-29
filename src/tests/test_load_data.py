@@ -14,3 +14,4 @@ from config import PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED
 
 ld = LoadDataTrain()
 df = ld.data_raw_load(PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED)
+
