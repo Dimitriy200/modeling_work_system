@@ -1,22 +1,17 @@
-import sys
+# ======================================================
+#   КЛАСС ДЛЯ ПРОЕДОБРАБОТКИ ДАННЫХ.
+# 
+#   ТУТ НОРМАЛИЗАЦИЯ И СТАНДАРТИЗАЦИЯ ДАННЫХ.
+#   ОБУЧЕНИЕ PIPELINE
+#   ДАЛЕЕ ПРОИСХОДИТ РАЗДЕЛЕНИЕ ДАННЫХ НА НОРМАЛЬНЫЕ И АНОМАЛЬНЫЕ.
+#   
+# ======================================================
+
 
 from typing import Dict, List, Any
 
-# from pathlib import Path
-# parent_dir = Path(__file__).parent.parent.parent
-# sys.path.append(str(parent_dir))
 
-
-from pathlib import Path
-parent_dir = Path(__file__).parent.parent.parent
-sys.path.append(str(parent_dir))
-import config
-
-
-print(parent_dir)
-
-
-class Preeprocess:
+class Preprocess:
     def __init__(self):
         pass
         # self.pipeline = 
