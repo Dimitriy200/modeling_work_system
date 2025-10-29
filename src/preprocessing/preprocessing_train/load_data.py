@@ -12,55 +12,50 @@ from typing import Dict, List, Any
 from pathlib import Path
 parent_dir = Path(__file__).parent.parent.parent
 sys.path.append(str(parent_dir))
-from config import *
-
-# from sklearn.impute import SimpleImputer, KNNImputer
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.pipeline import Pipeline
-# from sklearn.model_selection import train_test_split
+import config
 
 
-# -----------------------------------------------------------------------------
-def read_csv_generator(directory_path):
-    '''
-    Генератор для чтения файлов из директории один за другим 
-    [экономим память, ленивая загрузка, и тд]
-    '''
+class LoadDataTrain:
 
-    directory = Path(directory_path)
-    
-    for csv_file in directory.glob("*.csv"):
-        try:
-            df = pd.read_csv(
-                csv_file,
-                dtype=float
-            )
-            yield df, csv_file.name
-        except Exception as e:
-            main_logger.error(f"Ошибка чтения файла {csv_file}: {e}")
-            continue
-# -----------------------------------------------------------------------------
+    # =============================================================================
+    def read_csv_generator(directory_path: str = config.PATH_TRAIN_RAW):
+        '''
+        Генератор для чтения файлов из директории один за другим
+        '''
 
+        directory = Path(directory_path)
+        
+        for csv_file in directory.glob("*.csv"):
+            try:
+                df = pd.read_csv(
+                    csv_file,
+                    dtype=float
+                )
+                yield df, csv_file.name
+            except Exception as e:
+                main_logger.error(f"Ошибка чтения файла {csv_file}: {e}")
+                continue
+    # =============================================================================
 
-# -----------------------------------------------------------------------------
-def data_raw_load(directory_path: str = PATH_TRAIN_RAW) -> pd.DataFrame:
-    
-    csv_files = list(Path(directory_path).glob("*.csv"))
-    main_logger.info(f"CSV files found: {len(csv_files)}")
+    # =============================================================================
+    def data_raw_load(directory_path: str = config.PATH_TRAIN_RAW) -> pd.DataFrame:
+        
+        csv_files = list(Path(directory_path).glob("*.csv"))
+        main_logger.info(f"CSV files found: {len(csv_files)}")
 
-    if not csv_files:
-        main_logger.warning("CSV files not found")
-        return pd.DataFrame()
+        if not csv_files:
+            main_logger.warning("CSV files not found")
+            return pd.DataFrame()
 
-    # Генератор для чтения файлов
-    data_frames = []
-    for df, filename in read_csv_generator(directory_path):
-        main_logger.info(f"Writed csv file {filename}: {df.shape}")
-        df['source_file'] = filename
-        data_frames.append(df)
-    
-    combined_df = pd.concat(data_frames, ignore_index=False)
-    main_logger.info(f"Combined DF paams: {combined_df.shape}")
+        # Генератор для чтения файлов
+        data_frames = []
+        for df, filename in read_csv_generator(directory_path):
+            main_logger.info(f"Writed csv file {filename}: {df.shape}")
+            df['source_file'] = filename
+            data_frames.append(df)
+        
+        combined_df = pd.concat(data_frames, ignore_index=False)
+        main_logger.info(f"Combined DF paams: {combined_df.shape}")
 
-    return combined_df
-# -----------------------------------------------------------------------------
+        return combined_df
+    # =============================================================================
