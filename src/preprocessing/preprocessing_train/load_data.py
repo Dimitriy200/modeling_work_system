@@ -59,7 +59,17 @@ class LoadDataTrain:
 
         # Генератор для чтения файлов
         data_frames = []
+        global_unit_offset = 0  # накапливает смещение unit number между файлами
         for df, filename in self.read_csv_generator(directory_input_path):
+            if 'unit number' in df.columns:
+                current_max = df['unit number'].max()
+                df['unit number'] = df['unit number'] + global_unit_offset
+                # Обновляем смещение для следующего файла
+                global_unit_offset += current_max
+            else:
+                logging.warning(f"Столбец 'unit number' отсутствует в файле {filename}")
+                df['unit_number_global'] = global_unit_offset  # или np.nan, если неприемлемо
+
             logging.info(f"Writed csv file {filename}: {df.shape}")
             df['source_file'] = filename
             data_frames.append(df)
