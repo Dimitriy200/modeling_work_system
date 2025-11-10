@@ -1,6 +1,1 @@
-2025-11-10 23:34:07,639 INFO CSV files found: 4
-2025-11-10 23:34:07,713 INFO Writed csv file train_FD001.csv: (20631, 26)
-2025-11-10 23:34:07,908 INFO Writed csv file train_FD002.csv: (53759, 26)
-2025-11-10 23:34:08,003 INFO Writed csv file train_FD003.csv: (24720, 26)
-2025-11-10 23:34:08,211 INFO Writed csv file train_FD004.csv: (61249, 26)
-2025-11-10 23:34:08,222 INFO Combined DF paams: (160359, 27)
+2025-11-11 00:00:31,026 INFO different_norm_anom: обработано 100 юнитов, всего 20631 записей, аномалий = 1000 (4.8%)

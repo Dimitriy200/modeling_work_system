@@ -1,31 +1,19 @@
 import pandas as pd
+import sys
+
+# =============== ИМПОРТ ТЕСТИРУЕМЫХ МОДУЛЕЙ ===============
+from pathlib import Path
+parent_dir = Path(__file__).parent.parent
+sys.path.append(str(parent_dir))
+from preprocessing.preprocessing_train.preprocessing import Preprocess
+# ======================================================
+
+# =============== ИМПОРТ КОНФИГА ===============
+from config import PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED
 
 
-import pandas as pd
+df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\raw\\train_FD001.csv")
+pr = Preprocess()
 
-pd_arr = [
-    pd.DataFrame(
-        [
-            [1, 2, 3],
-            [5, 4, 3]
-        ]
-    ),
-
-    pd.DataFrame(
-        [
-            [10, 20, 30],
-            [50, 40, 30]
-        ]
-    ),
-
-    pd.DataFrame(
-        [
-            [100, 200, 300],
-            [500, 400, 300]
-        ]
-    )
-]
-
-print(pd_arr)
-print()
-print(pd_arr[2])
+df_out = pr.different_norm_anom(dtaframe = df_in)
+df_out.to_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\processing\\testing_dif_anom.csv")
