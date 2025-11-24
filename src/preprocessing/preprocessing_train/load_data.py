@@ -44,7 +44,6 @@ class LoadDataTrain:
             directory_input_path: str,
             /,
             directory_out_path: str = None
-        
         ) -> pd.DataFrame | None:
         '''
         Загрузчик, обединяющий исходные данные из csv в единый набор данных

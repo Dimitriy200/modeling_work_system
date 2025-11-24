@@ -12,11 +12,13 @@ import os
 import pickle
 import logging
 
+
 from typing import Dict, List, Any, Tuple, Optional, Type
 # from sklearn.scaler import Pipeline
 from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator
+from pathlib import Path
 
 
 class Preprocess:
@@ -150,7 +152,7 @@ class Preprocess:
     # ======================================================
     def save_scaler(
             self, 
-            save_pipeline_directory: str, 
+            save_scaler_directory: str, 
             scaler: Type[BaseEstimator]
         ) -> None:
         '''
@@ -158,9 +160,44 @@ class Preprocess:
         Метод не знает o существовании указанной директории. 
         Убедитесь, что перед запуском был запущен config.py из которого можно получить путь по директории scaler.
         '''
-        with open(save_pipeline_directory, 'wb') as handle:
+        with open(save_scaler_directory, 'wb') as handle:
                     save_pik_pipeline = pickle.dumps(scaler)
     
+    # ======================================================
+    def load_scaler(self, 
+            scaler_directory: str
+        ) -> Type[BaseEstimator]:
+
+        scaler_path = Path(scaler_directory)
+        
+        if not scaler_path.exists():
+            raise FileNotFoundError(
+                f"Scaler не найден по пути: {scaler_path.resolve()}"
+            )
+
+        try:
+            with open(self.scaler_path, 'rb') as file_scaller:
+                scaler = pickle.load(file_scaller)
+                logging.info(f"Scaler успешно загружен из: {scaler_path}")
+        
+        except Exception as e:
+            raise RuntimeError(f"Ошибка при загрузке scaler'a: {e}") from e
+        
+        # Валидация: должен быть совместим со sklearn API
+        if not hasattr(scaler, 'transform'):
+            raise TypeError(
+                f"Загруженный объект не поддерживает .transform(). Тип: {type(scaler)}"
+            )
+        if not hasattr(scaler, 'fit'):  # опционально, но полезно
+            logging.warning("Загруженный scaler не имеет .fit() — дообучение невозможно.")
+        
+        # Логируем тип и параметры (если есть)
+        logging.info(f"Тип scaler'a\a: {scaler.__class__.__name__}")
+        if hasattr(scaler, 'n_features_in_'):
+            logging.info(f"Ожидаемое число признаков: {scaler.n_features_in_}")
+        
+        return scaler
+
     # ======================================================
     def use_scaler(
             self,
