@@ -38,16 +38,3 @@ from config import PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED
 
 # df_scaled.to_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\final\\testing_scale.csv")
 # ======================================================
-
-# ======================================================
-#   ТЕСТЫ НА МАЛОМ НАБОРЕ
-
-df_min_csv = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\tarin_add\\raw\\train_FD001_mini.csv")
-pr = Preprocess()
-
-pr.use_scaler(
-    scaler=StandardScaler,
-    dataframe=df_min_csv
-)
-
-# ======================================================

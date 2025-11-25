@@ -98,10 +98,14 @@ class LoadDataTrainAdd:
                 logging.warning("Ни один валидный JSON не был обработан.")
                 return pd.DataFrame()
 
-            df = pd.DataFrame(res_rows)
-            logging.info(f"Создан DataFrame: {df.shape} (строк, столбцов). Пример столбцов: {list(df.columns[:5])}...")
+            jsons_combinet_df = pd.DataFrame(res_rows)
+            logging.info(f"Создан DataFrame: {jsons_combinet_df.shape} (строк, столбцов). Пример столбцов: {list(jsons_combinet_df.columns[:5])}...")
 
-            return df
+            if directory_out_path is None:
+                return jsons_combinet_df
+            else:
+                file_name_out = os.path.join(directory_out_path, 'jsons_combinet_df.csv')
+                jsons_combinet_df.to_csv(path_or_buf = file_name_out)
 
         except Exception as e:
             logging.exception(f"Критическая ошибка в read_json_to_dataframe: {e}")
