@@ -164,7 +164,7 @@ class Preprocess:
                     save_pik_pipeline = pickle.dumps(scaler)
     
     # ======================================================
-    def load_scaler(self, 
+    def load_scaler(self,
             scaler_directory: str
         ) -> Type[BaseEstimator]:
 
