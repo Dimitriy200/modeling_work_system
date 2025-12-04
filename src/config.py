@@ -33,7 +33,7 @@ PATH_TRAIN_FINAL = os.getenv('PATH_TRAIN_FINAL')
 PATH_TRAIN_ADD_RAW = os.getenv('PATH_TRAIN_ADD_RAW')
 PATH_TRAIN_ADD_FINAL = os.getenv('PATH_TRAIN_ADD_FINAL')
 PATH_LOG = os.getenv("PATH_LOG")
-PATH_PIPELINE = Path("PATH_PIPELINES")
+PATH_SKALERS = Path("skalers")
 
 base_logs_path = Path(PATH_LOG)
 
@@ -44,7 +44,7 @@ paths = [
     PATH_TRAIN_ADD_RAW,
     PATH_TRAIN_ADD_FINAL,
     PATH_LOG,
-    PATH_PIPELINE
+    PATH_SKALERS
 ]
 
 [os.mkdir(path) for path in paths if not os.path.isdir(path)]
