@@ -20,7 +20,6 @@ class LoadDataTrainAdd:
     def data_raw_load(
             self,
             directory_input_path: str,
-            /,
             directory_out_path: str = None
         )-> pd.DataFrame | None:
         '''
@@ -73,6 +72,7 @@ class LoadDataTrainAdd:
 
                         # Отбрасываем последние 3 значения, как в оригинале
                         values = values[:-3]
+                        keys = list(data.keys())
 
                         # Преобразуем в float (с обработкой ошибок)
                         try:
@@ -83,8 +83,9 @@ class LoadDataTrainAdd:
 
                         # Добавляем служебные поля
                         row = {
-                            **{f'feat_{i}': val for i, val in enumerate(numeric_values)},
-                            'unit_id': unit_id,
+                            # **{f'feat_{i}': val for i, val in enumerate(numeric_values)},
+                            'unit_id': unit_id, 
+                            **dict(zip(keys, numeric_values)), #  'key1': 1, key1': 1
                             'source_file': json_path.name
                         }
                         res_rows.append(row)
