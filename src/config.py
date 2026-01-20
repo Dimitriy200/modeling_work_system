@@ -8,6 +8,8 @@ import pickle
 import json
 import sys
 import pandas as pd
+import dagshub
+import mlflow
 
 from dotenv import load_dotenv
 
@@ -35,6 +37,12 @@ PATH_TRAIN_ADD_FINAL = os.getenv('PATH_TRAIN_ADD_FINAL')
 PATH_LOG = os.getenv("PATH_LOG")
 PATH_SKALERS = Path("skalers")
 
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
+MLFLOW_REPO_OWNER = os.getenv("MLFLOW_REPO_OWNER")
+MLFLOW_REPO_NAME = os.getenv("MLFLOW_REPO_NAME")
+MLFLOW_USERNAME = os.getenv("MLFLOW_USERNAME")
+
+
 base_logs_path = Path(PATH_LOG)
 
 paths = [
@@ -56,6 +64,20 @@ logging.basicConfig(
     format = "%(asctime)s %(levelname)s %(message)s"
 )
 main_logger = logging.getLogger(__name__)
+
+
+def setup_mlflow(
+        repo_owner: str, 
+        repo_name: str, 
+        tracking_uri: str, 
+        username: str):
+    
+    os.environ["MLFLOW_TRACKING_USERNAME"] = username
+    dagshub.init(
+        repo_owner = repo_owner, 
+        repo_name = repo_name, 
+        mlflow = True)
+    dagshub.mlflow.set_tracking_uri(tracking_uri)
 
 
 if __name__ == '__main__':
