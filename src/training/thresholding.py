@@ -22,12 +22,12 @@ def choose_optimal_threshold(
     
     Args:
         model: Обученная модель Keras (автокодировщик).
-        normal_control_path: Путь к CSV с нормальными данными (контрольная выборка).
-        anomaly_control_path: Путь к CSV с аномальными данными (контрольная выборка).
+        normal_control_path: Путь к CSV c нормальными данными (контрольная выборка).
+        anomaly_control_path: Путь к CSV c аномальными данными (контрольная выборка).
         threshold_candidates: Стратегия выбора кандидатов. Сейчас поддерживается только "all_mse_values".
     
     Returns:
-        tuple: (оптимальный_порог, DataFrame с полными результатами)
+        tuple: (oптимaльный_пopoг, DataFrame c полными результатами)
     """
     # Загрузка данных
     X_normal = load_csv_to_numpy(normal_control_path)

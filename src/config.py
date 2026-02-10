@@ -27,16 +27,19 @@ sys.path.append(str(parent_dir))
 
 load_dotenv()
 
+# РАСПОЛОЖЕНИЕ ДИРРЕКТОРИЙ ДАННЫХ ДЛЯ ОБУЧЕНИЯ МОДЕЛЕЙ С НУЛЯ
 PATH_TRAIN_RAW = os.getenv('PATH_TRAIN_RAW')
 PATH_TRAIN_FINAL = os.getenv('PATH_TRAIN_RAW')
 PATH_TRAIN_PROCESSED = os.getenv('PATH_TRAIN_PROCESSED')
 PATH_TRAIN_FINAL = os.getenv('PATH_TRAIN_FINAL')
 
+# РАСПОЛОЖЕНИЕ ДИРРЕКТОРИЙ ДЛЯ ДООБУЧЕНИЯ
 PATH_TRAIN_ADD_RAW = os.getenv('PATH_TRAIN_ADD_RAW')
 PATH_TRAIN_ADD_FINAL = os.getenv('PATH_TRAIN_ADD_FINAL')
 PATH_LOG = os.getenv("PATH_LOG")
 PATH_SKALERS = Path("skalers")
 
+# 
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
 MLFLOW_REPO_OWNER = os.getenv("MLFLOW_REPO_OWNER")
 MLFLOW_REPO_NAME = os.getenv("MLFLOW_REPO_NAME")

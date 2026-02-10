@@ -1,9 +1,12 @@
 # training/trainer.py
 import mlflow
 import numpy as np
+
+from numpy import load_csv_to_numpy
 from mlflow.models import infer_signature
 from models.autoencoder import create_contractive_autoencoder
 from evaluation.metrics import compute_rmse
+
 
 def train_and_log_to_mlflow(
     train_path: str,
