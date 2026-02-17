@@ -107,6 +107,27 @@ class Preprocess:
         return dataframe_out
 
     # ======================================================
+    def delete_nan(
+            self, 
+            dataframe: pd.DataFrame) -> pd.DataFrame:
+        
+        # Удаляем строки с None
+        initial_rows = len(dataframe)
+        dataframe.dropna(inplace=True)
+        logging.info(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+
+        # Финальная проверка
+        logging.info(f"Размер dataframe: {dataframe.shape}")
+        logging.info(f"Тип dataframe: {dataframe.dtype}")
+        logging.info(f"Есть ли NaN в dataframe: {np.isnan(dataframe).any()}")
+        logging.info(f"Есть ли inf в dataframe: {np.isinf(dataframe).any()}")
+
+        return dataframe
+
+    # ======================================================
+
+
+    # ======================================================
     def fit_scaler_on_normal(
             self,
             dataframe: pd.DataFrame,
