@@ -4,7 +4,6 @@
 #   ТУТ НОРМАЛИЗАЦИЯ И СТАНДАРТИЗАЦИЯ ДАННЫХ.
 #   ОБУЧЕНИЕ PIPELINE
 #   ДАЛЕЕ ПРОИСХОДИТ РАЗДЕЛЕНИЕ ДАННЫХ НА НОРМАЛЬНЫЕ И АНОМАЛЬНЫЕ.
-#   
 # ======================================================
 import pandas as pd
 import numpy as np
@@ -49,8 +48,8 @@ class Preprocess:
         if save_directory is None:
             return train_pd, test_pd
         else:
-            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train))
-            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test))
+            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train), index=False)
+            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test), index=False)
             return None
 
     # ======================================================
@@ -121,9 +120,6 @@ class Preprocess:
         print(f"Остались ли NAN: {dataframe.isna().any().any()}")
 
         return dataframe
-
-    # ======================================================
-
 
     # ======================================================
     def fit_scaler_on_normal(

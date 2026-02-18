@@ -11,7 +11,6 @@ from models.autoencoder import create_default_autoencoder
 
 # from sklearn.model_selection import train_test_split
 
-
 # all_data_dir = "D:\\yniver\\modeling_work_system\\data\\tarin\\final\\testing_scale.csv"
 all_data_dir = "D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv"
 

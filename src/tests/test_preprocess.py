@@ -19,6 +19,7 @@ from config import PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED
 
 # df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\processing\\combined_df.csv")
 df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\train\\processing\\combined_df.csv")
+print(df_in)
 
 pr = Preprocess()
 
@@ -41,5 +42,5 @@ df_scaled = pr.use_scaler(
 
 print(df_scaled.shape)
 
-df_scaled.to_csv("D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv")
+df_scaled.to_csv("D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv", index=False)
 # ======================================================
