@@ -12,7 +12,8 @@ from models.autoencoder import create_default_autoencoder
 # from sklearn.model_selection import train_test_split
 
 
-all_data_dir = "D:\\yniver\\modeling_work_system\\data\\tarin\\final\\testing_scale.csv"
+# all_data_dir = "D:\\yniver\\modeling_work_system\\data\\tarin\\final\\testing_scale.csv"
+all_data_dir = "D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv"
 
 
 model_1 = create_default_autoencoder()
@@ -23,8 +24,6 @@ df = pd.read_csv(
 
 # 1. Сначала удаляем строки с None
 initial_rows = len(df)
-df.dropna(inplace=True)
-print(f"Удалено строк с None: {initial_rows - len(df)}")
 
 # 2. Проверяем, что целевая колонка существует
 if 'is_anom' not in df.columns:
@@ -35,8 +34,11 @@ normal_data = df[df['is_anom'] == False].copy()
 anomal_data = df[df['is_anom'] == True].copy()
 
 # 4. Удаляем целевую колонку
-normal_data = normal_data.drop(columns=['is_anom'])
-anomal_data = anomal_data.drop(columns=['is_anom'])
+normal_data = normal_data.drop(columns = ['is_anom', 'source_file', 'Unnamed: 0.1', 'Unnamed: 0'])
+anomal_data = anomal_data.drop(columns = ['is_anom', 'source_file', 'Unnamed: 0.1', 'Unnamed: 0'])
+
+print(normal_data.columns)
+print(anomal_data.columns)
 
 # 5. Преобразуем в numpy и проверяем типы
 normal_data = normal_data.values.astype(np.float32)

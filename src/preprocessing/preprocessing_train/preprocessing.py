@@ -114,13 +114,11 @@ class Preprocess:
         # Удаляем строки с None
         initial_rows = len(dataframe)
         dataframe.dropna(inplace=True)
-        logging.info(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
 
         # Финальная проверка
-        logging.info(f"Размер dataframe: {dataframe.shape}")
-        logging.info(f"Тип dataframe: {dataframe.dtype}")
-        logging.info(f"Есть ли NaN в dataframe: {np.isnan(dataframe).any()}")
-        logging.info(f"Есть ли inf в dataframe: {np.isinf(dataframe).any()}")
+        print(f"Размер dataframe: {dataframe.shape}")
+        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
 
         return dataframe
 

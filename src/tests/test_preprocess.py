@@ -17,24 +17,29 @@ from config import PATH_TRAIN_RAW, PATH_TRAIN_PROCESSED
 # ======================================================
 #   ТЕСТЫ НА БОЛЬШОМ НАБОРЕ
 
-# df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\raw\\train_FD001.csv")
-# pr = Preprocess()
+# df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\processing\\combined_df.csv")
+df_in = pd.read_csv("D:\\yniver\\modeling_work_system\\data\\train\\processing\\combined_df.csv")
 
-# df_out = pr.different_norm_anom(dtaframe = df_in)
-# # df_out.to_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\processing\\testing_dif_anom.csv")
+pr = Preprocess()
 
-# sensor_cols = [col for col in df_out.columns if col.startswith('sensor')]
+df_non_nan = pr.delete_nan(df_in)
 
-# scaler = pr.fit_scaler_on_normal(
-#     dataframe=df_out,
-#     feature_columns=sensor_cols,
-#     scaler_class=StandardScaler
-# )
+df_out = pr.different_norm_anom(dtaframe = df_non_nan)
 
-# df_scaled = pr.use_scaler(
-#     dataframe=df_out,
-#     scaler=scaler, 
-#     feature_columns=sensor_cols)
+sensor_cols = [col for col in df_out.columns if col.startswith('sensor')]
 
-# df_scaled.to_csv("D:\\yniver\\modeling_work_system\\data\\tarin\\final\\testing_scale.csv")
+scaler = pr.fit_scaler_on_normal(
+    dataframe = df_out,
+    feature_columns = sensor_cols,
+    scaler_class = StandardScaler
+)
+
+df_scaled = pr.use_scaler(
+    dataframe = df_out,
+    scaler = scaler, 
+    feature_columns = sensor_cols)
+
+print(df_scaled.shape)
+
+df_scaled.to_csv("D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv")
 # ======================================================
