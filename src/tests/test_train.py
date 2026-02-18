@@ -21,20 +21,12 @@ df = pd.read_csv(
     sep = ','
 )
 
-# 1. Сначала удаляем строки с None
-initial_rows = len(df)
-
-# 2. Проверяем, что целевая колонка существует
-if 'is_anom' not in df.columns:
-    raise ValueError("Колонка 'is_anom' не найдена в данных!")
-
-# 3. Разделяем данные
 normal_data = df[df['is_anom'] == False].copy()
 anomal_data = df[df['is_anom'] == True].copy()
 
 # 4. Удаляем целевую колонку
-normal_data = normal_data.drop(columns = ['is_anom', 'source_file', 'Unnamed: 0.1', 'Unnamed: 0'])
-anomal_data = anomal_data.drop(columns = ['is_anom', 'source_file', 'Unnamed: 0.1', 'Unnamed: 0'])
+normal_data = normal_data.drop(columns = ['is_anom'])
+anomal_data = anomal_data.drop(columns = ['is_anom'])
 
 print(normal_data.columns)
 print(anomal_data.columns)

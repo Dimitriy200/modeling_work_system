@@ -14,7 +14,7 @@ def train_and_log_to_mlflow(
     predict_path: str,
     experiment_name: str,
     registered_model_name: str,
-    epochs: int = 5,
+    epochs: int = 10,
     batch_size: int = 80,
     model_type: str = "contractive"
 ):
