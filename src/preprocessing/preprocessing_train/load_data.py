@@ -70,7 +70,7 @@ class LoadDataTrain:
                 df['unit_number_global'] = global_unit_offset  # или np.nan, если неприемлемо
 
             logging.info(f"Writed csv file {filename}: {df.shape}")
-            df['source_file'] = filename
+            # df['source_file'] = filename
             data_frames.append(df)
         
         combined_df = pd.concat(data_frames, ignore_index=False)
@@ -80,6 +80,6 @@ class LoadDataTrain:
             return combined_df
         else:
             file_name_out = os.path.join(directory_out_path, 'combined_df.csv')
-            combined_df.to_csv(path_or_buf = file_name_out)
+            combined_df.to_csv(path_or_buf = file_name_out, index=False)
             return None
     # =============================================================================
