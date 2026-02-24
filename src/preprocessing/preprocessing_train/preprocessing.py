@@ -22,7 +22,9 @@ from pathlib import Path
 
 class Preprocess:
     
-    def __init__(self, scaler: Type[BaseEstimator]  = None):
+    def __init__(
+            self, 
+            scaler: Type[BaseEstimator]  = None):
         
         if scaler is None:
             self.scaler = StandardScaler()
@@ -30,34 +32,33 @@ class Preprocess:
             self.scaler = scaler
     
     # ======================================================
-    def different_train_test(
-              self,
-              dtaframe: pd.DataFrame, 
-              save_directory: str = None,
-              file_name_train: str = "train.csv",
-              file_name_test: str = "test.csv"
-            ) ->  tuple[pd.DataFrame, pd.DataFrame] | None:
-        '''
-        Разделяет данные на TRAIN и TEST выборки.
-        Если указан параметри save_directory - сохраняет в формат .csv, иначе возвращает в качестве Pandas наборов.
-        '''
-        train, test = train_test_split(dtaframe)
-        train_pd = pd.DataFrame(data=train, columns=dtaframe.columns)
-        test_pd = pd.DataFrame(data=test, columns=dtaframe.columns)
+    def delete_nan(
+            self,
+            dataframe: pd.DataFrame) -> pd.DataFrame:
         
-        if save_directory is None:
-            return train_pd, test_pd
-        else:
-            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train), index=False)
-            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test), index=False)
-            return None
+        # Удаляем строки с None
+        initial_rows = len(dataframe)
+        dataframe.dropna(inplace=True)
+        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+
+        # Финальная проверка
+        print(f"Размер dataframe: {dataframe.shape}")
+        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
+
+        return dataframe
 
     # ======================================================
-    def different_norm_anom(
+    def marking_norm_anom(
         self,
         dtaframe: pd.DataFrame,
         n_anom: int = 10
     ) -> pd.DataFrame:
+        
+        '''
+        Добавляет столбец is_anom со значениями аномальных и нормальных циклов = True и False соответственно.
+        По умолчанию - последние 10 циклов каждого двигатея считаются аномальными.
+        Разделение данных предлагается вынести за пределы функции в соображениях сохранения безопасности метода.
+        '''
          
         required_cols = ['time in cycles']
         unit_col = 'unit number'
@@ -106,20 +107,56 @@ class Preprocess:
         return dataframe_out
 
     # ======================================================
-    def delete_nan(
-            self, 
-            dataframe: pd.DataFrame) -> pd.DataFrame:
+    def different_norm_anom(
+            self,
+            dataframe: pd.DataFrame
+        ):
+
+        '''
+        Датасет должен содержать столбец "is_anom" 
+        Метод разделяет единый набор данных на поднаборы с нормальными и аномальными данными.
+        Столбец "is_anom" удаляется.
+        '''
+
+        # Проверяем, есть ли в наборе столбец is_anom
+
+        if dataframe.columns.isin(['is_anom']).any():
+            normal_data = dataframe[dataframe['is_anom'] == False].copy()
+            anomal_data = dataframe[dataframe['is_anom'] == True].copy()
+
+            # 4. Удаляем целевую колонку
+            normal_data = normal_data.drop(columns = ['is_anom'])
+            anomal_data = anomal_data.drop(columns = ['is_anom'])
+
+            return normal_data, anomal_data
+        else:
+            logging.info("Отсутствует столбец is_anom")
+            print("Отсутствует столбец is_anom")
+            
+            return 0
+
+    # ======================================================
+    def different_train_test(
+              self,
+              dtaframe: pd.DataFrame, 
+              save_directory: str = None,
+              file_name_train: str = "train.csv",
+              file_name_test: str = "test.csv"
+            ) ->  tuple[pd.DataFrame, pd.DataFrame] | None:
+        '''
+        Разделяет данные на TRAIN и TEST выборки.
+        Если указан параметри save_directory - сохраняет в формат .csv, иначе возвращает в качестве Pandas наборов.
+        '''
+        train, test = train_test_split(dtaframe)
+        train_pd = pd.DataFrame(data=train, columns=dtaframe.columns)
+        test_pd = pd.DataFrame(data=test, columns=dtaframe.columns)
         
-        # Удаляем строки с None
-        initial_rows = len(dataframe)
-        dataframe.dropna(inplace=True)
-        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
-
-        # Финальная проверка
-        print(f"Размер dataframe: {dataframe.shape}")
-        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
-
-        return dataframe
+        if save_directory is None:
+            return train_pd, test_pd
+        else:
+            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train), index=False)
+            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test), index=False)
+            return None
 
     # ======================================================
     def fit_scaler_on_normal(
@@ -164,6 +201,16 @@ class Preprocess:
 
         return scaler
     
+    # ======================================================
+    def pd_to_numpy(
+            self,
+            train_df :pd.DataFrame,
+            test_df :pd.DataFrame,
+            valid_df :pd.DataFrame ):
+        
+        return train_df.to_numpy(), test_df.to_numpy(), valid_df.to_numpy()
+        
+    # МЕТОДЫ SCALERR
     # ======================================================
     def save_scaler(
             self, 

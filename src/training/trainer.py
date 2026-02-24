@@ -9,23 +9,23 @@ from evaluation.metrics import compute_rmse
 
 
 def train_and_log_to_mlflow(
-    train_path: str,
-    valid_path: str,
-    predict_path: str,
+    train_df: np.ndarray,
+    test_df: np.ndarray,
+    valid_df: np.ndarray,
     experiment_name: str,
     registered_model_name: str,
     epochs: int = 10,
     batch_size: int = 80,
-    model_type: str = "contractive"
-):
+    model_type: str = "contractive"):
+    
     # Загрузка данных
-    X_train = load_csv_to_numpy(train_path)
-    X_valid = load_csv_to_numpy(valid_path)
-    X_pred = load_csv_to_numpy(predict_path)
+    # train_df = load_csv_to_numpy(train_path)
+    # test_df = load_csv_to_numpy(valid_path)
+    # valid_df = load_csv_to_numpy(predict_path)
 
     # Выбор модели
     if model_type == "contractive":
-        model = create_contractive_autoencoder(input_dim=X_train.shape[1])
+        model = create_contractive_autoencoder(input_dim=train_df.shape[1])
     else:
         raise ValueError("Unsupported model type")
 
@@ -36,23 +36,23 @@ def train_and_log_to_mlflow(
     with mlflow.start_run():
         # Обучение
         history = model.fit(
-            X_train, X_train,
-            validation_data=(X_valid, X_valid),
+            train_df, train_df,
+            validation_data=(test_df, test_df),
             epochs=epochs,
             batch_size=batch_size,
             shuffle=True
         )
 
         # Предсказание
-        X_recon = model.predict(X_pred)
+        X_recon = model.predict(valid_df)
 
         # Метрики
-        rmse = compute_rmse(X_pred, X_recon)
+        rmse = compute_rmse(valid_df, X_recon)
         mlflow.log_metric("rmse", rmse)
         mlflow.log_param("epochs", epochs)
 
         # Логирование модели
-        signature = infer_signature(X_train, model.predict(X_train[:10]))
+        signature = infer_signature(train_df, model.predict(train_df[:10]))
         mlflow.keras.log_model(
             model,
             artifact_path="autoencoder",

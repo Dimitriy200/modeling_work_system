@@ -25,7 +25,7 @@ pr = Preprocess()
 
 df_non_nan = pr.delete_nan(df_in)
 
-df_out = pr.different_norm_anom(dtaframe = df_non_nan)
+df_out = pr.marking_norm_anom(dtaframe = df_non_nan)
 
 sensor_cols = [col for col in df_out.columns if col.startswith('sensor')]
 
