@@ -2,6 +2,7 @@
 # ТЕСТ ПОЛНОГО ЦИКЛА ДВИЖЕНИЯ ДАННЫХ
 # ======================================================
 
+
 # ============ ИМПОРТ ТЕСТИРУЕМЫХ МОДУЛЕЙ ==============
 import sys
 from pathlib import Path
@@ -10,17 +11,20 @@ sys.path.append(str(parent_dir))
 from src.preprocessing.preprocessing_train.load_data import LoadDataTrain
 from src.preprocessing.preprocessing_train.preprocessing import Preprocess
 
-import src.training as training
-import src.models as models
+from src.training.trainer import train_and_log_to_mlflow
+from src.models import autoencoder
 # ======================================================
 
 import os
-
+import dagshub
 
 path_raw_data = Path(parent_dir).joinpath("data").joinpath("train").joinpath("raw")
 path_scaler = Path(parent_dir).joinpath("skalers").joinpath("test_sca;er.pkl")
 
+
 # 1. Объявляем загрузчик данных и запускаем процесс загрузки
+print(" === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === ")
+
 loader = LoadDataTrain()
 raw_df = loader.data_raw_load(path_raw_data)
 
@@ -76,9 +80,26 @@ print(" --- РАЗДЕЛЕНИЕ НА NORM TRAIN И TEST ЗАВЕРШЕНО --- 
 
 # 2.8 Преобразование в numpy
 final_train, final_test, anomal_valid = preprocessor.pd_to_numpy(scaling_norm_train, scaling_norm_test, scaing_anom)
-print(final_train)
-print(final_test)
-print(anomal_valid)
+# print(final_train)
+# print(final_test)
+# print(anomal_valid)
 print(" --- ПРЕОБРАЗОВАНИЕ В NUMPY ЗАВЕРШЕНО --- ")
+print(" === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ ЗАВЕРШЕН === ")
+
 
 # 3 Проведение эксперимента
+print(" === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === ")
+
+dagshub.init(repo_owner='Dimitriy200', repo_name='modeling_work_system', mlflow=True)
+encoder = autoencoder.create_default_autoencoder()
+
+model = train_and_log_to_mlflow(
+    train_df = final_train,
+    test_df = final_test,
+    valid_df = anomal_valid,
+    model = encoder,
+    experiment_name = "test_all_preprocess_line",
+    registered_model_name = "test_model",
+    epochs = 3)
+
+print(" --- ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО --- ")
