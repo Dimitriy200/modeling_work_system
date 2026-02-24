@@ -159,7 +159,17 @@ class Preprocess:
             return None
 
     # ======================================================
-    def fit_scaler_on_normal(
+    def pd_to_numpy(
+            self,
+            train_df :pd.DataFrame,
+            test_df :pd.DataFrame,
+            valid_df :pd.DataFrame ):
+        
+        return train_df.to_numpy(), test_df.to_numpy(), valid_df.to_numpy()
+        
+    # МЕТОДЫ SCALERR
+    # ======================================================
+    def fit_scaler(
             self,
             dataframe: pd.DataFrame,
             feature_columns: List[str],
@@ -171,46 +181,37 @@ class Preprocess:
         Ha других наборах обучение исклчено.
         dataframe обязан содержать столбец is_anom.
         '''
-        # Проверка наличия 'is_anom'
-        if 'is_anom' not in dataframe.columns:
-            raise ValueError("Столбец 'is_anom' отсутствует. Сначала вызовите different_norm_anom().")
+        # # Проверка наличия 'is_anom'
+        # if 'is_anom' not in dataframe.columns:
+        #     raise ValueError("Столбец 'is_anom' отсутствует. Сначала вызовите different_norm_anom().")
         
-        missing_cols = [col for col in feature_columns if col not in dataframe.columns]
-        if missing_cols:
-            raise ValueError(f"Отсутствующие столбцы: {missing_cols}")
+        # missing_cols = [col for col in feature_columns if col not in dataframe.columns]
+        # if missing_cols:
+        #     raise ValueError(f"Отсутствующие столбцы: {missing_cols}")
         
-        non_numeric = [col for col in feature_columns if not pd.api.types.is_numeric_dtype(dataframe[col])]
-        if non_numeric:
-            raise ValueError(f"Нечисловые столбцы: {non_numeric}. Scaler требует числовые признаки.")
+        # non_numeric = [col for col in feature_columns if not pd.api.types.is_numeric_dtype(dataframe[col])]
+        # if non_numeric:
+        #     raise ValueError(f"Нечисловые столбцы: {non_numeric}. Scaler требует числовые признаки.")
         
-        df_normal = dataframe[dataframe['is_anom'] == False]
-        n_norm, n_total = len(df_normal), len(dataframe)
-        if n_norm == 0:
-            raise ValueError("Нет нормальных данных (is_anom == False). Проверьте разметку.")
+        # df_normal = dataframe[dataframe['is_anom'] == False]
+        # n_norm, n_total = len(df_normal), len(dataframe)
+        # if n_norm == 0:
+        #     raise ValueError("Нет нормальных данных (is_anom == False). Проверьте разметку.")
         
-        logging.info(f"Обучение scaler на {n_norm} нормальных записях ({n_norm / n_total:.1%} от общего)")
+        # logging.info(f"Обучение scaler на {n_norm} нормальных записях ({n_norm / n_total:.1%} от общего)")
         scaler_kwargs = scaler_kwargs or {}
 
         try:
             scaler = scaler_class(**scaler_kwargs)
-            scaler.fit(df_normal[feature_columns])
+            scaler.fit(dataframe[feature_columns])          # scaler.fit(df_normal[feature_columns])
         except Exception as e:
             raise RuntimeError(f"Ошибка при обучении scaler'a {scaler_class.__name__}: {e}") from e
 
-        logging.info(f"✅ Scaler {scaler_class.__name__} обучен на норме. Признаки: {feature_columns}")
+        logging.info(f"Scaler {scaler_class.__name__} обучен на норме. Признаки: {feature_columns}")
 
         return scaler
     
-    # ======================================================
-    def pd_to_numpy(
-            self,
-            train_df :pd.DataFrame,
-            test_df :pd.DataFrame,
-            valid_df :pd.DataFrame ):
-        
-        return train_df.to_numpy(), test_df.to_numpy(), valid_df.to_numpy()
-        
-    # МЕТОДЫ SCALERR
+
     # ======================================================
     def save_scaler(
             self, 
@@ -221,9 +222,10 @@ class Preprocess:
         Сохраняет scaler в указанную дирректорию.
         Метод не знает o существовании указанной директории. 
         Убедитесь, что перед запуском был запущен config.py из которого можно получить путь по директории scaler.
+        Разрешение сохраняемого файла должно быть .pkl
         '''
         with open(save_scaler_directory, 'wb') as handle:
-                    save_pik_pipeline = pickle.dumps(scaler)
+                    pickle.dump(scaler, handle)
     
     # ======================================================
     def load_scaler(self,
@@ -238,7 +240,7 @@ class Preprocess:
             )
 
         try:
-            with open(self.scaler_path, 'rb') as file_scaller:
+            with open(scaler_path, 'rb') as file_scaller:
                 scaler = pickle.load(file_scaller)
                 logging.info(f"Scaler успешно загружен из: {scaler_path}")
         
@@ -276,17 +278,15 @@ class Preprocess:
             raise ValueError("Переданный scaler не имеет метода .transform()")
         
         # Столбцы, которые НЕ должны нормализоваться (служебные / категориальные / метки)
-        exclude_cols = {
-            'unit number', 'source_file', 
-            'is_anom', 'time in cycles',
-            'index', 'Unnamed: 0'
-        }
+        # exclude_cols = {
+        #     'unit number'
+        # }
 
             # Определяем признаки для нормализации
         if feature_columns is None:
             # Берём все числовые столбцы, кроме исключённых
             numeric_cols = dataframe.select_dtypes(include=[np.number]).columns
-            feature_columns = [col for col in numeric_cols if col not in exclude_cols]
+            # feature_columns = [col for col in numeric_cols if col not in exclude_cols]
             logging.debug(f"Автоматически выбраны числовые признаки для нормализации: {feature_columns}")
         else:
             # Проверяем наличие
