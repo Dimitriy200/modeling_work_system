@@ -6,7 +6,6 @@ import pandas as pd
 import tempfile
 import os
 
-
 # from numpy import load_csv_to_numpy
 from mlflow.models import infer_signature
 # from models.autoencoder import create_contractive_autoencoder
@@ -46,7 +45,7 @@ def log_run_to_mlflow(
             batch_size = batch_size,
             shuffle = True,
             verbose = 0  # чтобы не дублировать логи
-        )
+            )
 
         # Кастомные метрики
         X_recon_val = model.predict(X_test)
@@ -77,3 +76,43 @@ def log_run_to_mlflow(
             mlflow.log_artifact(csv_path)
 
         return run.info.run_id
+
+
+def load_model_from_mlflow(
+    registered_model_name: str,
+    stage: str = "None",  # или "Staging", "None", либо конкретная версия как строка "1"
+    tracking_uri: str = None ) -> keras.Model:
+    
+    """
+    Загружает модель из MLflow Model Registry.
+    
+    Parameters
+    ----------
+    registered_model_name : str
+        Имя модели в MLflow Registry (например, "autoencoder_turbo").
+    stage : str, optional
+        Стадия модели: "Production", "Staging", "None" (последняя версия),
+        или номер версии в виде строки, например "3".
+    tracking_uri : str, optional
+        URI для подключения к MLflow (например, "file:///path/to/mlruns" или "http://localhost:5000").
+        Если не указан — используется текущий активный URI.
+    
+    Returns
+    -------
+    mlflow.pyfunc.PyFuncModel
+        Загруженная модель, готовая к вызову через `.predict(X)`.
+    """
+
+    if tracking_uri:
+        mlflow.set_tracking_uri(tracking_uri)
+
+    # Формируем URI модели в формате MLflow
+    model_uri = f"models:/{registered_model_name}/{stage}"
+
+    try:
+        model = mlflow.keras.load_model(model_uri)
+        logging.info(f"Модель загружена из mlflow: {model_uri}")
+        return model
+    
+    except Exception as e:
+        raise RuntimeError(f"Не удалось загрузить модель из MLflow по URI '{model_uri}': {e}")

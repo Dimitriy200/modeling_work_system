@@ -88,3 +88,22 @@ def train_model(
         verbose = 1 )
 
     return model
+
+
+def compare_weights(model1, model2, tolerance=1e-5):
+    weights1 = model1.get_weights()
+    weights2 = model2.get_weights()
+    """
+    Сравнивает веса двух моделей
+    """
+    
+    if len(weights1) != len(weights2):
+        print("Модели имеют разное количество слоев с весами")
+        return False
+    
+    for i, (w1, w2) in enumerate(zip(weights1, weights2)):
+        if not np.allclose(w1, w2, rtol=tolerance, atol=tolerance):
+            print(f"Различие в весах на слое {i}")
+            return False
+        
+    return True

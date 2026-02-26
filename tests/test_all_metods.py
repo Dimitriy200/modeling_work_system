@@ -11,10 +11,10 @@ sys.path.append(str(parent_dir))
 from src.preprocessing.preprocessing_train.load_data import LoadDataTrain
 from src.preprocessing.preprocessing_train.preprocessing import Preprocess
 
-from src.training.trainer import train_model
+from src.training.trainer import train_model, compare_weights
 from src.models import autoencoder
 from src.training.thresholding import choose_optimal_threshold
-from src.training.mlflow_loader import log_run_to_mlflow
+from src.training.mlflow_loader import log_run_to_mlflow, load_model_from_mlflow
 # ======================================================
 
 import os
@@ -120,9 +120,16 @@ logging.info(" === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫ
 logging.info(" === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === ")
 
 # 3.1 Конфигурация
-dagshub.init(repo_owner='Dimitriy200', repo_name='modeling_work_system', mlflow=True)
+dagshub.init(
+    repo_owner = 'Dimitriy200', 
+    repo_name = 'modeling_work_system', 
+    mlflow = True)
+
 encoder = autoencoder.create_default_autoencoder()
 epohs = 3
+batch_size = 80
+registered_model_name = "test_model"
+experiment_name = "Autoencoder_Anomaly_v2"
 
 # 3.2 Обучение
 trained_model = train_model(
@@ -130,7 +137,7 @@ trained_model = train_model(
     train_df = final_train, 
     test_df = final_test, 
     epochs = epohs, 
-    batch_size = 80)
+    batch_size = batch_size)
 
 # 3.3 Подбор порога
 threshold, best_accuracy, results_df = choose_optimal_threshold(
@@ -150,11 +157,36 @@ run_id = log_run_to_mlflow(
     threshold_accuracy = best_accuracy,
     df_threshold_results = results_df,
 
-    experiment_name = "Autoencoder_Anomaly_v2",
-    registered_model_name = "autoencoder_final",
+    experiment_name = experiment_name,
+    registered_model_name = registered_model_name,
     epochs = epohs,
-    batch_size = 80)
+    batch_size = batch_size)
 
 logging.info(" --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- ")
 
 logging.info(" === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО === ")
+
+
+# ======================================================
+# 4 Тестирование пайплайна на данных датчиков
+# ======================================================
+
+# 4.1 Выгрузить актуальную модель
+loaded_model = load_model_from_mlflow(
+    registered_model_name = registered_model_name,
+
+)
+# Сравним модели
+res = compare_weights(loaded_model, trained_model)
+logging.info(f"РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ ЗАГРУЖЕННОЙ И ВЫГРУЖЕННОЙ МОДЕЛЕЙ --- {res}")
+
+# 4.2 Загрузить данные, пришедшие с датчиков
+
+
+# 4.3 Предобработать данные
+
+
+# 4.4 Дообучить модель
+
+
+# 4.5 Сохранить эксперимент
