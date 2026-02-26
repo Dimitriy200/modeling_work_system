@@ -10,6 +10,7 @@ parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 from src.preprocessing.preprocessing_train.load_data import LoadDataTrain
 from src.preprocessing.preprocessing_train.preprocessing import Preprocess
+from src.preprocessing.preprocessing_train_add.load_data import LoadDataTrainAdd
 
 from src.training.trainer import train_model, compare_weights
 from src.models import autoencoder
@@ -24,6 +25,8 @@ import logging
 
 
 path_raw_data = Path(parent_dir).joinpath("data").joinpath("train").joinpath("raw")
+path_raw_data_detectors = Path(parent_dir).joinpath("data").joinpath("train_add").joinpath("raw").joinpath("2024-07-02_2024-07-03_2024-07-04")
+
 path_scaler = Path(parent_dir).joinpath("skalers").joinpath("test_sca;er.pkl")
 path_test_data = Path(parent_dir).joinpath("data").joinpath("test_data")
 path_logs = Path(parent_dir).joinpath("logs")
@@ -171,22 +174,66 @@ logging.info(" === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШ�
 # 4 Тестирование пайплайна на данных датчиков
 # ======================================================
 
-# 4.1 Выгрузить актуальную модель
-loaded_model = load_model_from_mlflow(
-    registered_model_name = registered_model_name,
+logging.info(" === НАЧАЛО ЭТАПА ДООБУЧЕНИЯ === ")
+batch_size_train_add = 10
 
-)
+
+# 4.1 Выгрузить актуальную модель
+loaded_model = load_model_from_mlflow(registered_model_name = registered_model_name)
+logging.info(" --- ВЫГРУЗКА МОДЕЛИ ИЗ MLFLOW ЗАВЕРШЕНА --- ")
+
 # Сравним модели
 res = compare_weights(loaded_model, trained_model)
 logging.info(f"РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ ЗАГРУЖЕННОЙ И ВЫГРУЖЕННОЙ МОДЕЛЕЙ --- {res}")
 
 # 4.2 Загрузить данные, пришедшие с датчиков
+loader_add = LoadDataTrainAdd()
+detector_df = loader_add.data_raw_load(path_raw_data_detectors)
+logging.info(detector_df)
+logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- ")
 
+# 4.3 Предобработать данные с использованием предобученного Scaller
+scaing_detector_df = preprocessor.use_scaler(loading_scaler, detector_df, cols)
 
-# 4.3 Предобработать данные
+scaing_detector_df_train, scaing_detector_df_test =  preprocessor.different_train_test(scaing_detector_df)
 
+final_scaing_detector_df_train = preprocessor.pd_to_numpy(scaing_detector_df_train)
+final_scaing_detector_df_test = preprocessor.pd_to_numpy(scaing_detector_df_test)
+logging.info(f"final_scaing_detector_df_train\n{final_scaing_detector_df_train}")
+logging.info(f"final_scaing_detector_df_test\n{final_scaing_detector_df_test}")
 
-# 4.4 Дообучить модель
+logging.info(" --- ПРИМЕНЕНИЕ SCALER К ДАННЫМ ИЗ ДАТЧИКОВ ЗАВЕРШЕНО --- ")
 
+# 4.4 Дообучить модель и сохранить эксперимент
+# 4.4.1 Обучение
+trained_add_model = train_model(
+    model = loaded_model, 
+    train_df = final_scaing_detector_df_train,
+    test_df = final_scaing_detector_df_test,
+    epochs = epohs, 
+    batch_size = batch_size_train_add)
 
-# 4.5 Сохранить эксперимент
+# 4.4.2 Подбор порога
+threshold_add_tarin, best_accuracy_add_tarin, results_df_add_tarin = choose_optimal_threshold(
+    model = trained_add_model,
+    normal_control_df = final_valid,    # valid и anomal оставляем исходные для корректного сравнения прогресса
+    anomaly_control_df = final_anomal)
+
+# 4.4.3 Сохранение логов в mlflow
+run_id = log_run_to_mlflow(
+    model = trained_add_model,
+    X_train = final_scaing_detector_df_train,
+    X_test = final_scaing_detector_df_test,
+    X_val = final_valid,
+    X_anomaly = final_anomal,
+
+    threshold = threshold_add_tarin,
+    threshold_accuracy = best_accuracy_add_tarin,
+    df_threshold_results = results_df_add_tarin,
+
+    experiment_name = experiment_name,
+    registered_model_name = registered_model_name,
+    epochs = epohs,
+    batch_size = batch_size)
+
+logging.info(" === ЭТАП ДООБУЧЕНИЯ ЗАВЕРШЕН === ")

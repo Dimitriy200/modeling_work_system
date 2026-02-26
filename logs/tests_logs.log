@@ -1,16 +1,16 @@
-2026-02-27 01:02:07,966 INFO  === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === 
-2026-02-27 01:02:07,966 INFO CSV files found: 4
-2026-02-27 01:02:08,030 INFO Writed csv file train_FD001.csv: (20631, 26)
-2026-02-27 01:02:08,207 INFO Writed csv file train_FD002.csv: (53759, 26)
-2026-02-27 01:02:08,290 INFO Writed csv file train_FD003.csv: (24720, 26)
-2026-02-27 01:02:08,490 INFO Writed csv file train_FD004.csv: (61249, 26)
-2026-02-27 01:02:08,501 INFO Combined DF paams: (160359, 26)
-2026-02-27 01:02:08,503 INFO  --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,544 INFO  --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,614 INFO different_norm_anom: обработано 709 юнитов, всего 160359 записей, аномалий = 7090 (4.4%)
-2026-02-27 01:02:08,614 INFO  --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- 
-2026-02-27 01:02:08,661 INFO  --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,717 INFO Scaler StandardScaler обучен на норме. Признаки: Index(['unit number', 'time in cycles', 'operational setting 1',
+2026-02-27 01:43:58,619 INFO  === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === 
+2026-02-27 01:43:58,620 INFO CSV files found: 4
+2026-02-27 01:43:58,685 INFO Writed csv file train_FD001.csv: (20631, 26)
+2026-02-27 01:43:58,857 INFO Writed csv file train_FD002.csv: (53759, 26)
+2026-02-27 01:43:58,939 INFO Writed csv file train_FD003.csv: (24720, 26)
+2026-02-27 01:43:59,143 INFO Writed csv file train_FD004.csv: (61249, 26)
+2026-02-27 01:43:59,153 INFO Combined DF paams: (160359, 26)
+2026-02-27 01:43:59,156 INFO  --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,197 INFO  --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,263 INFO different_norm_anom: обработано 709 юнитов, всего 160359 записей, аномалий = 7090 (4.4%)
+2026-02-27 01:43:59,263 INFO  --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- 
+2026-02-27 01:43:59,302 INFO  --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,357 INFO Scaler StandardScaler обучен на норме. Признаки: Index(['unit number', 'time in cycles', 'operational setting 1',
        'operational setting 2', 'operational setting 3',
        'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3',
        'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6',
@@ -22,31 +22,142 @@
        'sensor measurement 18', 'sensor measurement 19',
        'sensor measurement 20', 'sensor measurement 21'],
       dtype='object')
-2026-02-27 01:02:08,717 INFO  --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,718 INFO Scaler успешно загружен из: D:\yniver\modeling_work_system\skalers\test_sca;er.pkl
-2026-02-27 01:02:08,719 INFO Тип scaler'a: StandardScaler
-2026-02-27 01:02:08,719 INFO Ожидаемое число признаков: 26
-2026-02-27 01:02:08,719 INFO  --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,720 INFO Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
-2026-02-27 01:02:08,794 INFO Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
-2026-02-27 01:02:08,800 INFO Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
-2026-02-27 01:02:08,809 INFO Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
-2026-02-27 01:02:08,809 INFO  --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,872 INFO  --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,889 INFO  --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,902 INFO  --- ПРЕОБРАЗОВАНИЕ В NUMPY ЗАВЕРШЕНО --- 
-2026-02-27 01:02:08,903 INFO  === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ ЗАВЕРШЕН === 
-2026-02-27 01:02:08,903 INFO  === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === 
-2026-02-27 01:02:09,960 INFO HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-2026-02-27 01:02:09,972 INFO Accessing as Dimitriy200
-2026-02-27 01:02:11,141 INFO HTTP Request: GET https://dagshub.com/api/v1/repos/Dimitriy200/modeling_work_system "HTTP/1.1 200 OK"
-2026-02-27 01:02:12,237 INFO HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-2026-02-27 01:02:12,243 INFO Initialized MLflow to track repo "Dimitriy200/modeling_work_system"
-2026-02-27 01:02:12,246 INFO Repository Dimitriy200/modeling_work_system initialized!
-2026-02-27 01:02:22,082 INFO Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
-2026-02-27 01:02:22,830 INFO Объединённый датасет: (14180, 2)
-2026-02-27 01:02:46,237 INFO Оптимальный порог: 0.004198, точность: 0.6961
-2026-02-27 01:03:54,465 INFO  --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- 
-2026-02-27 01:03:54,465 INFO  === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО === 
-2026-02-27 01:04:06,081 INFO Модель загружена: models:/test_model/None
-2026-02-27 01:04:06,087 INFO РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ ЗАГРУЖЕННОЙ И ВЫГРУЖЕННОЙ МОДЕЛЕЙ --- {res}
+2026-02-27 01:43:59,358 INFO  --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,359 INFO Scaler успешно загружен из: D:\yniver\modeling_work_system\skalers\test_sca;er.pkl
+2026-02-27 01:43:59,359 INFO Тип scaler'a: StandardScaler
+2026-02-27 01:43:59,360 INFO Ожидаемое число признаков: 26
+2026-02-27 01:43:59,360 INFO  --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,360 INFO Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
+2026-02-27 01:43:59,431 INFO Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
+2026-02-27 01:43:59,438 INFO Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
+2026-02-27 01:43:59,447 INFO Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
+2026-02-27 01:43:59,448 INFO  --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,506 INFO  --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,521 INFO  --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,531 INFO  --- ПРЕОБРАЗОВАНИЕ В NUMPY ЗАВЕРШЕНО --- 
+2026-02-27 01:43:59,532 INFO  === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ ЗАВЕРШЕН === 
+2026-02-27 01:43:59,532 INFO  === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === 
+2026-02-27 01:44:00,583 INFO HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2026-02-27 01:44:00,587 INFO Accessing as Dimitriy200
+2026-02-27 01:44:01,801 INFO HTTP Request: GET https://dagshub.com/api/v1/repos/Dimitriy200/modeling_work_system "HTTP/1.1 200 OK"
+2026-02-27 01:44:02,952 INFO HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2026-02-27 01:44:02,957 INFO Initialized MLflow to track repo "Dimitriy200/modeling_work_system"
+2026-02-27 01:44:02,959 INFO Repository Dimitriy200/modeling_work_system initialized!
+2026-02-27 01:44:12,728 INFO Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
+2026-02-27 01:44:13,449 INFO Объединённый датасет: (14180, 2)
+2026-02-27 01:44:36,505 INFO Оптимальный порог: 0.003744, точность: 0.6727
+2026-02-27 01:45:43,673 INFO  --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- 
+2026-02-27 01:45:43,674 INFO  === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО === 
+2026-02-27 01:45:43,674 INFO  === НАЧАЛО ЭТАПА ДООБУЧЕНИЯ === 
+2026-02-27 01:45:56,031 INFO Модель загружена из mlflow: models:/test_model/None
+2026-02-27 01:45:56,031 INFO  --- ВЫГРУЗКА МОДЕЛИ ИЗ MLFLOW ЗАВЕРШЕНА --- 
+2026-02-27 01:45:56,034 INFO РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ ЗАГРУЖЕННОЙ И ВЫГРУЖЕННОЙ МОДЕЛЕЙ --- True
+2026-02-27 01:45:56,037 INFO Найдено 57 unit-директорий в D:\yniver\modeling_work_system\data\train_add\raw\2024-07-02_2024-07-03_2024-07-04
+2026-02-27 01:45:56,037 INFO Unit 'unit_number_1': 4 JSON-файлов
+2026-02-27 01:45:56,039 INFO Unit 'unit_number_10': 47 JSON-файлов
+2026-02-27 01:45:56,047 INFO Unit 'unit_number_12': 44 JSON-файлов
+2026-02-27 01:45:56,054 INFO Unit 'unit_number_13': 40 JSON-файлов
+2026-02-27 01:45:56,061 INFO Unit 'unit_number_14': 34 JSON-файлов
+2026-02-27 01:45:56,066 INFO Unit 'unit_number_15': 43 JSON-файлов
+2026-02-27 01:45:56,073 INFO Unit 'unit_number_17': 51 JSON-файлов
+2026-02-27 01:45:56,081 INFO Unit 'unit_number_18': 26 JSON-файлов
+2026-02-27 01:45:56,086 INFO Unit 'unit_number_19': 45 JSON-файлов
+2026-02-27 01:45:56,093 INFO Unit 'unit_number_2': 26 JSON-файлов
+2026-02-27 01:45:56,098 INFO Unit 'unit_number_20': 45 JSON-файлов
+2026-02-27 01:45:56,105 INFO Unit 'unit_number_21': 42 JSON-файлов
+2026-02-27 01:45:56,112 INFO Unit 'unit_number_24': 36 JSON-файлов
+2026-02-27 01:45:56,118 INFO Unit 'unit_number_25': 36 JSON-файлов
+2026-02-27 01:45:56,124 INFO Unit 'unit_number_26': 51 JSON-файлов
+2026-02-27 01:45:56,132 INFO Unit 'unit_number_28': 63 JSON-файлов
+2026-02-27 01:45:56,143 INFO Unit 'unit_number_29': 42 JSON-файлов
+2026-02-27 01:45:56,150 INFO Unit 'unit_number_3': 40 JSON-файлов
+2026-02-27 01:45:56,156 INFO Unit 'unit_number_30': 3 JSON-файлов
+2026-02-27 01:45:56,157 INFO Unit 'unit_number_4': 29 JSON-файлов
+2026-02-27 01:45:56,162 INFO Unit 'unit_number_42': 42 JSON-файлов
+2026-02-27 01:45:56,169 INFO Unit 'unit_number_43': 42 JSON-файлов
+2026-02-27 01:45:56,176 INFO Unit 'unit_number_47': 29 JSON-файлов
+2026-02-27 01:45:56,181 INFO Unit 'unit_number_5': 34 JSON-файлов
+2026-02-27 01:45:56,187 INFO Unit 'unit_number_50': 41 JSON-файлов
+2026-02-27 01:45:56,194 INFO Unit 'unit_number_51': 35 JSON-файлов
+2026-02-27 01:45:56,200 INFO Unit 'unit_number_52': 45 JSON-файлов
+2026-02-27 01:45:56,207 INFO Unit 'unit_number_53': 22 JSON-файлов
+2026-02-27 01:45:56,211 INFO Unit 'unit_number_55': 35 JSON-файлов
+2026-02-27 01:45:56,217 INFO Unit 'unit_number_57': 18 JSON-файлов
+2026-02-27 01:45:56,220 INFO Unit 'unit_number_58': 41 JSON-файлов
+2026-02-27 01:45:56,227 INFO Unit 'unit_number_6': 37 JSON-файлов
+2026-02-27 01:45:56,233 INFO Unit 'unit_number_64': 45 JSON-файлов
+2026-02-27 01:45:56,240 INFO Unit 'unit_number_65': 42 JSON-файлов
+2026-02-27 01:45:56,247 INFO Unit 'unit_number_66': 37 JSON-файлов
+2026-02-27 01:45:56,253 INFO Unit 'unit_number_67': 45 JSON-файлов
+2026-02-27 01:45:56,261 INFO Unit 'unit_number_68': 45 JSON-файлов
+2026-02-27 01:45:56,269 INFO Unit 'unit_number_69': 40 JSON-файлов
+2026-02-27 01:45:56,276 INFO Unit 'unit_number_7': 42 JSON-файлов
+2026-02-27 01:45:56,282 INFO Unit 'unit_number_71': 45 JSON-файлов
+2026-02-27 01:45:56,290 INFO Unit 'unit_number_73': 45 JSON-файлов
+2026-02-27 01:45:56,297 INFO Unit 'unit_number_74': 36 JSON-файлов
+2026-02-27 01:45:56,303 INFO Unit 'unit_number_76': 37 JSON-файлов
+2026-02-27 01:45:56,310 INFO Unit 'unit_number_77': 47 JSON-файлов
+2026-02-27 01:45:56,318 INFO Unit 'unit_number_78': 49 JSON-файлов
+2026-02-27 01:45:56,326 INFO Unit 'unit_number_80': 36 JSON-файлов
+2026-02-27 01:45:56,332 INFO Unit 'unit_number_81': 42 JSON-файлов
+2026-02-27 01:45:56,339 INFO Unit 'unit_number_82': 19 JSON-файлов
+2026-02-27 01:45:56,343 INFO Unit 'unit_number_87': 49 JSON-файлов
+2026-02-27 01:45:56,351 INFO Unit 'unit_number_88': 37 JSON-файлов
+2026-02-27 01:45:56,357 INFO Unit 'unit_number_89': 49 JSON-файлов
+2026-02-27 01:45:56,365 INFO Unit 'unit_number_9': 50 JSON-файлов
+2026-02-27 01:45:56,373 INFO Unit 'unit_number_91': 31 JSON-файлов
+2026-02-27 01:45:56,379 INFO Unit 'unit_number_92': 37 JSON-файлов
+2026-02-27 01:45:56,386 INFO Unit 'unit_number_93': 48 JSON-файлов
+2026-02-27 01:45:56,394 INFO Unit 'unit_number_94': 45 JSON-файлов
+2026-02-27 01:45:56,401 INFO Unit 'unit_number_96': 41 JSON-файлов
+2026-02-27 01:45:56,419 INFO Создан DataFrame: (2207, 26) (строк, столбцов). Пример столбцов: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3']...
+2026-02-27 01:45:56,421 INFO       unit number  time in cycles  operational setting 1  operational setting 2  ...  sensor measurement 18  sensor measurement 19  sensor measurement 20  sensor measurement 21
+0             1.0            46.0                 0.0003                 0.0001  ...                 2388.0                  100.0                  38.93                23.3745
+1             1.0            47.0                 0.0000                 0.0005  ...                 2388.0                  100.0                  38.99                23.4873
+2             1.0            48.0                 0.0019                 0.0001  ...                 2388.0                  100.0                  38.94                23.3650
+3             1.0            49.0                -0.0014                 0.0005  ...                 2388.0                  100.0                  39.06                23.4498
+4            10.0            14.0                 0.0013                 0.0005  ...                 2388.0                  100.0                  39.12                23.3564
+...           ...             ...                    ...                    ...  ...                    ...                    ...                    ...                    ...
+2202         96.0            46.0                 0.0014                -0.0003  ...                 2388.0                  100.0                  38.76                23.3517
+2203         96.0            47.0                 0.0029                -0.0002  ...                 2388.0                  100.0                  38.84                23.3810
+2204         96.0            48.0                -0.0024                 0.0003  ...                 2388.0                  100.0                  38.96                23.2573
+2205         96.0            49.0                -0.0004                 0.0003  ...                 2388.0                  100.0                  39.04                23.5215
+2206         96.0            50.0                -0.0011                -0.0005  ...                 2388.0                  100.0                  38.84                23.3313
+
+[2207 rows x 26 columns]
+2026-02-27 01:45:56,451 INFO  --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- 
+2026-02-27 01:45:56,452 INFO Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
+2026-02-27 01:45:56,459 INFO Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
+2026-02-27 01:45:56,462 INFO final_scaing_detector_df_train
+[[-1.47535311 -1.21325654 -1.04156775 ...  0.34624855  1.12142143
+   1.11798514]
+ [-1.70650993 -0.99217772 -1.0416646  ...  0.34624855  1.11372319
+   1.11878345]
+ [-1.47535311 -1.23782086 -1.04163433 ...  0.34624855  1.0880624
+   1.09844083]
+ ...
+ [-1.50978072 -1.04130635 -1.0415738  ...  0.34624855  1.10174815
+   1.11921111]
+ [-1.48518957 -1.33607811 -1.04161617 ...  0.34624855  1.10602495
+   1.1041858 ]
+ [-1.54420833 -1.27466733 -1.04161012 ...  0.34624855  1.11885535
+   1.11204059]]
+2026-02-27 01:45:56,462 INFO final_scaing_detector_df_test
+[[-1.57863594 -1.12728145 -1.04168881 ...  0.34624855  1.11115711
+   1.10465623]
+ [-1.56879948 -1.07815282 -1.04169486 ...  0.34624855  1.11201247
+   1.08802004]
+ [-1.5392901  -0.84479184 -1.04158591 ...  0.34624855  1.10859103
+   1.09355118]
+ ...
+ [-1.750774   -0.80794537 -1.04128932 ...  0.34624855  1.12313215
+   1.11941069]
+ [-1.38682496 -1.29923164 -1.0415738  ...  0.34624855  1.11971071
+   1.11574702]
+ [-1.74093754 -0.84479184 -1.04158591 ...  0.34624855  1.10859103
+   1.11861238]]
+2026-02-27 01:45:56,462 INFO  --- ПРИМЕНЕНИЕ SCALER К ДАННЫМ ИЗ ДАТЧИКОВ ЗАВЕРШЕНО --- 
+2026-02-27 01:46:37,909 INFO Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
+2026-02-27 01:46:38,632 INFO Объединённый датасет: (14180, 2)
+2026-02-27 01:47:01,770 INFO Оптимальный порог: 0.022738, точность: 0.6013
+2026-02-27 01:48:08,010 INFO  === ЭТАП ДООБУЧЕНИЯ ЗАВЕРШЕН === 

@@ -84,9 +84,9 @@ class LoadDataTrainAdd:
                         # Добавляем служебные поля
                         row = {
                             # **{f'feat_{i}': val for i, val in enumerate(numeric_values)},
-                            'unit_id': unit_id, 
+                            # 'unit_id': unit_id,
                             **dict(zip(keys, numeric_values)), #  'key1': 1, key1': 1
-                            'source_file': json_path.name
+                            # 'source_file': json_path.name
                         }
                         res_rows.append(row)
 
