@@ -5,6 +5,8 @@ import keras
 import logging
 import numpy as np
 import pandas as pd
+import mlflow
+
 from sklearn.metrics import accuracy_score
 from .metrics import compute_mse
 
@@ -13,6 +15,7 @@ def choose_optimal_threshold(
     model: keras.Model,
     normal_control_df: np.ndarray,
     anomaly_control_df: np.ndarray,
+    run_id: str = None,
     threshold_candidates: str = "all_mse_values" ) -> tuple[float, pd.DataFrame]:
     """
     Подбирает оптимальный порог реконструкционной ошибки (MSE) для разделения нормальных и аномальных данных.
@@ -26,8 +29,8 @@ def choose_optimal_threshold(
     Returns:
         tuple: (oптимaльный_пopoг, DataFrame c полными результатами)
     """
+    
     logging.info(f"Загружено нормальных данных: {normal_control_df.shape}, аномальных: {anomaly_control_df.shape}")
-    print(f"Загружено нормальных данных: {normal_control_df.shape}, аномальных: {anomaly_control_df.shape}")
 
     # Предсказание реконструкции
     X_normal_recon = model.predict(normal_control_df, verbose=0)
@@ -50,7 +53,6 @@ def choose_optimal_threshold(
 
     df_all = pd.concat([df_normal, df_anomaly], ignore_index=True)
     logging.info(f"Объединённый датасет: {df_all.shape}")
-    print(f"Объединённый датасет: {df_all.shape}")
 
     # Кандидаты на порог — все уникальные значения MSE (отсортированы)
     candidate_thresholds = np.sort(df_all["mse"].unique())
@@ -72,8 +74,6 @@ def choose_optimal_threshold(
 
     # Сохраняем финальные предсказания
     df_all["pred_class"] = best_predictions
-
     logging.info(f"Оптимальный порог: {best_threshold:.6f}, точность: {best_accuracy:.4f}")
-    print(f"Оптимальный порог: {best_threshold:.6f}, точность: {best_accuracy:.4f}")
 
-    return float(best_threshold), df_all
+    return float(best_threshold), float(best_accuracy),  df_all

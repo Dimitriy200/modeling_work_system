@@ -11,13 +11,15 @@ sys.path.append(str(parent_dir))
 from src.preprocessing.preprocessing_train.load_data import LoadDataTrain
 from src.preprocessing.preprocessing_train.preprocessing import Preprocess
 
-from src.training.trainer import train_and_log_to_mlflow
+from src.training.trainer import train_model
 from src.models import autoencoder
 from src.training.thresholding import choose_optimal_threshold
+from src.training.mlflow_loader import log_run_to_mlflow
 # ======================================================
 
 import os
 import dagshub
+import mlflow
 import logging
 
 
@@ -117,27 +119,42 @@ logging.info(" === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫ
 
 logging.info(" === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === ")
 
+# 3.1 Конфигурация
 dagshub.init(repo_owner='Dimitriy200', repo_name='modeling_work_system', mlflow=True)
 encoder = autoencoder.create_default_autoencoder()
+epohs = 3
 
-model = train_and_log_to_mlflow(
-    train_df = final_train,
-    test_df = final_test,
-    valid_df = final_anomal,
-    model = encoder,
-    experiment_name = "test_all_preprocess_line",
-    registered_model_name = "test_model",
-    epochs = 3)
+# 3.2 Обучение
+trained_model = train_model(
+    model = encoder, 
+    train_df = final_train, 
+    test_df = final_test, 
+    epochs = epohs, 
+    batch_size = 80)
+
+# 3.3 Подбор порога
+threshold, best_accuracy, results_df = choose_optimal_threshold(
+    model = trained_model, 
+    normal_control_df = final_valid, 
+    anomaly_control_df = final_anomal)
+
+# 3.4 Сохранение логов в mlflow
+run_id = log_run_to_mlflow(
+    model = trained_model,
+    X_train = final_train,
+    X_test = final_test,
+    X_val = final_valid,
+    X_anomaly = final_anomal,
+
+    threshold = threshold,
+    threshold_accuracy = best_accuracy,
+    df_threshold_results = results_df,
+
+    experiment_name = "Autoencoder_Anomaly_v2",
+    registered_model_name = "autoencoder_final",
+    epochs = epohs,
+    batch_size = 80)
 
 logging.info(" --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- ")
-
-optimal_line, optimal_df = choose_optimal_threshold(
-    model = model,
-    normal_control_df = final_valid,
-    anomaly_control_df = final_anomal,
-    )
-
-logging.info(optimal_df)
-optimal_df.to_csv(Path(path_test_data).joinpath("optimal_df.csv"))
 
 logging.info(" === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО === ")
