@@ -138,7 +138,9 @@ class Preprocess:
     # ======================================================
     def different_train_test(
               self,
-              dtaframe: pd.DataFrame, 
+              dtaframe: pd.DataFrame,
+              test_size: float | None = None,
+              train_size: float | None = None,
               save_directory: str = None,
               file_name_train: str = "train.csv",
               file_name_test: str = "test.csv"
@@ -147,7 +149,11 @@ class Preprocess:
         Разделяет данные на TRAIN и TEST выборки.
         Если указан параметри save_directory - сохраняет в формат .csv, иначе возвращает в качестве Pandas наборов.
         '''
-        train, test = train_test_split(dtaframe)
+        train, test = train_test_split(
+            dtaframe,
+            test_size=test_size,
+            train_size=train_size
+        )
         train_pd = pd.DataFrame(data=train, columns=dtaframe.columns)
         test_pd = pd.DataFrame(data=test, columns=dtaframe.columns)
         
@@ -161,11 +167,15 @@ class Preprocess:
     # ======================================================
     def pd_to_numpy(
             self,
-            train_df :pd.DataFrame,
-            test_df :pd.DataFrame,
-            valid_df :pd.DataFrame ):
+            dataframe :pd.DataFrame ):
         
-        return train_df.to_numpy(), test_df.to_numpy(), valid_df.to_numpy()
+        if not dataframe.empty:
+            return dataframe.to_numpy()
+        else:
+            logging.info("dataframe пуст")
+            print("dataframe пуст")
+
+            return None
         
     # МЕТОДЫ SCALERR
     # ======================================================

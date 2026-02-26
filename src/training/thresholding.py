@@ -1,22 +1,19 @@
 
 # ПОДБОР РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
 
-
+import keras
 import logging
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
-
-from data.data_loader import load_csv_to_numpy
-from evaluation.metrics import compute_mse
+from .metrics import compute_mse
 
 
 def choose_optimal_threshold(
-    model,
-    normal_control_path: str,
-    anomaly_control_path: str,
-    threshold_candidates: str = "all_mse_values"
-) -> tuple[float, pd.DataFrame]:
+    model: keras.Model,
+    normal_control_df: np.ndarray,
+    anomaly_control_df: np.ndarray,
+    threshold_candidates: str = "all_mse_values" ) -> tuple[float, pd.DataFrame]:
     """
     Подбирает оптимальный порог реконструкционной ошибки (MSE) для разделения нормальных и аномальных данных.
     
@@ -29,19 +26,16 @@ def choose_optimal_threshold(
     Returns:
         tuple: (oптимaльный_пopoг, DataFrame c полными результатами)
     """
-    # Загрузка данных
-    X_normal = load_csv_to_numpy(normal_control_path)
-    X_anomaly = load_csv_to_numpy(anomaly_control_path)
-
-    logging.info(f"Загружено нормальных данных: {X_normal.shape}, аномальных: {X_anomaly.shape}")
+    logging.info(f"Загружено нормальных данных: {normal_control_df.shape}, аномальных: {anomaly_control_df.shape}")
+    print(f"Загружено нормальных данных: {normal_control_df.shape}, аномальных: {anomaly_control_df.shape}")
 
     # Предсказание реконструкции
-    X_normal_recon = model.predict(X_normal, verbose=0)
-    X_anomaly_recon = model.predict(X_anomaly, verbose=0)
+    X_normal_recon = model.predict(normal_control_df, verbose=0)
+    X_anomaly_recon = model.predict(anomaly_control_df, verbose=0)
 
     # Вычисление MSE
-    mse_normal = compute_mse(X_normal, X_normal_recon)
-    mse_anomaly = compute_mse(X_anomaly, X_anomaly_recon)
+    mse_normal = compute_mse(normal_control_df, X_normal_recon)
+    mse_anomaly = compute_mse(anomaly_control_df, X_anomaly_recon)
 
     # Создание DataFrame
     df_normal = pd.DataFrame({
@@ -56,6 +50,7 @@ def choose_optimal_threshold(
 
     df_all = pd.concat([df_normal, df_anomaly], ignore_index=True)
     logging.info(f"Объединённый датасет: {df_all.shape}")
+    print(f"Объединённый датасет: {df_all.shape}")
 
     # Кандидаты на порог — все уникальные значения MSE (отсортированы)
     candidate_thresholds = np.sort(df_all["mse"].unique())
@@ -79,5 +74,6 @@ def choose_optimal_threshold(
     df_all["pred_class"] = best_predictions
 
     logging.info(f"Оптимальный порог: {best_threshold:.6f}, точность: {best_accuracy:.4f}")
+    print(f"Оптимальный порог: {best_threshold:.6f}, точность: {best_accuracy:.4f}")
 
     return float(best_threshold), df_all
