@@ -1,24 +1,35 @@
-# main.py
-from config.mlflow_config import setup_mlflow
-from training.trainer import train_model
+# ======================================================
+# Главный модуль
+# ======================================================
+
+from .training.trainer import train_model, compare_weights
+from .config import (
+    setup_mlflow, 
+    PATH_TRAIN_RAW,
+    PATH_TRAIN_FINAL,
+    PATH_TRAIN_PROCESSED,
+    PATH_TRAIN_FINAL,
+    PATH_TRAIN_ADD_RAW,
+    PATH_TRAIN_ADD_FINAL,
+    
+    PATH_LOG,
+    PATH_SKALERS,
+    
+    MLFLOW_TRACKING_URI,
+    MLFLOW_REPO_OWNER,
+    MLFLOW_REPO_NAME,
+    MLFLOW_USERNAME,
+    )
+
 
 
 if __name__ == "__main__":
     # Настройка MLflow
     setup_mlflow(
-        repo_owner="Dimitriy200",
-        repo_name="diplom_autoencoder",
-        tracking_uri="https://dagshub.com/Dimitriy200/diplom_autoencoder.mlflow",
-        username="your_username"  # лучше из .env
+        repo_owner = MLFLOW_REPO_OWNER,
+        repo_name = MLFLOW_REPO_NAME,
+        tracking_uri = MLFLOW_TRACKING_URI,
+        username = MLFLOW_USERNAME
     )
 
-    # Запуск обучения
-    model = train_model(
-        train_path="data/train.csv",
-        valid_path="data/valid.csv",
-        predict_path="data/predict.csv",
-        experiment_name="Autoencoder_Experiment_v1",
-        registered_model_name="autoencoder_3",
-        epochs=10,
-        batch_size=80
-    )
+
