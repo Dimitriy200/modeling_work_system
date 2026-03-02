@@ -13,11 +13,10 @@ from pathlib import Path
 # parent_dir = Path(__file__).parent.parent.parent
 # sys.path.append(str(parent_dir))
 # import config
+from .load_data import LoadData
 
-# 
-# 
-# 
-class LoadDataTrain:
+
+class LoadDataTrain(LoadData):
 
     # =============================================================================
     def read_csv_generator(self, directory_path: str):
@@ -42,7 +41,6 @@ class LoadDataTrain:
     def data_raw_load(
             self, 
             directory_input_path: str,
-            /,
             directory_out_path: str = None
         ) -> pd.DataFrame | None:
         '''

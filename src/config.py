@@ -52,8 +52,10 @@ paths = [
     PATH_TRAIN_RAW,
     PATH_TRAIN_PROCESSED,
     PATH_TRAIN_FINAL,
+
     PATH_TRAIN_ADD_RAW,
     PATH_TRAIN_ADD_FINAL,
+
     PATH_LOG,
     PATH_SKALERS
 ]
@@ -80,7 +82,9 @@ def setup_mlflow(
         repo_owner = repo_owner, 
         repo_name = repo_name, 
         mlflow = True)
+    
     dagshub.mlflow.set_tracking_uri(tracking_uri)
+    logging.info("КОНФИГУРАЦИЯ DUGSHUB-MLFLOW ЗАВЕРШЕНА")
 
 
 if __name__ == '__main__':

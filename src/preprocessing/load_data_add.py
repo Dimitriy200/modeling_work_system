@@ -13,9 +13,10 @@ import json
 from pathlib import Path
 from sklearn.base import BaseEstimator
 from typing import Dict, List, Any, Tuple, Optional, Type
+from .load_data import LoadData
 
 
-class LoadDataTrainAdd:
+class LoadDataTrainAdd(LoadData):
 
     def data_raw_load(
             self,
