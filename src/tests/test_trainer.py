@@ -14,6 +14,7 @@ final_df_dir = "D:\\yniver\\modeling_work_system\\data\\train\\final\\final.csv"
 
 
 
+
 mofel = train_and_log_to_mlflow(
-    train_path=final_df_dir
+    train_path = final_df_dir
 )
