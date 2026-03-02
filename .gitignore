@@ -1,3 +1,7 @@
 /data
+.log
 .env
+*.db
 /venv
+/skalers
+/mlruns

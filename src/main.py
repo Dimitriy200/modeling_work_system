@@ -1,6 +1,6 @@
 # main.py
 from config.mlflow_config import setup_mlflow
-from training.trainer import train_and_log_to_mlflow
+from training.trainer import train_model
 
 
 if __name__ == "__main__":
@@ -13,7 +13,7 @@ if __name__ == "__main__":
     )
 
     # Запуск обучения
-    model = train_and_log_to_mlflow(
+    model = train_model(
         train_path="data/train.csv",
         valid_path="data/valid.csv",
         predict_path="data/predict.csv",

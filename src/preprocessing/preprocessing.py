@@ -22,7 +22,9 @@ from pathlib import Path
 
 class Preprocess:
     
-    def __init__(self, scaler: Type[BaseEstimator]  = None):
+    def __init__(
+            self, 
+            scaler: Type[BaseEstimator]  = None):
         
         if scaler is None:
             self.scaler = StandardScaler()
@@ -30,34 +32,33 @@ class Preprocess:
             self.scaler = scaler
     
     # ======================================================
-    def different_train_test(
-              self,
-              dtaframe: pd.DataFrame, 
-              save_directory: str = None,
-              file_name_train: str = "train.csv",
-              file_name_test: str = "test.csv"
-            ) ->  tuple[pd.DataFrame, pd.DataFrame] | None:
-        '''
-        Разделяет данные на TRAIN и TEST выборки.
-        Если указан параметри save_directory - сохраняет в формат .csv, иначе возвращает в качестве Pandas наборов.
-        '''
-        train, test = train_test_split(dtaframe)
-        train_pd = pd.DataFrame(data=train, columns=dtaframe.columns)
-        test_pd = pd.DataFrame(data=test, columns=dtaframe.columns)
+    def delete_nan(
+            self,
+            dataframe: pd.DataFrame) -> pd.DataFrame:
         
-        if save_directory is None:
-            return train_pd, test_pd
-        else:
-            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train), index=False)
-            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test), index=False)
-            return None
+        # Удаляем строки с None
+        initial_rows = len(dataframe)
+        dataframe.dropna(inplace=True)
+        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+
+        # Финальная проверка
+        print(f"Размер dataframe: {dataframe.shape}")
+        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
+
+        return dataframe
 
     # ======================================================
-    def different_norm_anom(
+    def marking_norm_anom(
         self,
         dtaframe: pd.DataFrame,
         n_anom: int = 10
     ) -> pd.DataFrame:
+        
+        '''
+        Добавляет столбец is_anom со значениями аномальных и нормальных циклов = True и False соответственно.
+        По умолчанию - последние 10 циклов каждого двигатея считаются аномальными.
+        Разделение данных предлагается вынести за пределы функции в соображениях сохранения безопасности метода.
+        '''
          
         required_cols = ['time in cycles']
         unit_col = 'unit number'
@@ -106,23 +107,79 @@ class Preprocess:
         return dataframe_out
 
     # ======================================================
-    def delete_nan(
-            self, 
-            dataframe: pd.DataFrame) -> pd.DataFrame:
-        
-        # Удаляем строки с None
-        initial_rows = len(dataframe)
-        dataframe.dropna(inplace=True)
-        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+    def different_norm_anom(
+            self,
+            dataframe: pd.DataFrame
+        ):
 
-        # Финальная проверка
-        print(f"Размер dataframe: {dataframe.shape}")
-        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
+        '''
+        Датасет должен содержать столбец "is_anom" 
+        Метод разделяет единый набор данных на поднаборы с нормальными и аномальными данными.
+        Столбец "is_anom" удаляется.
+        '''
 
-        return dataframe
+        # Проверяем, есть ли в наборе столбец is_anom
+
+        if dataframe.columns.isin(['is_anom']).any():
+            normal_data = dataframe[dataframe['is_anom'] == False].copy()
+            anomal_data = dataframe[dataframe['is_anom'] == True].copy()
+
+            # 4. Удаляем целевую колонку
+            normal_data = normal_data.drop(columns = ['is_anom'])
+            anomal_data = anomal_data.drop(columns = ['is_anom'])
+
+            return normal_data, anomal_data
+        else:
+            logging.info("Отсутствует столбец is_anom")
+            print("Отсутствует столбец is_anom")
+            
+            return 0
 
     # ======================================================
-    def fit_scaler_on_normal(
+    def different_train_test(
+              self,
+              dtaframe: pd.DataFrame,
+              test_size: float | None = None,
+              train_size: float | None = None,
+              save_directory: str = None,
+              file_name_train: str = "train.csv",
+              file_name_test: str = "test.csv"
+            ) ->  tuple[pd.DataFrame, pd.DataFrame] | None:
+        '''
+        Разделяет данные на TRAIN и TEST выборки.
+        Если указан параметри save_directory - сохраняет в формат .csv, иначе возвращает в качестве Pandas наборов.
+        '''
+        train, test = train_test_split(
+            dtaframe,
+            test_size=test_size,
+            train_size=train_size
+        )
+        train_pd = pd.DataFrame(data=train, columns=dtaframe.columns)
+        test_pd = pd.DataFrame(data=test, columns=dtaframe.columns)
+        
+        if save_directory is None:
+            return train_pd, test_pd
+        else:
+            train_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_train), index=False)
+            test_pd.to_csv(path_or_buf = os.path.join(save_directory, file_name_test), index=False)
+            return None
+
+    # ======================================================
+    def pd_to_numpy(
+            self,
+            dataframe :pd.DataFrame ):
+        
+        if not dataframe.empty:
+            return dataframe.to_numpy()
+        else:
+            logging.info("dataframe пуст")
+            print("dataframe пуст")
+
+            return None
+        
+    # МЕТОДЫ SCALERR
+    # ======================================================
+    def fit_scaler(
             self,
             dataframe: pd.DataFrame,
             feature_columns: List[str],
@@ -134,36 +191,37 @@ class Preprocess:
         Ha других наборах обучение исклчено.
         dataframe обязан содержать столбец is_anom.
         '''
-        # Проверка наличия 'is_anom'
-        if 'is_anom' not in dataframe.columns:
-            raise ValueError("Столбец 'is_anom' отсутствует. Сначала вызовите different_norm_anom().")
+        # # Проверка наличия 'is_anom'
+        # if 'is_anom' not in dataframe.columns:
+        #     raise ValueError("Столбец 'is_anom' отсутствует. Сначала вызовите different_norm_anom().")
         
-        missing_cols = [col for col in feature_columns if col not in dataframe.columns]
-        if missing_cols:
-            raise ValueError(f"Отсутствующие столбцы: {missing_cols}")
+        # missing_cols = [col for col in feature_columns if col not in dataframe.columns]
+        # if missing_cols:
+        #     raise ValueError(f"Отсутствующие столбцы: {missing_cols}")
         
-        non_numeric = [col for col in feature_columns if not pd.api.types.is_numeric_dtype(dataframe[col])]
-        if non_numeric:
-            raise ValueError(f"Нечисловые столбцы: {non_numeric}. Scaler требует числовые признаки.")
+        # non_numeric = [col for col in feature_columns if not pd.api.types.is_numeric_dtype(dataframe[col])]
+        # if non_numeric:
+        #     raise ValueError(f"Нечисловые столбцы: {non_numeric}. Scaler требует числовые признаки.")
         
-        df_normal = dataframe[dataframe['is_anom'] == False]
-        n_norm, n_total = len(df_normal), len(dataframe)
-        if n_norm == 0:
-            raise ValueError("Нет нормальных данных (is_anom == False). Проверьте разметку.")
+        # df_normal = dataframe[dataframe['is_anom'] == False]
+        # n_norm, n_total = len(df_normal), len(dataframe)
+        # if n_norm == 0:
+        #     raise ValueError("Нет нормальных данных (is_anom == False). Проверьте разметку.")
         
-        logging.info(f"Обучение scaler на {n_norm} нормальных записях ({n_norm / n_total:.1%} от общего)")
+        # logging.info(f"Обучение scaler на {n_norm} нормальных записях ({n_norm / n_total:.1%} от общего)")
         scaler_kwargs = scaler_kwargs or {}
 
         try:
             scaler = scaler_class(**scaler_kwargs)
-            scaler.fit(df_normal[feature_columns])
+            scaler.fit(dataframe[feature_columns])          # scaler.fit(df_normal[feature_columns])
         except Exception as e:
             raise RuntimeError(f"Ошибка при обучении scaler'a {scaler_class.__name__}: {e}") from e
 
-        logging.info(f"✅ Scaler {scaler_class.__name__} обучен на норме. Признаки: {feature_columns}")
+        logging.info(f"Scaler {scaler_class.__name__} обучен на норме. Признаки: {feature_columns}")
 
         return scaler
     
+
     # ======================================================
     def save_scaler(
             self, 
@@ -174,9 +232,10 @@ class Preprocess:
         Сохраняет scaler в указанную дирректорию.
         Метод не знает o существовании указанной директории. 
         Убедитесь, что перед запуском был запущен config.py из которого можно получить путь по директории scaler.
+        Разрешение сохраняемого файла должно быть .pkl
         '''
         with open(save_scaler_directory, 'wb') as handle:
-                    save_pik_pipeline = pickle.dumps(scaler)
+                    pickle.dump(scaler, handle)
     
     # ======================================================
     def load_scaler(self,
@@ -191,7 +250,7 @@ class Preprocess:
             )
 
         try:
-            with open(self.scaler_path, 'rb') as file_scaller:
+            with open(scaler_path, 'rb') as file_scaller:
                 scaler = pickle.load(file_scaller)
                 logging.info(f"Scaler успешно загружен из: {scaler_path}")
         
@@ -229,17 +288,15 @@ class Preprocess:
             raise ValueError("Переданный scaler не имеет метода .transform()")
         
         # Столбцы, которые НЕ должны нормализоваться (служебные / категориальные / метки)
-        exclude_cols = {
-            'unit number', 'source_file', 
-            'is_anom', 'time in cycles',
-            'index', 'Unnamed: 0'
-        }
+        # exclude_cols = {
+        #     'unit number'
+        # }
 
             # Определяем признаки для нормализации
         if feature_columns is None:
             # Берём все числовые столбцы, кроме исключённых
             numeric_cols = dataframe.select_dtypes(include=[np.number]).columns
-            feature_columns = [col for col in numeric_cols if col not in exclude_cols]
+            # feature_columns = [col for col in numeric_cols if col not in exclude_cols]
             logging.debug(f"Автоматически выбраны числовые признаки для нормализации: {feature_columns}")
         else:
             # Проверяем наличие
