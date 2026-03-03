@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
-from src.preprocessing.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.preprocessing.preprocessing import Preprocess
-from src.preprocessing.preprocessing.load_data_add import LoadDataTrainAdd
+from src.preprocessing.load_data_first import LoadDataTrain
+from src.preprocessing.preprocessing import Preprocess
+from src.preprocessing.load_data_add import LoadDataTrainAdd
 
 from src.training.trainer import train_model, compare_weights
 from src.models import autoencoder
