@@ -8,14 +8,22 @@ import sys
 from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
-from src.preprocessing.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.preprocessing.preprocessing import Preprocess
-from src.preprocessing.preprocessing.load_data_add import LoadDataTrainAdd
+from src.preprocessing.load_data_first import LoadDataTrain
+from src.preprocessing.load_data_add import LoadDataTrainAdd
+from src.preprocessing.preprocessing import Preprocess
+from src.preprocessing.scaler import Scaler
+from src.config import (
+    PATH_LOG,
+    PATH_SKALERS,
+
+    PATH_TRAIN_RAW,
+    PATH_TRAIN_ADD_RAW
+)
 
 from src.training.trainer import train_model, compare_weights
 from src.models import autoencoder
 from src.training.thresholding import choose_optimal_threshold
-from src.training.mlflow_loader import log_run_to_mlflow, load_model_from_mlflow
+from src.training.experiment import log_run_to_mlflow, load_model_from_mlflow
 # ======================================================
 
 import os
@@ -24,16 +32,9 @@ import mlflow
 import logging
 
 
-path_raw_data = Path(parent_dir).joinpath("data").joinpath("train").joinpath("raw")
-path_raw_data_detectors = Path(parent_dir).joinpath("data").joinpath("train_add").joinpath("raw").joinpath("2024-07-02_2024-07-03_2024-07-04")
-
-path_scaler = Path(parent_dir).joinpath("skalers").joinpath("test_sca;er.pkl")
-path_test_data = Path(parent_dir).joinpath("data").joinpath("test_data")
-path_logs = Path(parent_dir).joinpath("logs")
-
 logging.basicConfig(
     level = logging.INFO,
-    filename = Path(path_logs).joinpath('tests_logs.log'),
+    filename = Path(PATH_LOG).joinpath('tests_logs.log'),
     filemode = "w",
     format = "%(asctime)s %(levelname)s %(message)s"
 )
@@ -45,7 +46,7 @@ logging.basicConfig(
 logging.info(" === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === ")
 
 loader = LoadDataTrain()
-raw_df = loader.data_raw_load(path_raw_data)
+raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
 
 # logging.info(raw_df)
 logging.info(" --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- ")
@@ -74,21 +75,26 @@ norm_df, anom_df = preprocessor.different_norm_anom(is_anom_df)
 # logging.info(anom_df)
 logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
 
+
+# ======================================================
 # 2.4 Обучение и сериализация Scaler
+# ======================================================
+
+scaler_manager = Scaler()
 cols = norm_df.columns
-scaler = preprocessor.fit_scaler(norm_df, cols)
-preprocessor.save_scaler(path_scaler, scaler)
+standart_scaler = scaler_manager.fit_scaler(norm_df, cols)
+scaler_manager.save_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"), standart_scaler)
 logging.info(" --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.5 Чтение Scaler из файла
-loading_scaler = preprocessor.load_scaler(path_scaler)
+loading_scaler = scaler_manager.load_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"))
 # logging.info(loading_scaler)
 logging.info(" --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.6 Применение scaler к NORM и ANOM
 cols = norm_df.columns.tolist()
-scaing_norm = preprocessor.use_scaler(loading_scaler, norm_df, cols)
-scaing_anom = preprocessor.use_scaler(loading_scaler, anom_df, cols)
+scaing_norm = scaler_manager.use_scaler(loading_scaler, norm_df, cols)
+scaing_anom = scaler_manager.use_scaler(loading_scaler, anom_df, cols)
 
 # logging.info(" --------- Scaling NORM --------- ")
 # logging.info(scaing_norm)
@@ -188,12 +194,12 @@ logging.info(f"РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ З
 
 # 4.2 Загрузить данные, пришедшие с датчиков
 loader_add = LoadDataTrainAdd()
-detector_df = loader_add.data_raw_load(path_raw_data_detectors)
+detector_df = loader_add.data_raw_load(Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"))
 logging.info(detector_df)
 logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- ")
 
 # 4.3 Предобработать данные с использованием предобученного Scaller
-scaing_detector_df = preprocessor.use_scaler(loading_scaler, detector_df, cols)
+scaing_detector_df = scaler_manager.use_scaler(loading_scaler, detector_df, cols)
 
 scaing_detector_df_train, scaing_detector_df_test =  preprocessor.different_train_test(scaing_detector_df)
 
