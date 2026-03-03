@@ -32,13 +32,6 @@ import mlflow
 import logging
 
 
-# path_raw_data = Path(parent_dir).joinpath("data").joinpath("train").joinpath("raw")
-# path_raw_data_detectors = Path(parent_dir).joinpath("data").joinpath("train_add").joinpath("raw").joinpath("2024-07-02_2024-07-03_2024-07-04")
-
-# path_scaler = Path(parent_dir).joinpath("skalers").joinpath("test_sca;er.pkl")
-# path_test_data = Path(parent_dir).joinpath("data").joinpath("test_data")
-# path_logs = Path(parent_dir).joinpath("logs")
-
 logging.basicConfig(
     level = logging.INFO,
     filename = Path(PATH_LOG).joinpath('tests_logs.log'),
@@ -82,15 +75,19 @@ norm_df, anom_df = preprocessor.different_norm_anom(is_anom_df)
 # logging.info(anom_df)
 logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
 
+
+# ======================================================
 # 2.4 Обучение и сериализация Scaler
+# ======================================================
+
 scaler_manager = Scaler()
 cols = norm_df.columns
 standart_scaler = scaler_manager.fit_scaler(norm_df, cols)
-scaler_manager.save_scaler(PATH_SKALERS, standart_scaler)
+scaler_manager.save_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"), standart_scaler)
 logging.info(" --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.5 Чтение Scaler из файла
-loading_scaler = scaler_manager.load_scaler(PATH_SKALERS)
+loading_scaler = scaler_manager.load_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"))
 # logging.info(loading_scaler)
 logging.info(" --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
@@ -202,7 +199,7 @@ logging.info(detector_df)
 logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- ")
 
 # 4.3 Предобработать данные с использованием предобученного Scaller
-scaing_detector_df = preprocessor.use_scaler(loading_scaler, detector_df, cols)
+scaing_detector_df = scaler_manager.use_scaler(loading_scaler, detector_df, cols)
 
 scaing_detector_df_train, scaing_detector_df_test =  preprocessor.different_train_test(scaing_detector_df)
 
