@@ -1,0 +1,24 @@
+2026-03-03 15:59:16,421 INFO  === ÍÀ×ÀËÎ İÒÀÏÀ ÏĞÅÄÎÁĞÀÁÎÒÊÈ ÁÎËÜØÈÕ ÄÀÍÍÛÕ === 
+2026-03-03 15:59:16,421 INFO CSV files found: 4
+2026-03-03 15:59:16,465 INFO Writed csv file train_FD001.csv: (20631, 26)
+2026-03-03 15:59:16,551 INFO Writed csv file train_FD002.csv: (53759, 26)
+2026-03-03 15:59:16,600 INFO Writed csv file train_FD003.csv: (24720, 26)
+2026-03-03 15:59:16,702 INFO Writed csv file train_FD004.csv: (61249, 26)
+2026-03-03 15:59:16,709 INFO Combined DF paams: (160359, 26)
+2026-03-03 15:59:16,710 INFO  --- ×ÒÅÍÈÅ ÄÀÍÍÛÕ ÇÀÂÅĞØÅÍÎ --- 
+2026-03-03 15:59:16,737 INFO  --- ÓÄÀËÅÍÈÅ ÏĞÎÏÓÊÎÂ ÇÀÂÅĞØÅÍÎ --- 
+2026-03-03 15:59:16,777 INFO different_norm_anom: îáğàáîòàíî 709 şíèòîâ, âñåãî 160359 çàïèñåé, àíîìàëèé = 7090 (4.4%)
+2026-03-03 15:59:16,777 INFO  --- ÌÀĞÊÈĞÎÂÊÀ ÍÎĞÌÀËÜÍÛÕ È ÀÍÎÌÀËÜÍÛÕ ÄÀÍÍÛÕ ÇÀÂÅĞØÅÍÀ --- 
+2026-03-03 15:59:16,802 INFO  --- ĞÀÇÄÅËÅÍÈÅ ÍÀ NORM È ANOM ÇÀÂÅĞØÅÍÎ --- 
+2026-03-03 15:59:16,829 INFO Scaler StandardScaler îáó÷åí íà íîğìå. Ïğèçíàêè: Index(['unit number', 'time in cycles', 'operational setting 1',
+       'operational setting 2', 'operational setting 3',
+       'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3',
+       'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6',
+       'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9',
+       'sensor measurement 10', 'sensor measurement 11',
+       'sensor measurement 12', 'sensor measurement 13',
+       'sensor measurement 14', 'sensor measurement 15',
+       'sensor measurement 16', 'sensor measurement 17',
+       'sensor measurement 18', 'sensor measurement 19',
+       'sensor measurement 20', 'sensor measurement 21'],
+      dtype='object')

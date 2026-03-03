@@ -45,9 +45,6 @@ MLFLOW_REPO_OWNER = os.getenv("MLFLOW_REPO_OWNER")
 MLFLOW_REPO_NAME = os.getenv("MLFLOW_REPO_NAME")
 MLFLOW_USERNAME = os.getenv("MLFLOW_USERNAME")
 
-
-base_logs_path = Path(PATH_LOG)
-
 paths = [
     PATH_TRAIN_RAW,
     PATH_TRAIN_PROCESSED,
@@ -60,11 +57,9 @@ paths = [
     PATH_SKALERS
 ]
 
-[os.mkdir(path) for path in paths if not os.path.isdir(path)]
-
 logging.basicConfig(
     level = logging.INFO,
-    filename =  base_logs_path.joinpath('logs.log'),
+    filename =  Path(PATH_LOG).joinpath('logs.log'),
     filemode = "w",
     format = "%(asctime)s %(levelname)s %(message)s"
 )
@@ -86,7 +81,13 @@ def setup_mlflow(
     dagshub.mlflow.set_tracking_uri(tracking_uri)
     logging.info("КОНФИГУРАЦИЯ DUGSHUB-MLFLOW ЗАВЕРШЕНА")
 
+    return 0
+
+
+[os.mkdir(path) for path in paths if not os.path.isdir(path)]
+
 
 if __name__ == '__main__':
     # Проверка существования дирректорий. Создаем если нет
+    
     logging.info("CONFIG COMPLETE")
