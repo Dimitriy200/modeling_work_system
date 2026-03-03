@@ -43,7 +43,7 @@ class Preprocess:
     # ======================================================
     def marking_norm_anom(
         self,
-        dtaframe: pd.DataFrame,
+        dataframe: pd.DataFrame,
         n_anom: int = 10
     ) -> pd.DataFrame:
         
@@ -59,12 +59,12 @@ class Preprocess:
         required_cols.append(unit_col)
 
         # Проверка наличия обязательных столбцов
-        missing = [col for col in required_cols if col not in dtaframe.columns]
+        missing = [col for col in required_cols if col not in dataframe.columns]
         if missing:
             raise ValueError(f"Отсутствуют обязательные столбцы: {missing}")
 
         # Работаем с копией, чтобы не мутировать исходный dataframe
-        dataframe_out = dtaframe.copy()
+        dataframe_out = dataframe.copy()
 
         # Сортируем по юниту и времени — критически важно!
         dataframe_out = dataframe_out.sort_values([unit_col, 'time in cycles']).reset_index(drop=True)

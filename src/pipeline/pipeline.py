@@ -39,7 +39,7 @@ class Pipeline:
             self.data_raw_dir = path_data_dir
 
 # ======================================================
-    def run(self):
+    def run(self, n_anom = 10):
         """
         Запускает процесс предобработки данных
          1. Читает данные из указанной директории. Способ чтения зависит от Loader-а.
@@ -64,25 +64,31 @@ class Pipeline:
         logging.info(" --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- ")
 
         # 3 Раздление Norm и Anom. Удаление столбца
-        is_anom_df = self.processor.marking_norm_anom(no_null_df)
+        is_anom_df = self.processor.marking_norm_anom(
+            dataframe = no_null_df,
+            n_anom = n_anom)
         logging.info(" --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- ")
 
         norm_df, anom_df = self.processor.different_norm_anom(is_anom_df)
+        logging.info(f"NORM: \n{norm_df}\n ANOM:\n{anom_df}")
         logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
 
         # 4 Применение Scaler к NORM и ANOM
         cols = norm_df.columns.tolist()
         scaing_norm = self.scaler_manager.use_scaler(self.scaler, norm_df, cols)
         scaing_anom = self.scaler_manager.use_scaler(self.scaler, anom_df, cols)
+        logging.info(f"scaing_anom Shape = {scaing_anom.shape[0]}")
+        logging.info(f"scaing_anom:\n{scaing_anom}")
         logging.info(" --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- ")
 
         # 5 Разделение на Train и Test выборки нормального набора
         scaling_norm_train, scaling_process_norm_test = self.processor.different_train_test(scaing_norm)
+        logging.info(f"scaling_process_norm_test:\n{scaling_process_norm_test}")
         logging.info(" --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- ")
 
         # 6 Разделение Train на Normal_Train и Normal_Valid для равного набора данных с Normal_Valid = Anomal_valid
         scaling_norm_test, scaling_norm_valid = self.processor.different_train_test(
-            scaling_process_norm_test, 
+            scaling_process_norm_test,
             test_size = scaing_anom.shape[0]
             )
         logging.info(" --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- ")

@@ -28,6 +28,7 @@ from pathlib import Path
 from src.pipeline.pipeline import Pipeline
 from src.preprocessing.scaler import Scaler
 from src.preprocessing.load_data_first import LoadDataTrain
+from src.preprocessing.load_data_add import LoadDataTrainAdd
 from src.training.experiment import Experiment
 from src.models import autoencoder
 from src.training.trainer import train_model
@@ -37,7 +38,8 @@ from src.training.thresholding import choose_optimal_threshold
 # ======================================================
 # 1 Подготовка Loader
 # ======================================================
-loader = LoadDataTrain()
+# loader = LoadDataTrain()
+loader = LoadDataTrainAdd()
 
 # ======================================================
 # 2 Подготовка Scaler
@@ -49,13 +51,15 @@ scaler = scaler_manager.load_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pk
 # 3 Запуск Pipeline
 # ======================================================
 pipeline = Pipeline(
-    path_data_dir = PATH_TRAIN_RAW,
+    # path_data_dir = PATH_TRAIN_RAW,
+    path_data_dir = Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
     path_scaler = Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
     scaler_manager = scaler_manager,
     loader = loader
         )
 
-final_train, final_test, final_valid, final_anomal = pipeline.run()
+# Если берем данные с датсчиков то n_anom ближе к нулю
+final_train, final_test, final_valid, final_anomal = pipeline.run(n_anom=3)
 
 logging.info(f"Results: final_train:{final_train}\n final_test:{final_test}\n final_valid:{final_valid}\n final_anomal:{final_anomal}\n")
 
@@ -70,14 +74,23 @@ experiment = Experiment(
     mlflow_repo_name = MLFLOW_REPO_NAME,
     mlflow_username = MLFLOW_USERNAME)
 
-encoder = autoencoder.create_default_autoencoder()
-epohs = 3
-batch_size = 80
 MODEL_NAME = "test_model"
 EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
+epohs = 3
+batch_size = 80
+
+# ВАРИАНТ 1 - создаем новую модель
+# encoder = autoencoder.create_default_autoencoder()
+
+# ВАРИАНТ 2 - загркжаем модел из mlflow
+ld_model = experiment.load_model_from_mlflow(
+    registered_model_name = MODEL_NAME
+)
+
 
 trained_model, history = train_model(
-    model = encoder, 
+    # model = encoder,
+    model = ld_model,
     train_df = final_train, 
     test_df = final_test, 
     epochs = epohs, 
