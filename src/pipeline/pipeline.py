@@ -13,6 +13,8 @@ from ..preprocessing.load_data_first import LoadDataTrain
 from ..preprocessing.preprocessing import Preprocess
 from ..preprocessing.load_data_add import LoadDataTrainAdd
 from ..preprocessing.load_data import LoadData
+from ..preprocessing.scaler import Scaler
+
 
 class Pipeline:
     
@@ -20,14 +22,16 @@ class Pipeline:
             self,
 
             path_data_dir: str,
-            scaler: Type[BaseEstimator],
+            path_scaler: str,
+            scaler_manager: Type[Scaler],
             loader: Type[LoadData],
             processor: Preprocess = Preprocess()
         ):
 
-        self.scaler = scaler
+        self.scaler_manager = scaler_manager
         self.loader = loader
         self.processor = processor
+        self.scaler = scaler_manager.load_scaler(path_scaler)
         
         if path_data_dir is None:
             logging.error("data_raw_dir is None!!!")
@@ -36,6 +40,19 @@ class Pipeline:
 
 
     def run(self):
+        """
+        Запускает процесс предобработки данных
+         1. Читает данные из указанной директории. Способ чтения зависит от Loader-а.
+         2. Удаляет пропуски.
+         3. Маркирует и диференцирует данные на нормальные и аномальные
+         4. Применяет к данным указанный Scaler.
+         5. Разделяет датафрейм на TRAIN и TEST.
+         6. Преобразовывает в numpy наборы данных и возвращает в порядке:
+          - TRAIN
+          - TEST
+          - VALID
+          - ANOMAL
+        """
 
         # 1 Удаление пропусков
         logging.info(" === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === ")
@@ -55,8 +72,8 @@ class Pipeline:
 
         # 4 Применение Scaler к NORM и ANOM
         cols = norm_df.columns.tolist()
-        scaing_norm = self.processor.use_scaler(self.scaler, norm_df, cols)
-        scaing_anom = self.processor.use_scaler(self.scaler, anom_df, cols)
+        scaing_norm = self.scaler_manager.use_scaler(self.scaler, norm_df, cols)
+        scaing_anom = self.scaler_manager.use_scaler(self.scaler, anom_df, cols)
         logging.info(" --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- ")
 
         # 5 Разделение на Train и Test выборки нормального набора
