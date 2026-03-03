@@ -6,15 +6,23 @@ import pandas as pd
 import numpy as np
 import logging
 
+import sys
 from pathlib import Path
-from ..src.pipeline.pipeline import Pipeline
-from ..src.preprocessing.scaler import Scaler
-from ..src.preprocessing.load_data_first import LoadData
-from ..src.config import (
+parent_dir = Path(__file__).parent.parent
+sys.path.append(str(parent_dir))
+
+from src.config import (
     PATH_SKALERS,
     PATH_TRAIN_RAW,
-    PATH_LOG
+    PATH_LOG,
+
     )
+from pathlib import Path
+from src.pipeline.pipeline import Pipeline
+from src.preprocessing.scaler import Scaler
+from src.preprocessing.load_data_first import LoadDataTrain
+from src.training.experiment import (log_run_to_mlflow, load_model_from_mlflow)
+
 
 
 logging.basicConfig(
@@ -26,17 +34,29 @@ logging.basicConfig(
 
 
 # ======================================================
-# 1 Подготовка Scaler
+# 1 Подготовка Loader
+# ======================================================
+loader = LoadDataTrain()
+
+# ======================================================
+# 2 Подготовка Scaler
 # ======================================================
 scaler_manager = Scaler()
-loader = LoadData()
-
-raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
-logging.info(f"Загруенные данные:{raw_df}")
-
-scaler = scaler_manager.fit_scaler()
+scaler = scaler_manager.load_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"))
 
 # ======================================================
-# 1 Тестирование Pipeline
+# 3 Запуск Pipeline
 # ======================================================
-pipeline = Pipeline(PATH_TRAIN_RAW, )
+pipeline = Pipeline(
+    path_data_dir = PATH_TRAIN_RAW,
+    path_scaler = Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
+    scaler_manager = scaler_manager,
+    loader = loader
+        )
+
+final_train, final_test, final_valid, final_anomal = pipeline.run()
+
+logging.info(f"Results: final_train:{final_train}\n final_test:{final_test}\n final_valid:{final_valid}\n final_anomal:{final_anomal}\n")
+# ======================================================
+# 4 Проведение эксперимента
+# ======================================================

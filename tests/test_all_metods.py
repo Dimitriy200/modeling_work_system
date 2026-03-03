@@ -23,7 +23,7 @@ from src.config import (
 from src.training.trainer import train_model, compare_weights
 from src.models import autoencoder
 from src.training.thresholding import choose_optimal_threshold
-from src.training.mlflow_loader import log_run_to_mlflow, load_model_from_mlflow
+from src.training.experiment import log_run_to_mlflow, load_model_from_mlflow
 # ======================================================
 
 import os
