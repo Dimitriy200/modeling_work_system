@@ -21,7 +21,8 @@ class Experiment:
     Класс для произведения экспериментов
     Поддерживает методы для проведения эксперимента, что включает в себя:
      1. Обучение модели
-     2. Сохранение 
+     2. Сохранение логов в mlflow
+     3. Выгрузку модели из mlflow
     """
 
     def __init__(
@@ -45,7 +46,8 @@ class Experiment:
 
         return None
 
-    def send_logs_to_mlflow(
+# ======================================================
+    def send_experiment_to_mlflow(
         self,
         model: keras.Model,
         training_history,
@@ -111,7 +113,7 @@ class Experiment:
 
             return run.info.run_id
 
-
+# ======================================================
     def load_model_from_mlflow(
         self,
         registered_model_name: str,

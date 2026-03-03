@@ -38,7 +38,7 @@ class Pipeline:
         else:
             self.data_raw_dir = path_data_dir
 
-
+# ======================================================
     def run(self):
         """
         Запускает процесс предобработки данных

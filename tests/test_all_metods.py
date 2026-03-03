@@ -149,8 +149,7 @@ trained_model, history = train_model(
     train_df = final_train, 
     test_df = final_test, 
     epochs = epohs, 
-    batch_size = batch_size
-    )
+    batch_size = batch_size)
 
 # 3.3 Подбор порога
 threshold, best_accuracy, results_df = choose_optimal_threshold(
@@ -160,7 +159,7 @@ threshold, best_accuracy, results_df = choose_optimal_threshold(
     )
 
 # 3.4 Сохранение логов в mlflow
-run_id = experiment.send_logs_to_mlflow(
+run_id = experiment.send_experiment_to_mlflow(
     model = trained_model,
     training_history = history,
 
@@ -190,7 +189,6 @@ logging.info(" === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШ�
 
 logging.info(" === НАЧАЛО ЭТАПА ДООБУЧЕНИЯ === ")
 batch_size_train_add = 10
-
 
 # 4.1 Выгрузить актуальную модель
 loaded_model = experiment.load_model_from_mlflow(registered_model_name = MODEL_NAME)
@@ -234,7 +232,7 @@ threshold_add_tarin, best_accuracy_add_tarin, results_df_add_tarin = choose_opti
     anomaly_control_df = final_anomal)
 
 # 4.4.3 Сохранение логов в mlflow
-run_id = experiment.send_logs_to_mlflow(
+run_id = experiment.send_experiment_to_mlflow(
     model = trained_add_model,
     training_history = history_add,
 

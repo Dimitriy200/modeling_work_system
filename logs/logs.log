@@ -1,164 +1,90 @@
-2026-03-03 22:50:24,599 INFO [test_all_metods.py:43]  === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === 
-2026-03-03 22:50:24,600 INFO [load_data_first.py:51] CSV files found: 4
-2026-03-03 22:50:24,668 INFO [load_data_first.py:70] Writed csv file train_FD001.csv: (20631, 26)
-2026-03-03 22:50:24,851 INFO [load_data_first.py:70] Writed csv file train_FD002.csv: (53759, 26)
-2026-03-03 22:50:24,939 INFO [load_data_first.py:70] Writed csv file train_FD003.csv: (24720, 26)
-2026-03-03 22:50:25,140 INFO [load_data_first.py:70] Writed csv file train_FD004.csv: (61249, 26)
-2026-03-03 22:50:25,149 INFO [load_data_first.py:75] Combined DF paams: (160359, 26)
-2026-03-03 22:50:25,152 INFO [test_all_metods.py:49]  --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,193 INFO [test_all_metods.py:61]  --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,257 INFO [preprocessing.py:85] different_norm_anom: обработано 709 юнитов, всего 160359 записей, аномалий = 7090 (4.4%)
-2026-03-03 22:50:25,257 INFO [test_all_metods.py:67]  --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- 
-2026-03-03 22:50:25,299 INFO [test_all_metods.py:73]  --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,351 INFO [scaler.py:63] Scaler StandardScaler обучен на норме. Признаки: Index(['unit number', 'time in cycles', 'operational setting 1',
-       'operational setting 2', 'operational setting 3',
-       'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3',
-       'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6',
-       'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9',
-       'sensor measurement 10', 'sensor measurement 11',
-       'sensor measurement 12', 'sensor measurement 13',
-       'sensor measurement 14', 'sensor measurement 15',
-       'sensor measurement 16', 'sensor measurement 17',
-       'sensor measurement 18', 'sensor measurement 19',
-       'sensor measurement 20', 'sensor measurement 21'],
-      dtype='object')
-2026-03-03 22:50:25,351 INFO [test_all_metods.py:84]  --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,353 INFO [scaler.py:96] Scaler успешно загружен из: skalers\test_skaller.pkl
-2026-03-03 22:50:25,353 INFO [scaler.py:110] Тип scaler'a: StandardScaler
-2026-03-03 22:50:25,353 INFO [scaler.py:112] Ожидаемое число признаков: 26
-2026-03-03 22:50:25,353 INFO [test_all_metods.py:89]  --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,354 INFO [scaler.py:158] Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
-2026-03-03 22:50:25,422 INFO [scaler.py:182] Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
-2026-03-03 22:50:25,428 INFO [scaler.py:158] Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
-2026-03-03 22:50:25,438 INFO [scaler.py:182] Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
-2026-03-03 22:50:25,438 INFO [test_all_metods.py:100]  --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,499 INFO [test_all_metods.py:104]  --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,512 INFO [test_all_metods.py:108]  --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,522 INFO [test_all_metods.py:118]  --- ПРЕОБРАЗОВАНИЕ В NUMPY ЗАВЕРШЕНО --- 
-2026-03-03 22:50:25,523 INFO [test_all_metods.py:119]  === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ ЗАВЕРШЕН === 
-2026-03-03 22:50:25,523 INFO [test_all_metods.py:126]  === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === 
-2026-03-03 22:50:26,693 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-2026-03-03 22:50:26,720 INFO [helpers.py:107] Accessing as Dimitriy200
-2026-03-03 22:50:27,924 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/repos/Dimitriy200/modeling_work_system "HTTP/1.1 200 OK"
-2026-03-03 22:50:28,998 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-2026-03-03 22:50:29,004 INFO [helpers.py:107] Initialized MLflow to track repo "Dimitriy200/modeling_work_system"
-2026-03-03 22:50:29,006 INFO [helpers.py:107] Repository Dimitriy200/modeling_work_system initialized!
-2026-03-03 22:50:29,006 INFO [experiment.py:44] КОНФИГУРАЦИЯ DUGSHUB-MLFLOW ЗАВЕРШЕНА
-2026-03-03 22:50:38,864 INFO [thresholding.py:33] Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
-2026-03-03 22:50:39,633 INFO [thresholding.py:55] Объединённый датасет: (14180, 2)
-2026-03-03 22:51:02,508 INFO [thresholding.py:77] Оптимальный порог: 0.004359, точность: 0.6925
-2026-03-03 22:51:34,234 INFO [test_all_metods.py:182]  --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- 
-2026-03-03 22:51:34,234 INFO [test_all_metods.py:184]  === ПРОВЕДЕНИЕ ЭКСПЕРИМЕНТА ЗАВЕРНШЕНО === 
-2026-03-03 22:51:34,235 INFO [test_all_metods.py:191]  === НАЧАЛО ЭТАПА ДООБУЧЕНИЯ === 
-2026-03-03 22:51:46,380 INFO [experiment.py:149] Модель загружена из mlflow: models:/test_model/None
-2026-03-03 22:51:46,380 INFO [test_all_metods.py:197]  --- ВЫГРУЗКА МОДЕЛИ ИЗ MLFLOW ЗАВЕРШЕНА --- 
-2026-03-03 22:51:46,383 INFO [test_all_metods.py:201] РЕЗУЛЬТАТ СРАВНЕНИЯ ИДЕНТИЧНОСТИ ЗАГРУЖЕННОЙ И ВЫГРУЖЕННОЙ МОДЕЛЕЙ --- True
-2026-03-03 22:51:46,386 INFO [load_data_add.py:44] Найдено 57 unit-директорий в D:\yniver\modeling_work_system\data\train_add\raw\2024-07-02_2024-07-03_2024-07-04
-2026-03-03 22:51:46,386 INFO [load_data_add.py:58] Unit 'unit_number_1': 4 JSON-файлов
-2026-03-03 22:51:46,388 INFO [load_data_add.py:58] Unit 'unit_number_10': 47 JSON-файлов
-2026-03-03 22:51:46,396 INFO [load_data_add.py:58] Unit 'unit_number_12': 44 JSON-файлов
-2026-03-03 22:51:46,403 INFO [load_data_add.py:58] Unit 'unit_number_13': 40 JSON-файлов
-2026-03-03 22:51:46,410 INFO [load_data_add.py:58] Unit 'unit_number_14': 34 JSON-файлов
-2026-03-03 22:51:46,415 INFO [load_data_add.py:58] Unit 'unit_number_15': 43 JSON-файлов
-2026-03-03 22:51:46,423 INFO [load_data_add.py:58] Unit 'unit_number_17': 51 JSON-файлов
-2026-03-03 22:51:46,431 INFO [load_data_add.py:58] Unit 'unit_number_18': 26 JSON-файлов
-2026-03-03 22:51:46,435 INFO [load_data_add.py:58] Unit 'unit_number_19': 45 JSON-файлов
-2026-03-03 22:51:46,442 INFO [load_data_add.py:58] Unit 'unit_number_2': 26 JSON-файлов
-2026-03-03 22:51:46,447 INFO [load_data_add.py:58] Unit 'unit_number_20': 45 JSON-файлов
-2026-03-03 22:51:46,455 INFO [load_data_add.py:58] Unit 'unit_number_21': 42 JSON-файлов
-2026-03-03 22:51:46,462 INFO [load_data_add.py:58] Unit 'unit_number_24': 36 JSON-файлов
-2026-03-03 22:51:46,467 INFO [load_data_add.py:58] Unit 'unit_number_25': 36 JSON-файлов
-2026-03-03 22:51:46,474 INFO [load_data_add.py:58] Unit 'unit_number_26': 51 JSON-файлов
-2026-03-03 22:51:46,482 INFO [load_data_add.py:58] Unit 'unit_number_28': 63 JSON-файлов
-2026-03-03 22:51:46,493 INFO [load_data_add.py:58] Unit 'unit_number_29': 42 JSON-файлов
-2026-03-03 22:51:46,500 INFO [load_data_add.py:58] Unit 'unit_number_3': 40 JSON-файлов
-2026-03-03 22:51:46,506 INFO [load_data_add.py:58] Unit 'unit_number_30': 3 JSON-файлов
-2026-03-03 22:51:46,507 INFO [load_data_add.py:58] Unit 'unit_number_4': 29 JSON-файлов
-2026-03-03 22:51:46,512 INFO [load_data_add.py:58] Unit 'unit_number_42': 42 JSON-файлов
-2026-03-03 22:51:46,520 INFO [load_data_add.py:58] Unit 'unit_number_43': 42 JSON-файлов
-2026-03-03 22:51:46,526 INFO [load_data_add.py:58] Unit 'unit_number_47': 29 JSON-файлов
-2026-03-03 22:51:46,531 INFO [load_data_add.py:58] Unit 'unit_number_5': 34 JSON-файлов
-2026-03-03 22:51:46,537 INFO [load_data_add.py:58] Unit 'unit_number_50': 41 JSON-файлов
-2026-03-03 22:51:46,544 INFO [load_data_add.py:58] Unit 'unit_number_51': 35 JSON-файлов
-2026-03-03 22:51:46,550 INFO [load_data_add.py:58] Unit 'unit_number_52': 45 JSON-файлов
-2026-03-03 22:51:46,557 INFO [load_data_add.py:58] Unit 'unit_number_53': 22 JSON-файлов
-2026-03-03 22:51:46,561 INFO [load_data_add.py:58] Unit 'unit_number_55': 35 JSON-файлов
-2026-03-03 22:51:46,567 INFO [load_data_add.py:58] Unit 'unit_number_57': 18 JSON-файлов
-2026-03-03 22:51:46,570 INFO [load_data_add.py:58] Unit 'unit_number_58': 41 JSON-файлов
-2026-03-03 22:51:46,577 INFO [load_data_add.py:58] Unit 'unit_number_6': 37 JSON-файлов
-2026-03-03 22:51:46,583 INFO [load_data_add.py:58] Unit 'unit_number_64': 45 JSON-файлов
-2026-03-03 22:51:46,591 INFO [load_data_add.py:58] Unit 'unit_number_65': 42 JSON-файлов
-2026-03-03 22:51:46,598 INFO [load_data_add.py:58] Unit 'unit_number_66': 37 JSON-файлов
-2026-03-03 22:51:46,604 INFO [load_data_add.py:58] Unit 'unit_number_67': 45 JSON-файлов
-2026-03-03 22:51:46,611 INFO [load_data_add.py:58] Unit 'unit_number_68': 45 JSON-файлов
-2026-03-03 22:51:46,619 INFO [load_data_add.py:58] Unit 'unit_number_69': 40 JSON-файлов
-2026-03-03 22:51:46,625 INFO [load_data_add.py:58] Unit 'unit_number_7': 42 JSON-файлов
-2026-03-03 22:51:46,632 INFO [load_data_add.py:58] Unit 'unit_number_71': 45 JSON-файлов
-2026-03-03 22:51:46,640 INFO [load_data_add.py:58] Unit 'unit_number_73': 45 JSON-файлов
-2026-03-03 22:51:46,647 INFO [load_data_add.py:58] Unit 'unit_number_74': 36 JSON-файлов
-2026-03-03 22:51:46,653 INFO [load_data_add.py:58] Unit 'unit_number_76': 37 JSON-файлов
-2026-03-03 22:51:46,659 INFO [load_data_add.py:58] Unit 'unit_number_77': 47 JSON-файлов
-2026-03-03 22:51:46,667 INFO [load_data_add.py:58] Unit 'unit_number_78': 49 JSON-файлов
-2026-03-03 22:51:46,675 INFO [load_data_add.py:58] Unit 'unit_number_80': 36 JSON-файлов
-2026-03-03 22:51:46,681 INFO [load_data_add.py:58] Unit 'unit_number_81': 42 JSON-файлов
-2026-03-03 22:51:46,688 INFO [load_data_add.py:58] Unit 'unit_number_82': 19 JSON-файлов
-2026-03-03 22:51:46,692 INFO [load_data_add.py:58] Unit 'unit_number_87': 49 JSON-файлов
-2026-03-03 22:51:46,700 INFO [load_data_add.py:58] Unit 'unit_number_88': 37 JSON-файлов
-2026-03-03 22:51:46,707 INFO [load_data_add.py:58] Unit 'unit_number_89': 49 JSON-файлов
-2026-03-03 22:51:46,714 INFO [load_data_add.py:58] Unit 'unit_number_9': 50 JSON-файлов
-2026-03-03 22:51:46,723 INFO [load_data_add.py:58] Unit 'unit_number_91': 31 JSON-файлов
-2026-03-03 22:51:46,728 INFO [load_data_add.py:58] Unit 'unit_number_92': 37 JSON-файлов
-2026-03-03 22:51:46,734 INFO [load_data_add.py:58] Unit 'unit_number_93': 48 JSON-файлов
-2026-03-03 22:51:46,742 INFO [load_data_add.py:58] Unit 'unit_number_94': 45 JSON-файлов
-2026-03-03 22:51:46,749 INFO [load_data_add.py:58] Unit 'unit_number_96': 41 JSON-файлов
-2026-03-03 22:51:46,766 INFO [load_data_add.py:104] Создан DataFrame: (2207, 26) (строк, столбцов). Пример столбцов: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3']...
-2026-03-03 22:51:46,768 INFO [test_all_metods.py:206]       unit number  time in cycles  operational setting 1  operational setting 2  ...  sensor measurement 18  sensor measurement 19  sensor measurement 20  sensor measurement 21
-0             1.0            46.0                 0.0003                 0.0001  ...                 2388.0                  100.0                  38.93                23.3745
-1             1.0            47.0                 0.0000                 0.0005  ...                 2388.0                  100.0                  38.99                23.4873
-2             1.0            48.0                 0.0019                 0.0001  ...                 2388.0                  100.0                  38.94                23.3650
-3             1.0            49.0                -0.0014                 0.0005  ...                 2388.0                  100.0                  39.06                23.4498
-4            10.0            14.0                 0.0013                 0.0005  ...                 2388.0                  100.0                  39.12                23.3564
-...           ...             ...                    ...                    ...  ...                    ...                    ...                    ...                    ...
-2202         96.0            46.0                 0.0014                -0.0003  ...                 2388.0                  100.0                  38.76                23.3517
-2203         96.0            47.0                 0.0029                -0.0002  ...                 2388.0                  100.0                  38.84                23.3810
-2204         96.0            48.0                -0.0024                 0.0003  ...                 2388.0                  100.0                  38.96                23.2573
-2205         96.0            49.0                -0.0004                 0.0003  ...                 2388.0                  100.0                  39.04                23.5215
-2206         96.0            50.0                -0.0011                -0.0005  ...                 2388.0                  100.0                  38.84                23.3313
+2026-03-03 23:05:57,913 INFO [scaler.py:96] Scaler успешно загружен из: skalers\test_skaller.pkl
+2026-03-03 23:05:57,913 INFO [scaler.py:110] Тип scaler'a: StandardScaler
+2026-03-03 23:05:57,913 INFO [scaler.py:112] Ожидаемое число признаков: 26
+2026-03-03 23:05:57,914 INFO [scaler.py:96] Scaler успешно загружен из: skalers\test_skaller.pkl
+2026-03-03 23:05:57,914 INFO [scaler.py:110] Тип scaler'a: StandardScaler
+2026-03-03 23:05:57,914 INFO [scaler.py:112] Ожидаемое число признаков: 26
+2026-03-03 23:05:57,914 INFO [pipeline.py:58]  === НАЧАЛО ЭТАПА ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ === 
+2026-03-03 23:05:57,914 INFO [load_data_first.py:51] CSV files found: 4
+2026-03-03 23:05:57,990 INFO [load_data_first.py:70] Writed csv file train_FD001.csv: (20631, 26)
+2026-03-03 23:05:58,178 INFO [load_data_first.py:70] Writed csv file train_FD002.csv: (53759, 26)
+2026-03-03 23:05:58,266 INFO [load_data_first.py:70] Writed csv file train_FD003.csv: (24720, 26)
+2026-03-03 23:05:58,487 INFO [load_data_first.py:70] Writed csv file train_FD004.csv: (61249, 26)
+2026-03-03 23:05:58,497 INFO [load_data_first.py:75] Combined DF paams: (160359, 26)
+2026-03-03 23:05:58,500 INFO [pipeline.py:60]  --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,542 INFO [pipeline.py:64]  --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,607 INFO [preprocessing.py:85] different_norm_anom: обработано 709 юнитов, всего 160359 записей, аномалий = 7090 (4.4%)
+2026-03-03 23:05:58,607 INFO [pipeline.py:68]  --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- 
+2026-03-03 23:05:58,648 INFO [pipeline.py:71]  --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,649 INFO [scaler.py:158] Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
+2026-03-03 23:05:58,712 INFO [scaler.py:182] Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
+2026-03-03 23:05:58,718 INFO [scaler.py:158] Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
+2026-03-03 23:05:58,727 INFO [scaler.py:182] Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
+2026-03-03 23:05:58,727 INFO [pipeline.py:77]  --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,785 INFO [pipeline.py:81]  --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,800 INFO [pipeline.py:88]  --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,811 INFO [pipeline.py:95]  --- ПРЕОБРАЗОВАНИЕ В NUMPY ЗАВЕРШЕНО --- 
+2026-03-03 23:05:58,811 INFO [pipeline.py:96]  === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫХ ЗАВЕРШЕН === 
+2026-03-03 23:05:58,830 INFO [test_user.py:60] Results: final_train:[[-0.319569   -0.73425243  0.47204222 ... -2.8880987  -1.00585846
+  -0.99760479]
+ [ 1.56411319  0.65363129  0.1691229  ...  0.34624855 -0.13681288
+  -0.11383405]
+ [ 0.1181535   1.02209599 -1.04151933 ...  0.34624855  1.10260351
+   1.07389283]
+ ...
+ [-1.1655046  -0.47632714 -1.04154959 ...  0.34624855  1.11714463
+   1.12449991]
+ [ 1.53952204 -1.40977105  0.47207853 ... -2.8880987  -1.01013526
+  -0.99687776]
+ [ 1.61329549 -0.6851238  -0.43628598 ...  0.34624855  0.23612401
+   0.23898999]]
+ final_test:[[-0.11300333  0.97296736  0.16916527 ...  0.34624855 -0.14622183
+  -0.12885936]
+ [ 1.20508238 -1.04130635  0.47171536 ... -2.8880987  -0.99901558
+  -0.99589413]
+ [ 0.01487066 -0.88163831 -1.04159802 ...  0.34624855  1.12056607
+   1.10965992]
+ ...
+ [ 0.53128484  0.75188854  1.07693661 ...  0.34624855 -0.95453687
+  -0.95322737]
+ [ 1.3378746  -0.47632714  0.16918343 ...  0.34624855 -0.11885032
+  -0.12570889]
+ [ 0.09356234 -1.44661752 -1.04148907 ...  0.34624855  1.10431423
+   1.12271797]]
+ final_valid:[[ 0.30504625  0.94840305 -1.04160407 ...  0.34624855  1.13339647
+   1.14391592]
+ [-1.63765471 -0.57458439 -1.04154354 ...  0.34624855  1.11030175
+   1.11946771]
+ [-0.39826068  1.55022873  1.50060358 ...  0.34624855 -1.32319696
+  -1.31594473]
+ ...
+ [ 0.55095776  0.6781956   0.16892316 ...  0.34624855 -0.13595752
+  -0.12251566]
+ [ 0.36898324 -0.29209478 -1.04128932 ...  0.34624855  1.11543391
+   1.12102156]
+ [-1.81962923 -0.63599517 -1.04147696 ...  0.34624855  1.11372319
+   1.10072171]]
+ final_anomal:[[-1.81962923  0.78873501 -1.04156775 ...  0.34624855  1.07865344
+   1.07779884]
+ [-1.81962923  0.80101717 -1.04154959 ...  0.34624855  1.06753376
+   1.06131946]
+ [-1.81962923  0.81329933 -1.04152538 ...  0.34624855  1.07437664
+   1.06921702]
+ ...
+ [ 1.6624778   1.64848599 -1.04139827 ...  0.34624855  1.18300734
+   1.17713128]
+ [ 1.6624778   1.66076814  1.07719082 ...  0.34624855 -0.91433496
+  -0.92550039]
+ [ 1.6624778   1.6730503   1.50079122 ...  0.34624855 -1.30780048
+  -1.30231646]]
 
-[2207 rows x 26 columns]
-2026-03-03 22:51:46,799 INFO [test_all_metods.py:207]  --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- 
-2026-03-03 22:51:46,800 INFO [scaler.py:158] Применение scaler к 26 столбцам: ['unit number', 'time in cycles', 'operational setting 1', 'operational setting 2', 'operational setting 3', 'sensor measurement 1', 'sensor measurement 2', 'sensor measurement 3', 'sensor measurement 4', 'sensor measurement 5', 'sensor measurement 6', 'sensor measurement 7', 'sensor measurement 8', 'sensor measurement 9', 'sensor measurement 10', 'sensor measurement 11', 'sensor measurement 12', 'sensor measurement 13', 'sensor measurement 14', 'sensor measurement 15', 'sensor measurement 16', 'sensor measurement 17', 'sensor measurement 18', 'sensor measurement 19', 'sensor measurement 20', 'sensor measurement 21']
-2026-03-03 22:51:46,806 INFO [scaler.py:182] Scaler успешно применён. Пример значений для unit number: [-1.8196292256030826, -1.8196292256030826, -1.8196292256030826]
-2026-03-03 22:51:46,808 INFO [test_all_metods.py:216] final_scaing_detector_df_train
-[[-1.5392901  -1.20097439 -1.04165249 ...  0.34624855  1.12056607
-   1.12642441]
- [-1.57863594 -1.11499929 -1.04187645 ...  0.34624855  1.10859103
-   1.10840543]
- [-1.56388125 -1.21325654 -1.04160407 ...  0.34624855  1.11714463
-   1.11507701]
- ...
- [-1.80487453 -1.21325654 -1.04144064 ...  0.34624855  1.10859103
-   1.11233996]
- [-1.46551665 -0.96761341 -1.04163433 ...  0.34624855  1.10174815
-   1.10472751]
- [-1.3769885  -1.23782086 -1.04165854 ...  0.34624855  1.0923392
-   1.09812721]]
-2026-03-03 22:51:46,809 INFO [test_all_metods.py:217] final_scaing_detector_df_test
-[[-1.73601931 -1.2255387  -1.04155565 ...  0.34624855  1.13168575
-   1.10730776]
- [-1.56879948 -1.15184576 -1.04148301 ...  0.34624855  1.10516959
-   1.11788535]
- [-1.80487453 -1.1395636  -1.04138617 ...  0.34624855  1.11201247
-   1.1074218 ]
- ...
- [-1.45076196 -1.20097439 -1.04157986 ...  0.34624855  1.0837856
-   1.10666626]
- [-1.3769885  -1.29923164 -1.04150722 ...  0.34624855  1.10345887
-   1.10381516]
- [-1.45076196 -0.96761341 -1.04180986 ...  0.34624855  1.10260351
-   1.10997354]]
-2026-03-03 22:51:46,809 INFO [test_all_metods.py:219]  --- ПРИМЕНЕНИЕ SCALER К ДАННЫМ ИЗ ДАТЧИКОВ ЗАВЕРШЕНО --- 
-2026-03-03 22:51:48,846 INFO [thresholding.py:33] Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
-2026-03-03 22:51:49,564 INFO [thresholding.py:55] Объединённый датасет: (14180, 2)
-2026-03-03 22:52:12,516 INFO [thresholding.py:77] Оптимальный порог: 0.019066, точность: 0.6307
-2026-03-03 22:52:42,762 INFO [test_all_metods.py:255]  === ЭТАП ДООБУЧЕНИЯ ЗАВЕРШЕН === 
+2026-03-03 23:05:59,894 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2026-03-03 23:05:59,898 INFO [helpers.py:107] Accessing as Dimitriy200
+2026-03-03 23:06:00,984 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/repos/Dimitriy200/modeling_work_system "HTTP/1.1 200 OK"
+2026-03-03 23:06:02,131 INFO [_client.py:1025] HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+2026-03-03 23:06:02,132 INFO [helpers.py:107] Initialized MLflow to track repo "Dimitriy200/modeling_work_system"
+2026-03-03 23:06:02,133 INFO [helpers.py:107] Repository Dimitriy200/modeling_work_system initialized!
+2026-03-03 23:06:02,133 INFO [experiment.py:45] КОНФИГУРАЦИЯ DUGSHUB-MLFLOW ЗАВЕРШЕНА
+2026-03-03 23:06:16,901 INFO [thresholding.py:33] Загружено нормальных данных: (7090, 26), аномальных: (7090, 26)
+2026-03-03 23:06:17,683 INFO [thresholding.py:55] Объединённый датасет: (14180, 2)
+2026-03-03 23:06:41,577 INFO [thresholding.py:77] Оптимальный порог: 0.004762, точность: 0.6894
