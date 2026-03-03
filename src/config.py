@@ -61,7 +61,7 @@ logging.basicConfig(
     level = logging.INFO,
     filename =  Path(PATH_LOG).joinpath('logs.log'),
     filemode = "w",
-    format = "%(asctime)s %(levelname)s %(message)s"
+    format = "%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s"
 )
 main_logger = logging.getLogger(__name__)
 

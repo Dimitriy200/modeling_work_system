@@ -14,23 +14,13 @@ sys.path.append(str(parent_dir))
 from src.config import (
     PATH_SKALERS,
     PATH_TRAIN_RAW,
-    PATH_LOG,
-
+    PATH_LOG
     )
 from pathlib import Path
 from src.pipeline.pipeline import Pipeline
 from src.preprocessing.scaler import Scaler
 from src.preprocessing.load_data_first import LoadDataTrain
 from src.training.experiment import (log_run_to_mlflow, load_model_from_mlflow)
-
-
-
-logging.basicConfig(
-    level = logging.INFO,
-    filename = Path(PATH_LOG).joinpath('tests_ppeline_logs.log'),
-    filemode = "w",
-    format = "%(asctime)s %(levelname)s %(message)s"
-)
 
 
 # ======================================================

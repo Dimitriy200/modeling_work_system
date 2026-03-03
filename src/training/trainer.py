@@ -79,15 +79,16 @@ def train_model(
 ) -> keras.Model:
     
     """Обучает модель автокодировщика на нормальных данных."""
-    model.fit(
-        train_df, train_df,
+    history = model.fit(
+        train_df, 
+        train_df,
         validation_data = (test_df, test_df),
         epochs = epochs,
         batch_size = batch_size,
         shuffle = True,
         verbose = 1 )
 
-    return model
+    return model, history.history
 
 
 def compare_weights(model1, model2, tolerance=1e-5):

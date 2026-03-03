@@ -21,22 +21,20 @@ from src.config import (
     PATH_SKALERS,
 
     PATH_TRAIN_RAW,
-    PATH_TRAIN_ADD_RAW
+    PATH_TRAIN_ADD_RAW,
+
+    MLFLOW_TRACKING_URI,
+    MLFLOW_USERNAME,
+    MLFLOW_REPO_OWNER,
+    MLFLOW_REPO_NAME
+    
 )
 
 from src.training.trainer import train_model, compare_weights
+from src.training.experiment import Experiment
 from src.models import autoencoder
 from src.training.thresholding import choose_optimal_threshold
-from src.training.experiment import log_run_to_mlflow, load_model_from_mlflow
 # ======================================================
-
-
-logging.basicConfig(
-    level = logging.INFO,
-    filename = Path(PATH_LOG).joinpath('tests_logs.log'),
-    filemode = "w",
-    format = "%(asctime)s %(levelname)s %(message)s"
-)
 
 
 # ======================================================
@@ -128,34 +126,44 @@ logging.info(" === ЭТАП ПРЕДОБРАБОТКИ БОЛЬШИХ ДАННЫ
 logging.info(" === НАЧАЛО ЭТАПА ЭКСПЕРИМЕНТОВ === ")
 
 # 3.1 Конфигурация
-dagshub.init(
-    repo_owner = 'Dimitriy200', 
-    repo_name = 'modeling_work_system', 
-    mlflow = True)
+experiment = Experiment(
+    mlflow_tracking_uri = MLFLOW_TRACKING_URI,
+    mlflow_repo_owner = MLFLOW_REPO_OWNER,
+    mlflow_repo_name = MLFLOW_REPO_NAME,
+    mlflow_username = MLFLOW_USERNAME
+)
+# dagshub.init(
+#     repo_owner = 'Dimitriy200', 
+#     repo_name = 'modeling_work_system', 
+#     mlflow = True)
 
 encoder = autoencoder.create_default_autoencoder()
 epohs = 3
 batch_size = 80
-registered_model_name = "test_model"
-experiment_name = "Autoencoder_Anomaly_v2"
+MODEL_NAME = "test_model"
+EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
 
 # 3.2 Обучение
-trained_model = train_model(
+trained_model, history = train_model(
     model = encoder, 
     train_df = final_train, 
     test_df = final_test, 
     epochs = epohs, 
-    batch_size = batch_size)
+    batch_size = batch_size
+    )
 
 # 3.3 Подбор порога
 threshold, best_accuracy, results_df = choose_optimal_threshold(
-    model = trained_model, 
+    model = trained_model,
     normal_control_df = final_valid, 
-    anomaly_control_df = final_anomal)
+    anomaly_control_df = final_anomal
+    )
 
 # 3.4 Сохранение логов в mlflow
-run_id = log_run_to_mlflow(
+run_id = experiment.send_logs_to_mlflow(
     model = trained_model,
+    training_history = history,
+
     X_train = final_train,
     X_test = final_test,
     X_val = final_valid,
@@ -165,10 +173,11 @@ run_id = log_run_to_mlflow(
     threshold_accuracy = best_accuracy,
     df_threshold_results = results_df,
 
-    experiment_name = experiment_name,
-    registered_model_name = registered_model_name,
+    experiment_name = EXPERIMENT_NAME,
+    registered_model_name = MODEL_NAME,
     epochs = epohs,
-    batch_size = batch_size)
+    batch_size = batch_size
+    )
 
 logging.info(" --- ОБУЧЕНИЕ МОДЕЛИ И СОХРАЕНИЕ ЛОГОВ В MLFLOW ЗАВЕРШЕНО --- ")
 
@@ -184,7 +193,7 @@ batch_size_train_add = 10
 
 
 # 4.1 Выгрузить актуальную модель
-loaded_model = load_model_from_mlflow(registered_model_name = registered_model_name)
+loaded_model = experiment.load_model_from_mlflow(registered_model_name = MODEL_NAME)
 logging.info(" --- ВЫГРУЗКА МОДЕЛИ ИЗ MLFLOW ЗАВЕРШЕНА --- ")
 
 # Сравним модели
@@ -211,7 +220,7 @@ logging.info(" --- ПРИМЕНЕНИЕ SCALER К ДАННЫМ ИЗ ДАТЧИК
 
 # 4.4 Дообучить модель и сохранить эксперимент
 # 4.4.1 Обучение
-trained_add_model = train_model(
+trained_add_model, history_add = train_model(
     model = loaded_model, 
     train_df = final_scaing_detector_df_train,
     test_df = final_scaing_detector_df_test,
@@ -225,8 +234,10 @@ threshold_add_tarin, best_accuracy_add_tarin, results_df_add_tarin = choose_opti
     anomaly_control_df = final_anomal)
 
 # 4.4.3 Сохранение логов в mlflow
-run_id = log_run_to_mlflow(
+run_id = experiment.send_logs_to_mlflow(
     model = trained_add_model,
+    training_history = history_add,
+
     X_train = final_scaing_detector_df_train,
     X_test = final_scaing_detector_df_test,
     X_val = final_valid,
@@ -236,8 +247,8 @@ run_id = log_run_to_mlflow(
     threshold_accuracy = best_accuracy_add_tarin,
     df_threshold_results = results_df_add_tarin,
 
-    experiment_name = experiment_name,
-    registered_model_name = registered_model_name,
+    experiment_name = EXPERIMENT_NAME,
+    registered_model_name = MODEL_NAME,
     epochs = epohs,
     batch_size = batch_size)
 
