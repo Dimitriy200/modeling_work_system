@@ -43,6 +43,8 @@ PATH_SKALERS = Path("skalers")
 MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
 MLFLOW_REPO_OWNER = os.getenv("MLFLOW_REPO_OWNER")
 MLFLOW_REPO_NAME = os.getenv("MLFLOW_REPO_NAME")
+MLFLOW_REPO_PASSWORD = os.getenv("MLFLOW_REPO_PASSWORD")
+MLFLOW_REPO_TOKEN = os.getenv("MLFLOW_REPO_TOKEN")
 MLFLOW_USERNAME = os.getenv("MLFLOW_USERNAME")
 
 paths = [
@@ -70,9 +72,15 @@ def setup_mlflow(
         repo_owner: str, 
         repo_name: str, 
         tracking_uri: str, 
-        username: str):
+        username: str,
+        password: str,
+        token: str):
     
     os.environ["MLFLOW_TRACKING_USERNAME"] = username
+    os.environ['MLFLOW_TRACKING_PASSWORD'] = password
+    os.environ['MLFLOW_TRACKING_TOKEN'] = token
+
+    dagshub.auth.add_app_token(token = token)
     dagshub.init(
         repo_owner = repo_owner, 
         repo_name = repo_name, 

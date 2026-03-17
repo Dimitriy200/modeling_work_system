@@ -30,11 +30,16 @@ class Experiment:
             mlflow_tracking_uri: str, 
             mlflow_repo_owner: str, 
             mlflow_repo_name: str, 
-            mlflow_username: str
+            mlflow_username: str,
+            mlflow_pass: str,
+            mlflow_token: str
             ):
     
         os.environ["MLFLOW_TRACKING_USERNAME"] = mlflow_username
+        os.environ['MLFLOW_TRACKING_PASSWORD'] = mlflow_pass
+        os.environ['MLFLOW_TRACKING_TOKEN'] = mlflow_token
 
+        dagshub.auth.add_app_token(token = mlflow_token)
         dagshub.init(
             repo_owner = mlflow_repo_owner, 
             repo_name = mlflow_repo_name, 

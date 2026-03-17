@@ -158,6 +158,140 @@ class Preprocess:
             return None
 
     # ======================================================
+    def split_data_by_engine(
+            self,
+            dataframe: pd.DataFrame,
+
+            unit_col = 'unit_number', 
+            label_col = 'is_anom',
+
+            train_ratio = 0.6, 
+            val_ratio = 0.2, 
+            test_ratio = 0.2, 
+            random_state = 42
+        ):
+        """
+        Разделяет датасет на Train/Val/Test по идентификаторам двигателей (unit_number),
+        а не по строкам. Это предотвращает утечку данных (data leakage).
+        
+        Логика разделения:
+        1. Двигатели случайно распределяются между наборами.
+        2. Train: Только нормальные данные (для обучения Autoencoder).
+        3. Val/Test: Все данные (Норма + Аномалия) для оценки качества детекции.
+        
+        Parameters
+        ----------
+        unit_col : str
+            Название колонки с ID двигателя (по умолчанию 'unit_number').
+        label_col : str
+            Название колонки с метками (по умолчанию 'label').
+        train_ratio : float
+            Доля двигателей для обучения.
+        val_ratio : float
+            Доля двигателей для валидации (подбор порога).
+        test_ratio : float
+            Доля двигателей для финального теста.
+        random_state : int
+            Фиксация случайности для воспроизводимости результатов.
+            
+        Returns
+        -------
+        dict
+            Словарь с датасетами:
+            {
+                'X_train': pd.DataFrame (только норма),
+                'X_val': pd.DataFrame (норма + аномалия),
+                'y_val': pd.Series (метки для валидации),
+                'X_test': pd.DataFrame (норма + аномалия),
+                'y_test': pd.Series (метки для теста),
+                'info': dict (статистика разделения)
+            }
+        """
+        
+        # 1. Проверка суммарной пропорции
+        total_ratio = train_ratio + val_ratio + test_ratio
+        if not abs(total_ratio - 1.0) < 1e-6:
+            raise ValueError(f"Сумма ratio должна быть равна 1.0. Сейчас: {total_ratio}")
+            
+        # 2. Получаем уникальный список двигателей и перемешиваем их
+        unique_units = dataframe[unit_col].unique()
+        
+        # Сначала отделяем Train от остальных (Val + Test)
+        train_units, temp_units = train_test_split(
+            unique_units, 
+            test_size=(val_ratio + test_ratio), 
+            random_state=random_state
+        )
+        
+        # Затем делим оставшиеся на Val и Test пропорционально
+        test_ratio_adjusted = test_ratio / (val_ratio + test_ratio)
+        val_units, test_units = train_test_split(
+            temp_units, 
+            test_size=test_ratio_adjusted, 
+            random_state=random_state
+        )
+        
+        # 3. Формируем итоговые датасеты
+        # TRAIN: Только нормальные данные выбранных двигателей
+        mask_train = (dataframe[unit_col].isin(train_units)) & (dataframe[label_col] == 'Norm')
+        df_train = dataframe.loc[mask_train].copy()
+        
+        # VAL: Все данные выбранных двигателей (для подбора порога)
+        mask_val = dataframe[unit_col].isin(val_units)
+        df_val = dataframe.loc[mask_val].copy()
+        
+        # TEST: Все данные выбранных двигателей (для финальной оценки)
+        mask_test = dataframe[unit_col].isin(test_units)
+        df_test = dataframe.loc[mask_test].copy()
+        
+        # 4. Sanity Checks (Проверка на утечку данных)
+        # Проверка пересечения двигателей
+        assert len(set(train_units) & set(val_units)) == 0, "Утечка: двигатели Train и Val пересекаются!"
+        assert len(set(train_units) & set(test_units)) == 0, "Утечка: двигатели Train и Test пересекаются!"
+        assert len(set(val_units) & set(test_units)) == 0, "Утечка: двигатели Val и Test пересекаются!"
+        
+        # Проверка чистоты обучения (в Train не должно быть аномалий)
+        unique_labels_train = df_train[label_col].unique()
+        assert 'Anom' not in unique_labels_train, "Ошибка: В обучающей выборке обнаружены аномалии!"
+        
+        # 5. Подготовка словаря для возврата
+        # X_... содержат все признаки (включая метку, если нужно, или только фичи - зависит от вашей архитектуры)
+        # y_... содержат только метки для удобства расчета метрик
+        result = {
+            'X_train': df_train.drop(columns=[label_col]),
+            'y_train': df_train[label_col],
+            'X_val': df_val.drop(columns=[label_col]),
+            'y_val': df_val[label_col],
+            'X_test': df_test.drop(columns=[label_col]),
+            'y_test': df_test[label_col],
+            'info': {
+                'n_train_units': len(train_units),
+                'n_val_units': len(val_units),
+                'n_test_units': len(test_units),
+                'n_train_samples': len(df_train),
+                'n_val_samples': len(df_val),
+                'n_test_samples': len(df_test),
+                'train_units': train_units,
+                'val_units': val_units,
+                'test_units': test_units
+            }
+        }
+        
+        # 6. Вывод статистики в консоль
+        print("="*50)
+        print("DATA SPLIT STATISTICS (BY ENGINE ID)")
+        print("="*50)
+        print(f"Train: {len(train_units)} engines, {len(df_train)} samples (Norm only)")
+        print(f"Val:   {len(val_units)} engines, {len(df_val)} samples (Norm + Anom)")
+        print(f"Test:  {len(test_units)} engines, {len(df_test)} samples (Norm + Anom)")
+        print("="*50)
+        
+        # Сохраняем информацию в атрибут класса для доступа из других методов
+        self.split_info = result['info']
+        
+        return result
+
+    # ======================================================
     def pd_to_numpy(
             self,
             dataframe :pd.DataFrame ):

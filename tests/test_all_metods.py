@@ -26,8 +26,9 @@ from src.config import (
     MLFLOW_TRACKING_URI,
     MLFLOW_USERNAME,
     MLFLOW_REPO_OWNER,
-    MLFLOW_REPO_NAME
-    
+    MLFLOW_REPO_NAME,
+    MLFLOW_REPO_PASSWORD,
+    MLFLOW_REPO_TOKEN
 )
 
 from src.training.trainer import train_model, compare_weights
@@ -130,8 +131,11 @@ experiment = Experiment(
     mlflow_tracking_uri = MLFLOW_TRACKING_URI,
     mlflow_repo_owner = MLFLOW_REPO_OWNER,
     mlflow_repo_name = MLFLOW_REPO_NAME,
-    mlflow_username = MLFLOW_USERNAME
+    mlflow_username = MLFLOW_USERNAME,
+    mlflow_pass = MLFLOW_REPO_PASSWORD,
+    mlflow_token = MLFLOW_REPO_TOKEN
 )
+
 # dagshub.init(
 #     repo_owner = 'Dimitriy200', 
 #     repo_name = 'modeling_work_system', 
