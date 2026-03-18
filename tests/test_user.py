@@ -32,7 +32,7 @@ from src.preprocessing.load_data_add import LoadDataTrainAdd
 from src.training.experiment import Experiment
 from src.models import autoencoder
 from src.training.trainer import train_model
-from src.training.thresholding import choose_optimal_threshold
+from src.training.thresholding import choose_optimal_threshold_stadart
 
 
 # ======================================================
@@ -96,7 +96,7 @@ trained_model, history = train_model(
     epochs = epohs, 
     batch_size = batch_size)
 
-threshold, best_accuracy, results_df = choose_optimal_threshold(
+threshold, best_accuracy, results_df = choose_optimal_threshold_stadart(
     model = trained_model,
     normal_control_df = final_valid, 
     anomaly_control_df = final_anomal)

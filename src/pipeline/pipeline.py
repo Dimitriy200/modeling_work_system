@@ -82,12 +82,12 @@ class Pipeline:
         logging.info(" --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- ")
 
         # 5 Разделение на Train и Test выборки нормального набора
-        scaling_norm_train, scaling_process_norm_test = self.processor.different_train_test(scaing_norm)
+        scaling_norm_train, scaling_process_norm_test = self.processor.split_train_test_standart(scaing_norm)
         logging.info(f"scaling_process_norm_test:\n{scaling_process_norm_test}")
         logging.info(" --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- ")
 
         # 6 Разделение Train на Normal_Train и Normal_Valid для равного набора данных с Normal_Valid = Anomal_valid
-        scaling_norm_test, scaling_norm_valid = self.processor.different_train_test(
+        scaling_norm_test, scaling_norm_valid = self.processor.split_train_test_standart(
             scaling_process_norm_test,
             test_size = scaing_anom.shape[0]
             )

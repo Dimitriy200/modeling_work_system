@@ -8,7 +8,7 @@ import logging
 from mlflow.models import infer_signature
 # from models.autoencoder import create_contractive_autoencoder
 from .metrics import compute_rmse
-from .thresholding import choose_optimal_threshold
+from .thresholding import choose_optimal_threshold_stadart
 
 
 def train_model(
