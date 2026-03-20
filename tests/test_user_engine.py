@@ -49,6 +49,9 @@ pipeline = Pipeline(
     loader = loader
     )
 
+# ======================================================
+# 2 Предобработка данных
+# ======================================================
 final_dataframes = pipeline.run_new()
 logging.info(f"Results: final_X_train: {final_dataframes["final_X_train"]}")
 logging.info(f"final_X_test: {final_dataframes["final_X_test"]}")
@@ -57,3 +60,7 @@ logging.info(f"final_X_val: {final_dataframes["final_X_val"]}")
 logging.info(f"Results: final_y_train: {final_dataframes["final_y_train"]}")
 logging.info(f"final_y_test: {final_dataframes["final_y_test"]}")
 logging.info(f"final_y_val: {final_dataframes["final_y_val"]}")
+
+# ======================================================
+# 3 Проведение эксперимента
+# ======================================================
