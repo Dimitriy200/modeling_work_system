@@ -82,7 +82,7 @@ batch_size = 80
 # ВАРИАНТ 1 - создаем новую модель
 # encoder = autoencoder.create_default_autoencoder()
 
-# ВАРИАНТ 2 - загркжаем модел из mlflow
+# ВАРИАНТ 2 - загружаем модел из mlflow
 ld_model = experiment.load_model_from_mlflow(
     registered_model_name = MODEL_NAME
 )
