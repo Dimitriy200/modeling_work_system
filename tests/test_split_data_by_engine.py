@@ -99,68 +99,68 @@ logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
 # 3 Проведение эксперимента
 # ======================================================
 
-# logging.info(" === BEGINNING OF THE EXPERIMENTAL STAGE === ")
+logging.info(" === BEGINNING OF THE EXPERIMENTAL STAGE === ")
 
-# experiment = Experiment(
-#     mlflow_tracking_uri = MLFLOW_TRACKING_URI,
-#     mlflow_repo_owner = MLFLOW_REPO_OWNER,
-#     mlflow_repo_name = MLFLOW_REPO_NAME,
-#     mlflow_username = MLFLOW_USERNAME)
+experiment = Experiment(
+    mlflow_tracking_uri = MLFLOW_TRACKING_URI,
+    mlflow_repo_owner = MLFLOW_REPO_OWNER,
+    mlflow_repo_name = MLFLOW_REPO_NAME,
+    mlflow_username = MLFLOW_USERNAME)
 
-# MODEL_NAME = "test_model"
-# EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
-# epohs = 3
-# batch_size = 80
+MODEL_NAME = "test_model"
+EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
+epohs = 3
+batch_size = 80
 
-# # ВАРИАНТ 2 - загркжаем модел из mlflow
-# ld_model = experiment.load_model_from_mlflow(
-#     registered_model_name = MODEL_NAME
-# )
+# ВАРИАНТ 2 - загркжаем модел из mlflow
+ld_model = experiment.load_model_from_mlflow(
+    registered_model_name = MODEL_NAME
+)
 
-# # 3.1 Конфигурация
-# experiment = Experiment(
-#     mlflow_tracking_uri = MLFLOW_TRACKING_URI,
-#     mlflow_repo_owner = MLFLOW_REPO_OWNER,
-#     mlflow_repo_name = MLFLOW_REPO_NAME,
-#     mlflow_username = MLFLOW_USERNAME,
-#     mlflow_pass = MLFLOW_REPO_PASSWORD,
-#     mlflow_token = MLFLOW_REPO_TOKEN
-# )
+# 3.1 Конфигурация
+experiment = Experiment(
+    mlflow_tracking_uri = MLFLOW_TRACKING_URI,
+    mlflow_repo_owner = MLFLOW_REPO_OWNER,
+    mlflow_repo_name = MLFLOW_REPO_NAME,
+    mlflow_username = MLFLOW_USERNAME,
+    mlflow_pass = MLFLOW_REPO_PASSWORD,
+    mlflow_token = MLFLOW_REPO_TOKEN
+)
 
-# trained_model, history = train_model(
-#     model = ld_model,
-#     train_df = scaling_train, 
-#     test_df = scaling_test, 
-#     epochs = epohs, 
-#     batch_size = batch_size
-# )
+trained_model, history = train_model(
+    model = ld_model,
+    train_df = scaling_train, 
+    test_df = scaling_test, 
+    epochs = epohs, 
+    batch_size = batch_size
+)
 
-# threshold_result = choose_optimal_threshold_un(
-#     model = trained_model,
-#     X_val = split_data['X_val'],      # DataFrame с признаками
-#     y_val = split_data['y_val'],      # Series с метками
-#     feature_names = cols,  # только сенсоры
-#     metric='f1',                    # или 'recall', если важнее не пропускать поломки
-#     target_recall=0.95,             # хотим найти 95% реальных аномалий
-#     plot=True,                      # построить графики для статьи
-#     run_id='exp_001'
-# )
+threshold_result = choose_optimal_threshold_un(
+    model = trained_model,
+    X_val = split_data['X_val'],      # DataFrame с признаками
+    y_val = split_data['y_val'],      # Series с метками
+    feature_names = cols,  # только сенсоры
+    metric='f1',                    # или 'recall', если важнее не пропускать поломки
+    target_recall=0.95,             # хотим найти 95% реальных аномалий
+    plot=True,                      # построить графики для статьи
+    run_id='exp_001'
+)
 
-# run_id = experiment.send_experiment_to_mlflow_new(
-#     model = trained_model,
-#     training_history=history,
-#     split_data = split_data,
-#     threshold_result = threshold_result,
-#     experiment_name = "Turbofan_AnomalyDetection",
-#     registered_model_name = "LSTM_Autoencoder_CMAPSS",
-#     epochs = 50,
-#     batch_size = 256,
-#     feature_names = cols,
-#     additional_params = {
-#         "anomaly_window": 10,
-#         "model_architecture": "LSTM_AE",
-#         "optimizer": "adam",
-#         "loss": "mse"
-#     },
-#     log_predictions=True
-# )
+run_id = experiment.send_experiment_to_mlflow_new(
+    model = trained_model,
+    training_history=history,
+    split_data = split_data,
+    threshold_result = threshold_result,
+    experiment_name = "Turbofan_AnomalyDetection",
+    registered_model_name = "LSTM_Autoencoder_CMAPSS",
+    epochs = 50,
+    batch_size = 256,
+    feature_names = cols,
+    additional_params = {
+        "anomaly_window": 10,
+        "model_architecture": "LSTM_AE",
+        "optimizer": "adam",
+        "loss": "mse"
+    },
+    log_predictions=True
+)
