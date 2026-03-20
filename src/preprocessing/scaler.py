@@ -58,7 +58,7 @@ class Scaler():
             scaler = scaler_class(**scaler_kwargs)
             scaler.fit(dataframe[feature_columns])          # scaler.fit(df_normal[feature_columns])
         except Exception as e:
-            raise RuntimeError(f"Ошибка при обучении scaler'a {scaler_class.__name__}: {e}") from e
+            raise RuntimeError(f"Error while training the scaler'a {scaler_class.__name__}: {e}") from e
 
         logging.info(f"Scaler {scaler_class.__name__} has been trained on the normal data. Features: {feature_columns}")
 
@@ -87,29 +87,29 @@ class Scaler():
         
         if not scaler_path.exists():
             raise FileNotFoundError(
-                f"Scaler не найден по пути: {scaler_path.resolve()}"
+                f"Scaler not found at path: {scaler_path.resolve()}"
             )
 
         try:
             with open(scaler_path, 'rb') as file_scaller:
                 scaler = pickle.load(file_scaller)
-                logging.info(f"Scaler успешно загружен из: {scaler_path}")
+                logging.info(f"Scaler successfully loaded from: {scaler_path}")
         
         except Exception as e:
-            raise RuntimeError(f"Ошибка при загрузке scaler'a: {e}") from e
+            raise RuntimeError(f"Error loading scaler'a: {e}") from e
         
         # Валидация: должен быть совместим со sklearn API
         if not hasattr(scaler, 'transform'):
             raise TypeError(
-                f"Загруженный объект не поддерживает .transform(). Тип: {type(scaler)}"
+                f"The loaded object does not support .transform(). Тип: {type(scaler)}"
             )
         if not hasattr(scaler, 'fit'):  # опционально, но полезно
-            logging.warning("Загруженный scaler не имеет .fit() — дообучение невозможно.")
+            logging.warning("The loaded scaler does not have a .fit() method—retraining is not possible..")
         
         # Логируем тип и параметры (если есть)
         logging.info(f"Тип scaler'a\a: {scaler.__class__.__name__}")
         if hasattr(scaler, 'n_features_in_'):
-            logging.info(f"Ожидаемое число признаков: {scaler.n_features_in_}")
+            logging.info(f"Expected number of features: {scaler.n_features_in_}")
         
         return scaler
 
@@ -126,7 +126,7 @@ class Scaler():
         '''
         
         if not hasattr(scaler, 'transform'):
-            raise ValueError("Переданный scaler не имеет метода .transform()")
+            raise ValueError("The provided scaler does not have a .transform() method.")
         
         # Столбцы, которые НЕ должны нормализоваться (служебные / категориальные / метки)
         # exclude_cols = {
@@ -138,24 +138,24 @@ class Scaler():
             # Берём все числовые столбцы, кроме исключённых
             numeric_cols = dataframe.select_dtypes(include=[np.number]).columns
             # feature_columns = [col for col in numeric_cols if col not in exclude_cols]
-            logging.debug(f"Автоматически выбраны числовые признаки для нормализации: {feature_columns}")
+            logging.debug(f"Numerical features automatically selected for normalization.: {feature_columns}")
         else:
             # Проверяем наличие
             missing = [col for col in feature_columns if col not in dataframe.columns]
             if missing:
-                raise ValueError(f"Следующие столбцы отсутствуют в датафрейме: {missing}")
+                raise ValueError(f"The following columns are missing from the DataFrame.: {missing}")
             # Проверяем числовость
             non_numeric = [col for col in feature_columns if not pd.api.types.is_numeric_dtype(dataframe[col])]
             if non_numeric:
-                raise ValueError(f"Нечисловые столбцы в feature_columns: {non_numeric}. "
-                                "Scaler работает только с числовыми данными.")
+                raise ValueError(f"Non-numeric columns in feature_columns: {non_numeric}. "
+                                "Scaler works only with numerical data..")
 
         # Проверяем, что есть что нормализовать
         if not feature_columns:
-            logging.warning("Нет столбцов для нормализации. Возвращается копия исходного датафрейма.")
+            logging.warning("No columns to normalize. A copy of the original DataFrame is returned.")
             return dataframe.copy()
 
-        logging.info(f"Применение scaler к {len(feature_columns)} столбцам: {feature_columns}")
+        logging.info(f"Applying a Scaler to {len(feature_columns)} columns: {feature_columns}")
 
         # Работаем с копией
         dataframe_out = dataframe.copy()
@@ -179,11 +179,11 @@ class Scaler():
                 if not pd.api.types.is_float_dtype(dataframe_out[col]):
                     dataframe_out[col] = dataframe_out[col].astype(np.float32)  # или float64, если точность критична
 
-            logging.info(f"Scaler успешно применён. Пример значений для {feature_columns[0]}: "
+            logging.info(f"Scaler successfully applied. Example values ​​for {feature_columns[0]}: "
                         f"{dataframe_out[feature_columns[0]].iloc[:3].tolist()}")
             
         except Exception as e:
-            logging.error(f"Ошибка при применении scaler: {e}")
+            logging.error(f"Error applying scaler: {e}")
             raise
 
         return dataframe_out
