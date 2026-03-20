@@ -94,11 +94,6 @@ class Experiment:
 
         experiment_name: str,
         registered_model_name: str,
-
-        epochs: int,
-        batch_size: int,
-
-        X_anomaly: np.ndarray = None
         ):
         """
         Логирует уже ОБУЧЕННУЮ модель и связанные метрики в MLflow.
@@ -118,8 +113,8 @@ class Experiment:
             mlflow.log_metric("anomaly_detection_accuracy", threshold_accuracy)
 
             # Параметры
-            mlflow.log_param("epochs", epochs)
-            mlflow.log_param("batch_size", batch_size)
+            mlflow.log_param("epochs", self.epochs)
+            mlflow.log_param("batch_size", self.batch_size)
             mlflow.log_param("input_dim", X_train.shape[1])
 
             # История обучения по эпохам
@@ -151,13 +146,12 @@ class Experiment:
         self,
         model: keras.Model,
         training_history: dict,
+
         split_data: dict,
         threshold_result: dict,
-        experiment_name: str,
-        registered_model_name: str,
-        epochs: int,
-        batch_size: int,
+        
         feature_names: list = None,
+
         additional_params: dict = None,
         log_predictions: bool = False,
         max_samples_log: int = 100
@@ -204,14 +198,14 @@ class Experiment:
        
         
         # Устанавливаем эксперимент
-        mlflow.set_experiment(experiment_name)
+        mlflow.set_experiment(self.experiment_name)
         
-        with mlflow.start_run(run_name=f"{registered_model_name}_run") as run:
+        with mlflow.start_run(run_name=f"{self.model_name}_run") as run:
             
             # ==================== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ====================
             mlflow.log_param("model_type", "Autoencoder")
-            mlflow.log_param("epochs", epochs)
-            mlflow.log_param("batch_size", batch_size)
+            mlflow.log_param("epochs", self.epochs)
+            mlflow.log_param("batch_size", self.batch_size)
             mlflow.log_param("input_dim", split_data['X_train'].shape[1])
             mlflow.log_param("anomaly_label", split_data['info'].get('anomaly_label', 'Anom'))
             mlflow.log_param("normal_label", split_data['info'].get('normal_label', 'Norm'))
@@ -320,7 +314,7 @@ class Experiment:
             mlflow.keras.log_model(
                 model,
                 artifact_path="model",
-                registered_model_name=registered_model_name,
+                registered_model_name=self.model_name,
                 signature=signature,
                 input_example=X_sample[:1]  # Пример входа для Model Registry
             )
@@ -347,7 +341,7 @@ class Experiment:
                 
                 # 4. Конфиг эксперимента (воспроизводимость)
                 config = {
-                    "experiment_name": experiment_name,
+                    "experiment_name": self.experiment_name,
                     "timestamp": pd.Timestamp.now().isoformat(),
                     "split_info": {k: v for k, v in split_data['info'].items() 
                                   if not isinstance(v, (np.ndarray, list))},
@@ -382,7 +376,7 @@ class Experiment:
             # =================== ТЕГИ ДЛЯ ПОИСКА ==================
             # ======================================================
 
-            mlflow.set_tag("mlflow.runName", f"{registered_model_name}_run")
+            mlflow.set_tag("mlflow.runName", f"{self.model_name}_run")
             mlflow.set_tag("task", "anomaly_detection")
             mlflow.set_tag("dataset", "NASA_CMAPSS")
             if threshold_metrics.get('f1', 0) > 0.8:
@@ -397,8 +391,8 @@ class Experiment:
     def load_model_from_mlflow(
         self,
         registered_model_name: str,
-        stage: str = "None",  # или "Staging", "None", либо конкретная версия как строка "1"
-        tracking_uri: str = None ) -> keras.Model:
+        stage: str = "None"  # или "Staging", "None", либо конкретная версия как строка "1"
+        ) -> keras.Model:
         
         """
         Загружает модель из MLflow Model Registry.
@@ -420,8 +414,8 @@ class Experiment:
             Загруженная модель, готовая к вызову через `.predict(X)`.
         """
 
-        if tracking_uri:
-            mlflow.set_tracking_uri(tracking_uri)
+        if self.mlflow_tracking_uri:
+            mlflow.set_tracking_uri(self.mlflow_tracking_uri)
 
         # Формируем URI модели в формате MLflow
         model_uri = f"models:/{registered_model_name}/{stage}"
