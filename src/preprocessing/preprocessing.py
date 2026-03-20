@@ -10,8 +10,7 @@ import os
 import pickle
 import logging
 
-
-from typing import Dict, List, Any, Tuple, Optional, Type
+from typing import Dict, List, Any, Tuple, Optional, Type, TypedDict
 # from sklearn.scaler import Pipeline
 from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -100,7 +99,7 @@ class Preprocess:
         return dataframe_out
 
     # ======================================================
-    def divide_norm_anom(
+    def split_norm_anom(
             self,
             dataframe: pd.DataFrame
         ):
@@ -129,7 +128,7 @@ class Preprocess:
             return 0
 
     # ======================================================
-    def divide_train_test_standart(
+    def split_train_test_standart(
               self,
               dtaframe: pd.DataFrame,
               test_size: float | None = None,
@@ -158,23 +157,16 @@ class Preprocess:
             return None
 
     # ======================================================
-    def divide_by_engine_train_test_val(
+    def split_by_engine_train_test_val(
             self,
-            data: pd.DataFrame, 
+            dataframe: pd.DataFrame, 
             unit_col: str = 'unit number', 
             label_col: str = 'is_anom', 
             train_ratio: float = 0.6, 
             val_ratio: float = 0.2, 
             test_ratio: float = 0.2, 
             random_state: int = 42
-            ) -> tuple[
-                pd.DataFrame, # x_train
-                pd.DataFrame, # y_train
-                pd.DataFrame, # x_val
-                pd.DataFrame, # y_val
-                pd.DataFrame, # x_test
-                pd.DataFrame  # y_test
-                ] | None:
+            ) -> Dict[str, pd.DataFrame]:
         """
         Разделяет датасет на Train/Test/Val по идентификаторам двигателей.
         Возвращает данные в формате pandas DataFrame.
@@ -203,20 +195,20 @@ class Preprocess:
         """
     
         # Проверка колонок
-        if unit_col not in data.columns:
-            raise ValueError(f"Колонка '{unit_col}' не найдена! Доступны: {data.columns.tolist()}")
-        if label_col not in data.columns:
-            raise ValueError(f"Колонка '{label_col}' не найдена! Доступны: {data.columns.tolist()}")
+        if unit_col not in dataframe.columns:
+            raise ValueError(f"Колонка '{unit_col}' не найдена! Доступны: {dataframe.columns.tolist()}")
+        if label_col not in dataframe.columns:
+            raise ValueError(f"Колонка '{label_col}' не найдена! Доступны: {dataframe.columns.tolist()}")
             
         # Определение меток
         # value_counts = data[label_col].value_counts
-        if label_col in data.columns:
+        if label_col in dataframe.columns:
             normal_label = False
             anomaly_label = True
             logging.info(f"[INFO] Обнаружена колонка '{label_col}'. Используем булеву логику: False=Norm, True=Anom.")
             
         # Разделение двигателей
-        unique_units = data[unit_col].unique()
+        unique_units = dataframe[unit_col].unique()
         
         if len(unique_units) < 3:
             raise ValueError(f"Слишком мало двигателей ({len(unique_units)}) для разделения!")
@@ -236,11 +228,11 @@ class Preprocess:
         )
         
         # Фильтрация данных
-        mask_train = (data[unit_col].isin(train_units)) & (data[label_col] == normal_label)
-        df_train = data.loc[mask_train].copy()
+        mask_train = (dataframe[unit_col].isin(train_units)) & (dataframe[label_col] == normal_label)
+        df_train = dataframe.loc[mask_train].copy()
         
-        df_val = data.loc[data[unit_col].isin(val_units)].copy()
-        df_test = data.loc[data[unit_col].isin(test_units)].copy()
+        df_val = dataframe.loc[dataframe[unit_col].isin(val_units)].copy()
+        df_test = dataframe.loc[dataframe[unit_col].isin(test_units)].copy()
         
         # Проверка на пустой Train
         if df_train.empty:
@@ -250,12 +242,14 @@ class Preprocess:
             )
         
         # Формирование результата
-        X_train = df_train.drop(columns=[label_col]).reset_index(drop=True),
-        y_train = df_train[label_col].reset_index(drop=True),
-        X_val = df_val.drop(columns=[label_col]).reset_index(drop=True),
-        y_val = df_val[label_col].reset_index(drop=True),
-        X_test = df_test.drop(columns=[label_col]).reset_index(drop=True),
-        y_test = df_test[label_col].reset_index(drop=True),
+        result_dataframes = {
+            'X_train': df_train.drop(columns=[label_col]).reset_index(drop=True),
+            'y_train': df_train[label_col].reset_index(drop=True),
+            'X_val': df_val.drop(columns=[label_col]).reset_index(drop=True),
+            'y_val': df_val[label_col].reset_index(drop=True),
+            'X_test': df_test.drop(columns=[label_col]).reset_index(drop=True),
+            'y_test': df_test[label_col].reset_index(drop=True)
+        }
         
         result_info = {
             # 'normal_label': normal_label,
@@ -279,27 +273,14 @@ class Preprocess:
         logging.info(f"count train samples = {result_info['n_train_samples']}")
         logging.info(f"count val samples = {result_info['n_val_samples']}")
         logging.info(f"count test samples = {result_info['n_test_samples']}")
-        logging.info(f"X_train is pd.DataFrame = {isinstance(X_train, pd.DataFrame)}")
-        logging.info(f"y_train is pd.DataFrame = {isinstance(y_train, pd.DataFrame)}")
-        logging.info(f"X_val is pd.DataFrame = {isinstance(X_val, pd.DataFrame)}")
-        logging.info(f"y_val is pd.DataFrame = {isinstance(y_val, pd.DataFrame)}")
-        logging.info(f"X_test is pd.DataFrame = {isinstance(X_test, pd.DataFrame)}")
-        logging.info(f"y_test is pd.DataFrame = {isinstance(y_test, pd.DataFrame)}")
+        logging.info(f"X_train is pd.DataFrame = {isinstance(result_dataframes['X_train'], pd.DataFrame)}")
+        logging.info(f"y_train is pd.DataFrame = {isinstance(result_dataframes['y_train'], pd.DataFrame)}")
+        logging.info(f"X_val is pd.DataFrame = {isinstance(result_dataframes['X_val'], pd.DataFrame)}")
+        logging.info(f"y_val is pd.DataFrame = {isinstance(result_dataframes['y_val'], pd.DataFrame)}")
+        logging.info(f"X_test is pd.DataFrame = {isinstance(result_dataframes['X_test'], pd.DataFrame)}")
+        logging.info(f"y_test is pd.DataFrame = {isinstance(result_dataframes['y_test'], pd.DataFrame)}")
         
-        return X_train, y_train, X_val, y_val, X_test, y_test
-    
-    # ======================================================
-    def split_by_engine(
-            self, 
-            split_data):
-        """Разделение данны по двигателям"""
-        feature_cols = [col for col in split_data['X_train'].columns if col not in ['unit_number', 'cycle']]
-        
-        X_train = split_data['X_train'][feature_cols].values
-        X_val = split_data['X_val'][feature_cols].values
-        X_test = split_data['X_test'][feature_cols].values
-        
-        return X_train, X_test, X_val
+        return result_dataframes
         
     # ======================================================
     def pd_to_numpy(

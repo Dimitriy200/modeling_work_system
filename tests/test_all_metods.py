@@ -68,7 +68,7 @@ is_anom_df = preprocessor.marking_norm_anom(no_null_df)
 logging.info(" --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- ")
 
 # 2.3 Раздление Norm и Anom. Удаление столбца
-norm_df, anom_df = preprocessor.divide_norm_anom(is_anom_df)
+norm_df, anom_df = preprocessor.split_norm_anom(is_anom_df)
 # logging.info(norm_df)
 # logging.info(anom_df)
 logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
@@ -91,8 +91,8 @@ logging.info(" --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.6 Применение scaler к NORM и ANOM
 cols = norm_df.columns.tolist()
-scaing_norm = scaler_manager.use_scaler(loading_scaler, norm_df, cols)
-scaing_anom = scaler_manager.use_scaler(loading_scaler, anom_df, cols)
+scaing_norm = scaler_manager.apply_scaler(loading_scaler, norm_df, cols)
+scaing_anom = scaler_manager.apply_scaler(loading_scaler, anom_df, cols)
 
 # logging.info(" --------- Scaling NORM --------- ")
 # logging.info(scaing_norm)
@@ -101,11 +101,11 @@ scaing_anom = scaler_manager.use_scaler(loading_scaler, anom_df, cols)
 logging.info(" --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- ")
 
 # 2.7.1 Разделение на Train и Test выборки нормального набора
-scaling_norm_train, scaling_process_norm_test = preprocessor.divide_train_test_standart(scaing_norm)
+scaling_norm_train, scaling_process_norm_test = preprocessor.split_train_test_standart(scaing_norm)
 logging.info(" --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- ")
 
 # 2.7.2 Разделение Train на Normal_Train и Normal_Valid для равного набора данных с Normal_Valid = Anomal_valid
-scaling_norm_test, scaling_norm_valid = preprocessor.divide_train_test_standart(scaling_process_norm_test, test_size = scaing_anom.shape[0])
+scaling_norm_test, scaling_norm_valid = preprocessor.split_train_test_standart(scaling_process_norm_test, test_size = scaing_anom.shape[0])
 logging.info(" --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- ")
 
 # 2.8 Преобразование в numpy
@@ -209,9 +209,9 @@ logging.info(detector_df)
 logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- ")
 
 # 4.3 Предобработать данные с использованием предобученного Scaller
-scaing_detector_df = scaler_manager.use_scaler(loading_scaler, detector_df, cols)
+scaing_detector_df = scaler_manager.apply_scaler(loading_scaler, detector_df, cols)
 
-scaing_detector_df_train, scaing_detector_df_test =  preprocessor.divide_train_test_standart(scaing_detector_df)
+scaing_detector_df_train, scaing_detector_df_test =  preprocessor.split_train_test_standart(scaing_detector_df)
 
 final_scaing_detector_df_train = preprocessor.pd_to_numpy(scaing_detector_df_train)
 final_scaing_detector_df_test = preprocessor.pd_to_numpy(scaing_detector_df_test)

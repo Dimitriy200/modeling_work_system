@@ -47,9 +47,9 @@ logging.info(" === BEGINNING OF THE BIG DATA PREPROCESSING STAGE === ")
 
 loader = LoadDataTrain()
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
-cols = raw_df.columns
+cols = raw_df.columns.tolist()
 
-# logging.info(raw_df)
+logging.info(f"cols = {cols}")
 logging.info(" --- DATA READING COMPLETED --- ")
 
 # ======================================================
@@ -69,10 +69,10 @@ marking_df = preprocessor.marking_norm_anom(no_null_df)
 # logging.info(f"marking_df\n{marking_df}")
 logging.info(" --- MARKING OF NORMAL AND ABNORMAL DATA IS COMPLETE --- ")
 
-X_train, Y_train, X_val, Y_val, X_test, Y_test = preprocessor.divide_by_engine_train_test_val(
-    dataframe = marking_df)
+result_dataframes = preprocessor.split_by_engine_train_test_val(dataframe=marking_df)
+result_dataframes
 
-logging.info()
+logging.info(result_dataframes["X_train"])
 logging.info(" --- DATA DISTRIBUTION TO ENGINES IS COMPLETE --- ")
 
 # df_train, df_test, df_val = preprocessor.split_by_engine(split_data)
@@ -86,12 +86,11 @@ logging.info(" --- DATA DISTRIBUTION TO ENGINES IS COMPLETE --- ")
 # ======================================================
 
 scaler_manager = Scaler()
-# Обучаем Scaller только на нормальных данных!!!
-std_scaler = scaler_manager.fit_scaler(X_test, cols)
+std_scaler = scaler_manager.fit_scaler(result_dataframes["X_train"], cols) # Обучаем Scaller только на нормальных данных!!!
 
-scaling_train = scaler_manager.use_scaler(std_scaler, X_train, cols)
-scaling_val = scaler_manager.use_scaler(std_scaler, X_val, cols)
-scaling_test = scaler_manager.use_scaler(std_scaler, X_test, cols)
+scaling_train = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_train"], cols)
+scaling_val = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_val"], cols)
+scaling_test = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_test"], cols)
 
 logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
 

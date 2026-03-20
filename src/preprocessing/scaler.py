@@ -60,7 +60,7 @@ class Scaler():
         except Exception as e:
             raise RuntimeError(f"Ошибка при обучении scaler'a {scaler_class.__name__}: {e}") from e
 
-        logging.info(f"Scaler {scaler_class.__name__} обучен на норме. Признаки: {feature_columns}")
+        logging.info(f"Scaler {scaler_class.__name__} has been trained on the normal data. Features: {feature_columns}")
 
         return scaler
     
@@ -114,7 +114,7 @@ class Scaler():
         return scaler
 
     # ======================================================
-    def use_scaler(
+    def apply_scaler(
             self,
             scaler: Type[BaseEstimator],
             dataframe: pd.DataFrame,
@@ -187,3 +187,5 @@ class Scaler():
             raise
 
         return dataframe_out
+
+    # ======================================================
