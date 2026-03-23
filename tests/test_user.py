@@ -72,7 +72,8 @@ experiment = Experiment(
     mlflow_tracking_uri = MLFLOW_TRACKING_URI,
     mlflow_repo_owner = MLFLOW_REPO_OWNER,
     mlflow_repo_name = MLFLOW_REPO_NAME,
-    mlflow_username = MLFLOW_USERNAME)
+    mlflow_username = MLFLOW_USERNAME
+)
 
 MODEL_NAME = "test_model"
 EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
@@ -83,9 +84,7 @@ batch_size = 80
 # encoder = autoencoder.create_default_autoencoder()
 
 # ВАРИАНТ 2 - загружаем модел из mlflow
-ld_model = experiment.load_model_from_mlflow(
-    registered_model_name = MODEL_NAME
-)
+  
 
 
 trained_model, history = train_model(

@@ -167,17 +167,18 @@ class Pipeline:
         final_Y__val = self.processor.pd_to_numpy(result_dataframes["y_val"])
         final_Y__test = self.processor.pd_to_numpy(result_dataframes["y_test"])
         
-        final_dataframes = {
-            'final_X_train': final_X_train,
-            'final_X_val': final_X__val,
-            'final_X_test': final_X__test,
 
-            'final_y_train': final_Y_train,
-            'final_y_val': final_Y__val,
-            'final_y_test': final_Y__test
-        }
+        result_dataframes.update({
+            'X_train': final_X_train,
+            'X_val': final_X__val,
+            'X_test': final_X__test,
+
+            'y_train': final_Y_train,
+            'y_val': final_Y__val,
+            'y_test': final_Y__test
+            })
 
         logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
         logging.info(" === BIG DATA PREPROCESSING STAGE COMPLETED === ")
 
-        return final_dataframes
+        return result_dataframes

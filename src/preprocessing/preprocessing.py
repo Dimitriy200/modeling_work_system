@@ -242,45 +242,45 @@ class Preprocess:
             )
         
         # Формирование результата
-        result_dataframes = {
+        result = {
             'X_train': df_train.drop(columns=[label_col]).reset_index(drop=True),
             'y_train': df_train[label_col].reset_index(drop=True),
             'X_val': df_val.drop(columns=[label_col]).reset_index(drop=True),
             'y_val': df_val[label_col].reset_index(drop=True),
             'X_test': df_test.drop(columns=[label_col]).reset_index(drop=True),
-            'y_test': df_test[label_col].reset_index(drop=True)
-        }
-        
-        result_info = {
-            # 'normal_label': normal_label,
-            # 'anomaly_label': anomaly_label,
-            'n_train_units': len(train_units),
-            'n_val_units': len(val_units),
-            'n_test_units': len(test_units),
-            'n_train_samples': len(df_train),
-            'n_val_samples': len(df_val),
-            'n_test_samples': len(df_test),
-            'train_units': list(train_units),
-            'val_units': list(val_units),
-            'test_units': list(test_units)
+            'y_test': df_test[label_col].reset_index(drop=True),
+            
+            'info': {
+                'normal_label': normal_label,
+                'anomaly_label': anomaly_label,
+                'n_train_units': len(train_units),
+                'n_val_units': len(val_units),
+                'n_test_units': len(test_units),
+                'n_train_samples': len(df_train),
+                'n_val_samples': len(df_val),
+                'n_test_samples': len(df_test),
+                'train_units': list(train_units),
+                'val_units': list(val_units),
+                'test_units': list(test_units)
+            }
         }
         
         # Логирование 
         logging.info("=== RESULTS OF DATA SEPARATION BY ENGINES ===")
-        logging.info(f"count train units = {result_info['n_train_units']}")
-        logging.info(f"count val units = {result_info['n_val_units']}")
-        logging.info(f"count test units = {result_info['n_test_units']}")
-        logging.info(f"count train samples = {result_info['n_train_samples']}")
-        logging.info(f"count val samples = {result_info['n_val_samples']}")
-        logging.info(f"count test samples = {result_info['n_test_samples']}")
-        logging.info(f"X_train is pd.DataFrame = {isinstance(result_dataframes['X_train'], pd.DataFrame)}")
-        logging.info(f"y_train is pd.DataFrame = {isinstance(result_dataframes['y_train'], pd.DataFrame)}")
-        logging.info(f"X_val is pd.DataFrame = {isinstance(result_dataframes['X_val'], pd.DataFrame)}")
-        logging.info(f"y_val is pd.DataFrame = {isinstance(result_dataframes['y_val'], pd.DataFrame)}")
-        logging.info(f"X_test is pd.DataFrame = {isinstance(result_dataframes['X_test'], pd.DataFrame)}")
-        logging.info(f"y_test is pd.DataFrame = {isinstance(result_dataframes['y_test'], pd.DataFrame)}")
+        logging.info(f"count train units = {result['info']['n_train_units']}")
+        logging.info(f"count val units = {result['info']['n_val_units']}")
+        logging.info(f"count test units = {result['info']['n_test_units']}")
+        logging.info(f"count train samples = {result['info']['n_train_samples']}")
+        logging.info(f"count val samples = {result['info']['n_val_samples']}")
+        logging.info(f"count test samples = {result['info']['n_test_samples']}")
+        logging.info(f"X_train is pd.DataFrame = {isinstance(result['X_train'], pd.DataFrame)}")
+        logging.info(f"y_train is pd.DataFrame = {isinstance(result['y_train'], pd.DataFrame)}")
+        logging.info(f"X_val is pd.DataFrame = {isinstance(result['X_val'], pd.DataFrame)}")
+        logging.info(f"y_val is pd.DataFrame = {isinstance(result['y_val'], pd.DataFrame)}")
+        logging.info(f"X_test is pd.DataFrame = {isinstance(result['X_test'], pd.DataFrame)}")
+        logging.info(f"y_test is pd.DataFrame = {isinstance(result['y_test'], pd.DataFrame)}")
         
-        return result_dataframes
+        return result
         
     # ======================================================
     def pd_to_numpy(

@@ -15,7 +15,8 @@ from mlflow.models import infer_signature
 from .metrics import compute_rmse
 from .trainer import train_model
 from .thresholding import choose_optimal_threshold_stadart
-
+from sklearn.metrics import (precision_score, recall_score, f1_score, 
+                                         roc_auc_score, accuracy_score, confusion_matrix)
 
 class Experiment:
 
@@ -91,16 +92,13 @@ class Experiment:
         threshold: float,
         threshold_accuracy: float,
         df_threshold_results: pd.DataFrame,
-
-        experiment_name: str,
-        registered_model_name: str,
         ):
         """
         Логирует уже ОБУЧЕННУЮ модель и связанные метрики в MLflow.
         Вычисляет метрики самостоятельно.
         """
 
-        mlflow.set_experiment(experiment_name)
+        mlflow.set_experiment(self.experiment_name)
 
         with mlflow.start_run() as run:
 
@@ -129,7 +127,7 @@ class Experiment:
             mlflow.keras.log_model(
                 model,
                 artifact_path = "autoencoder",
-                registered_model_name = registered_model_name,
+                registered_model_name = self.model_name,
                 signature = signature
             )
 
@@ -275,11 +273,10 @@ class Experiment:
             test_mse = np.mean(np.square(X_test_features - X_test_recon), axis=1)
             
             # Бинаризация меток для теста
-            y_test_true = (split_data['y_test'] == split_data['info']['normal_label']).astype(int).values
+            y_test_true = (split_data['y_test'] == split_data['info']['normal_label']).astype(int)
             y_test_pred = (test_mse < threshold_result['threshold']).astype(int)
             
-            from sklearn.metrics import (precision_score, recall_score, f1_score, 
-                                         roc_auc_score, accuracy_score, confusion_matrix)
+ 
             
             test_metrics = {
                 'test_f1': f1_score(y_test_true, y_test_pred, zero_division=0),
@@ -295,14 +292,16 @@ class Experiment:
             for name, value in test_metrics.items():
                 mlflow.log_metric(name, float(value))
             
-            # Confusion matrix как артефакт
-            cm = confusion_matrix(y_test_true, y_test_pred)
-            cm_df = pd.DataFrame(cm, columns=['Pred_Anom', 'Pred_Norm'], 
-                                index=['True_Anom', 'True_Norm'])
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
-                cm_df.to_csv(f.name)
-                mlflow.log_artifact(f.name, artifact_path="test_results")
-                os.unlink(f.name)
+            # # Confusion matrix как артефакт
+            # cm = confusion_matrix(y_test_true, y_test_pred)
+            # cm_df = pd.DataFrame(cm, columns=['Pred_Anom', 'Pred_Norm'], 
+            #                     index=['True_Anom', 'True_Norm'])
+            
+            # with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+            #     cm_df.to_csv(f.name)
+            #     mlflow.log_artifact(f.name, artifact_path="test_results")
+            #     os.unlink(f.name)
+
             # ======================================================
             # ======================= МОДЕЛЬ =======================
             # ======================================================
@@ -315,8 +314,8 @@ class Experiment:
                 model,
                 artifact_path="model",
                 registered_model_name=self.model_name,
-                signature=signature,
-                input_example=X_sample[:1]  # Пример входа для Model Registry
+                signature=signature
+                # input_example=X_sample[:1]  # Пример входа для Model Registry
             )
             
             # ======================================================
@@ -390,7 +389,6 @@ class Experiment:
 # ======================================================
     def load_model_from_mlflow(
         self,
-        registered_model_name: str,
         stage: str = "None"  # или "Staging", "None", либо конкретная версия как строка "1"
         ) -> keras.Model:
         
@@ -418,7 +416,7 @@ class Experiment:
             mlflow.set_tracking_uri(self.mlflow_tracking_uri)
 
         # Формируем URI модели в формате MLflow
-        model_uri = f"models:/{registered_model_name}/{stage}"
+        model_uri = f"models:/{self.model_name}/{stage}"
 
         try:
             model = mlflow.keras.load_model(model_uri)
@@ -427,3 +425,46 @@ class Experiment:
         
         except Exception as e:
             raise RuntimeError(f"Не удалось загрузить модель из MLflow по URI '{model_uri}': {e}")
+        
+# ======================================================
+    def train_model(
+        self,
+        model: keras.Model,
+        train_df: np.ndarray,
+        test_df: np.ndarray
+    ) -> keras.Model:
+        
+        """Обучает модель автокодировщика на нормальных данных."""
+        history = model.fit(
+            train_df, 
+            train_df,
+            validation_data = (test_df, test_df),
+            epochs = self.epochs,
+            batch_size = self.batch_size,
+            shuffle = True,
+            verbose = 1 )
+
+        return model, history.history
+
+# ======================================================
+    def compare_weights(
+            self, 
+            model1: keras.Model, 
+            model2: keras.Model,
+            tolerance=1e-5):
+        weights1 = model1.get_weights()
+        weights2 = model2.get_weights()
+        """
+        Сравнивает веса двух моделей
+        """
+        
+        if len(weights1) != len(weights2):
+            print("Модели имеют разное количество слоев с весами")
+            return False
+        
+        for i, (w1, w2) in enumerate(zip(weights1, weights2)):
+            if not np.allclose(w1, w2, rtol=tolerance, atol=tolerance):
+                print(f"Различие в весах на слое {i}")
+                return False
+            
+        return True
