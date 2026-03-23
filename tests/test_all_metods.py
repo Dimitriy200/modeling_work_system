@@ -68,7 +68,7 @@ is_anom_df = preprocessor.marking_norm_anom(no_null_df)
 logging.info(" --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- ")
 
 # 2.3 Раздление Norm и Anom. Удаление столбца
-norm_df, anom_df = preprocessor.different_norm_anom(is_anom_df)
+norm_df, anom_df = preprocessor.split_norm_anom(is_anom_df)
 # logging.info(norm_df)
 # logging.info(anom_df)
 logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
@@ -91,8 +91,8 @@ logging.info(" --- ЧТЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.6 Применение scaler к NORM и ANOM
 cols = norm_df.columns.tolist()
-scaing_norm = scaler_manager.use_scaler(loading_scaler, norm_df, cols)
-scaing_anom = scaler_manager.use_scaler(loading_scaler, anom_df, cols)
+scaing_norm = scaler_manager.apply_scaler(loading_scaler, norm_df, cols)
+scaing_anom = scaler_manager.apply_scaler(loading_scaler, anom_df, cols)
 
 # logging.info(" --------- Scaling NORM --------- ")
 # logging.info(scaing_norm)
@@ -209,7 +209,7 @@ logging.info(detector_df)
 logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕРШЕНА --- ")
 
 # 4.3 Предобработать данные с использованием предобученного Scaller
-scaing_detector_df = scaler_manager.use_scaler(loading_scaler, detector_df, cols)
+scaing_detector_df = scaler_manager.apply_scaler(loading_scaler, detector_df, cols)
 
 scaing_detector_df_train, scaing_detector_df_test =  preprocessor.split_train_test_standart(scaing_detector_df)
 

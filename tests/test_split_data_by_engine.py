@@ -47,9 +47,9 @@ logging.info(" === BEGINNING OF THE BIG DATA PREPROCESSING STAGE === ")
 
 loader = LoadDataTrain()
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
-cols = raw_df.columns
+cols = raw_df.columns.tolist()
 
-# logging.info(raw_df)
+logging.info(f"cols = {cols}")
 logging.info(" --- DATA READING COMPLETED --- ")
 
 # ======================================================
@@ -69,17 +69,16 @@ marking_df = preprocessor.marking_norm_anom(no_null_df)
 # logging.info(f"marking_df\n{marking_df}")
 logging.info(" --- MARKING OF NORMAL AND ABNORMAL DATA IS COMPLETE --- ")
 
-split_data = preprocessor.marking_data_by_engine(dataframe = marking_df)
-logging.info(split_data)
+result_dataframes = preprocessor.split_by_engine_train_test_val(dataframe=marking_df)
+result_dataframes
+
+logging.info(result_dataframes["X_train"])
 logging.info(" --- DATA DISTRIBUTION TO ENGINES IS COMPLETE --- ")
 
-df_train, df_test, df_val = preprocessor.split_by_engine(split_data)
-np.savetxt(Path(PATH_TRAIN_PROCESSED).joinpath("df_train.csv"), df_train, delimiter=',')
+# df_train, df_test, df_val = preprocessor.split_by_engine(split_data)
+# np.savetxt(Path(PATH_TRAIN_PROCESSED).joinpath("df_train.csv"), df_train, delimiter=',')
 
-logging.info(f"df_train\n{df_train}")
-logging.info(f"df_test\n{df_test}")
-logging.info(f"df_val\n{df_val}")
-logging.info(" --- ENGINE DATA SPLITTING COMPLETED --- ")
+# logging.info(" --- ENGINE DATA SPLITTING COMPLETE --- ")
 
 
 # ======================================================
@@ -87,11 +86,12 @@ logging.info(" --- ENGINE DATA SPLITTING COMPLETED --- ")
 # ======================================================
 
 scaler_manager = Scaler()
-std_scaler = scaler_manager.fit_scaler(df_train, cols)
+std_scaler = scaler_manager.fit_scaler(result_dataframes["X_train"], cols) # Обучаем Scaller только на нормальных данных!!!
 
-scaling_train = scaler_manager.use_scaler(std_scaler, df_train, cols)
-scaling_test = scaler_manager.use_scaler(std_scaler, df_test, cols)
-scaling_val = scaler_manager.use_scaler(std_scaler, df_val, cols)
+scaling_train = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_train"], cols)
+scaling_val = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_val"], cols)
+scaling_test = scaler_manager.apply_scaler(std_scaler, result_dataframes["X_test"], cols)
+
 logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
 
 
