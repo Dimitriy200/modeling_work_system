@@ -19,8 +19,11 @@ src/preprocessing/preprocessing.py
 src/preprocessing/scaler.py
 src/training/__init__.py
 src/training/experiment.py
+src/training/experiment_new.py
 src/training/metrics.py
 src/training/thresholding.py
 src/training/trainer.py
 tests/test_all_metods.py
+tests/test_split_data_by_engine.py
 tests/test_user.py
+tests/test_user_engine.py
