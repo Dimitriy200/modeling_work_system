@@ -16,7 +16,5 @@ dependencies = [
 requires-python = ">=3.9"
 
 [tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.package-dir]
-"" = "src"
+where = ["."]
+include = ["modeling_work_system*"]
