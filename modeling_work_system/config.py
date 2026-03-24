@@ -59,14 +59,6 @@ paths = [
     PATH_SKALERS
 ]
 
-logging.basicConfig(
-    level = logging.INFO,
-    filename =  Path(PATH_LOG).joinpath('logs.log'),
-    filemode = "w",
-    format = "%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s"
-)
-main_logger = logging.getLogger(__name__)
-
 
 def setup_mlflow(
         repo_owner: str, 
@@ -93,6 +85,15 @@ def setup_mlflow(
 
 
 [os.mkdir(path) for path in paths if not os.path.isdir(path)]
+
+
+logging.basicConfig(
+    level = logging.INFO,
+    filename =  Path(PATH_LOG).joinpath('logs.log'),
+    filemode = "w",
+    format = "%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s"
+)
+main_logger = logging.getLogger(__name__)
 
 
 if __name__ == '__main__':
