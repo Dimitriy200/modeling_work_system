@@ -8,15 +8,16 @@ import mlflow
 import logging
 
 # ============ ИМПОРТ ТЕСТИРУЕМЫХ МОДУЛЕЙ ==============
+import pandas as pd
+import numpy as np
+import logging
+
 import sys
 from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
-from src.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.load_data_add import LoadDataTrainAdd
-from src.preprocessing.preprocessing import Preprocess
-from src.preprocessing.scaler import Scaler
-from src.config import (
+
+from modeling_work_system.config import (
     PATH_LOG,
     PATH_SKALERS,
 
@@ -27,14 +28,20 @@ from src.config import (
     MLFLOW_USERNAME,
     MLFLOW_REPO_OWNER,
     MLFLOW_REPO_NAME,
-    MLFLOW_REPO_PASSWORD,
-    MLFLOW_REPO_TOKEN
+    MLFLOW_REPO_TOKEN,
+    MLFLOW_REPO_PASSWORD
 )
 
-from src.training.trainer import train_model, compare_weights
-from src.training.experiment import Experiment
-from src.models import autoencoder
-from src.training.thresholding import choose_optimal_threshold_stadart
+from pathlib import Path
+from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.preprocessing.scaler import Scaler
+from modeling_work_system.preprocessing.preprocessing import Preprocess
+from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
+from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
+from modeling_work_system.training.experiment_new import Experiment
+from modeling_work_system.models.autoencoders import autoencoder
+from modeling_work_system.training.thresholding import choose_optimal_threshold_un
+
 # ======================================================
 
 
@@ -55,23 +62,26 @@ logging.info(" --- ЧТЕНИЕ ДАННЫХ ЗАВЕРШЕНО --- ")
 # ======================================================
 
 # 2.1 Удаление пропусков
-preprocessor = Preprocess()
-no_null_df = preprocessor.delete_nan(raw_df)
+processor = Preprocess()
+no_null_df = processor.delete_nan(raw_df)
 
 # logging.info(no_null_df)
 logging.info(" --- УДАЛЕНИЕ ПРОПУКОВ ЗАВЕРШЕНО --- ")
 
 
 # 2.2 Определение Norm и Anom и добавление столбца с меткой
-is_anom_df = preprocessor.marking_norm_anom(no_null_df)
+is_anom_df = processor.marking_norm_anom(no_null_df)
 # logging.info(is_anom_df)
 logging.info(" --- МАРКИРОВКА НОРМАЛЬНЫХ И АНОМАЛЬНЫХ ДАННЫХ ЗАВЕРШЕНА --- ")
 
 # 2.3 Раздление Norm и Anom. Удаление столбца
-norm_df, anom_df = preprocessor.split_norm_anom(is_anom_df)
+# norm_df, anom_df = processor.split_norm_anom(is_anom_df)
+marking_df = processor.marking_norm_anom(no_null_df)
+result_dataframes = processor.split_by_engine_train_test_val(dataframe=marking_df)
+logging.info(" --- MARKING OF NORMAL AND ANOMAL DATA IS COMPLETE --- ")
 # logging.info(norm_df)
 # logging.info(anom_df)
-logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО --- ")
+logging.info(" --- DATA DISTRIBUTION TO ENGINES IS COMPLETE --- ")
 
 
 # ======================================================
@@ -79,9 +89,10 @@ logging.info(" --- РАЗДЕЛЕНИЕ НА NORM И ANOM ЗАВЕРШЕНО ---
 # ======================================================
 
 scaler_manager = Scaler()
-cols = norm_df.columns
-standart_scaler = scaler_manager.fit_scaler(norm_df, cols)
-scaler_manager.save_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"), standart_scaler)
+cols = raw_df.columns.tolist()
+std_scaler = scaler_manager.fit_scaler(result_dataframes["X_train"], cols) # Обучаем Scaller только на нормальных данных!!!
+
+scaler_manager.save_scaler(Path(PATH_SKALERS).joinpath("test_skaller_v2.pkl"), std_scaler)
 logging.info(" --- ОБУЧЕНИЕ И СОХРАНЕНИЕ SCALER ЗАВЕРШЕНО --- ")
 
 # 2.5 Чтение Scaler из файла
@@ -101,18 +112,18 @@ scaing_anom = scaler_manager.apply_scaler(loading_scaler, anom_df, cols)
 logging.info(" --- Применение SCALER к NORM и ANOM ЗАВЕРШЕНО --- ")
 
 # 2.7.1 Разделение на Train и Test выборки нормального набора
-scaling_norm_train, scaling_process_norm_test = preprocessor.split_train_test_standart(scaing_norm)
+scaling_norm_train, scaling_process_norm_test = processor.split_train_test_standart(scaing_norm)
 logging.info(" --- РАЗДЕЛЕНИЕ НА TRAIN И TEST ЗАВЕРШЕНО --- ")
 
 # 2.7.2 Разделение Train на Normal_Train и Normal_Valid для равного набора данных с Normal_Valid = Anomal_valid
-scaling_norm_test, scaling_norm_valid = preprocessor.split_train_test_standart(scaling_process_norm_test, test_size = scaing_anom.shape[0])
+scaling_norm_test, scaling_norm_valid = processor.split_train_test_standart(scaling_process_norm_test, test_size = scaing_anom.shape[0])
 logging.info(" --- РАЗДЕЛЕНИЕ TRAIN НА TRAIN И VALID ЗАВЕРШЕНО --- ")
 
 # 2.8 Преобразование в numpy
-final_train = preprocessor.pd_to_numpy(scaling_norm_train)
-final_test = preprocessor.pd_to_numpy(scaling_norm_test)
-final_valid = preprocessor.pd_to_numpy(scaling_norm_valid)
-final_anomal = preprocessor.pd_to_numpy(scaing_anom)
+final_train = processor.pd_to_numpy(scaling_norm_train)
+final_test = processor.pd_to_numpy(scaling_norm_test)
+final_valid = processor.pd_to_numpy(scaling_norm_valid)
+final_anomal = processor.pd_to_numpy(scaing_anom)
 # logging.info(final_train)
 # logging.info(final_test)
 # logging.info(anomal_valid)
@@ -211,10 +222,10 @@ logging.info(" --- ЗАГРУЗКА ДАННЫХ ИЗ ДАТЧИКОВ ЗАВЕ�
 # 4.3 Предобработать данные с использованием предобученного Scaller
 scaing_detector_df = scaler_manager.apply_scaler(loading_scaler, detector_df, cols)
 
-scaing_detector_df_train, scaing_detector_df_test =  preprocessor.split_train_test_standart(scaing_detector_df)
+scaing_detector_df_train, scaing_detector_df_test =  processor.split_train_test_standart(scaing_detector_df)
 
-final_scaing_detector_df_train = preprocessor.pd_to_numpy(scaing_detector_df_train)
-final_scaing_detector_df_test = preprocessor.pd_to_numpy(scaing_detector_df_test)
+final_scaing_detector_df_train = processor.pd_to_numpy(scaing_detector_df_train)
+final_scaing_detector_df_test = processor.pd_to_numpy(scaing_detector_df_test)
 logging.info(f"final_scaing_detector_df_train\n{final_scaing_detector_df_train}")
 logging.info(f"final_scaing_detector_df_test\n{final_scaing_detector_df_test}")
 

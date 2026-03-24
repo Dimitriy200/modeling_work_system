@@ -12,3 +12,7 @@ def create_default_autoencoder(input_dim: int = 26) -> keras.Model:
     ])
     model.compile(optimizer="adam", loss="mse", metrics=[MeanAbsoluteError(), RootMeanSquaredError(name="rmse")])
     return model
+
+
+
+# class Autoencoder(keras.Model):

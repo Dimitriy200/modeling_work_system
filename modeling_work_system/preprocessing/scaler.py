@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import os
 import pickle
+import joblib
 import logging
 
 from typing import Dict, List, Any, Tuple, Optional, Type
@@ -77,7 +78,8 @@ class Scaler():
         Разрешение сохраняемого файла должно быть .pkl
         '''
         with open(save_scaler_directory, 'wb') as handle:
-                    pickle.dump(scaler, handle)
+                    # pickle.dump(scaler, handle)
+                    joblib.dump(scaler, handle)
     
     # ======================================================
     def load_scaler(self,
@@ -92,7 +94,8 @@ class Scaler():
 
         try:
             with open(scaler_path, 'rb') as file_scaller:
-                scaler = pickle.load(file_scaller)
+                # scaler = pickle.load(file_scaller)
+                scaler = joblib.load(file_scaller)
                 logging.info(f"Scaler successfully loaded from: {scaler_path}")
         
         except Exception as e:

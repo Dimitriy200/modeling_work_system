@@ -31,7 +31,7 @@ def train_model(
 
     return model, history.history
 
-
+# ======================================================
 def compare_weights(model1, model2, tolerance=1e-5):
     weights1 = model1.get_weights()
     weights2 = model2.get_weights()

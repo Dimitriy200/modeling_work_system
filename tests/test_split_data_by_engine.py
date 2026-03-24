@@ -11,7 +11,7 @@ from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
-from src.config import (
+from modeling_work_system.config import (
     PATH_LOG,
     PATH_SKALERS,
 
@@ -28,16 +28,16 @@ from src.config import (
 )
 
 from pathlib import Path
-from src.pipeline.pipeline import Pipeline
-from src.preprocessing.scaler import Scaler
-from src.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.load_data_add import LoadDataTrainAdd
-from src.training.experiment import Experiment
-from src.preprocessing.preprocessing import Preprocess
+from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.preprocessing.scaler import Scaler
+from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
+from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
+from modeling_work_system.training.experiment import Experiment
+from modeling_work_system.preprocessing.preprocessing import Preprocess
 
-from src.models import autoencoder
-from src.training.trainer import train_model
-from src.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
+from modeling_work_system.models import autoencoder
+from modeling_work_system.training.trainer import train_model
+from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
 
 
 # ======================================================
@@ -137,8 +137,8 @@ trained_model, history = train_model(
 
 threshold_result = choose_optimal_threshold_un(
     model = trained_model,
-    X_val = split_data['X_val'],      # DataFrame с признаками
-    y_val = split_data['y_val'],      # Series с метками
+    X_val = result_dataframes['X_val'],      # DataFrame с признаками
+    y_val = result_dataframes['y_val'],      # Series с метками
     feature_names = cols,  # только сенсоры
     metric='f1',                    # или 'recall', если важнее не пропускать поломки
     target_recall=0.95,             # хотим найти 95% реальных аномалий
@@ -149,7 +149,7 @@ threshold_result = choose_optimal_threshold_un(
 run_id = experiment.send_experiment_to_mlflow_new(
     model = trained_model,
     training_history=history,
-    split_data = split_data,
+    split_data = result_dataframes,
     threshold_result = threshold_result,
     experiment_name = "Turbofan_AnomalyDetection",
     registered_model_name = "LSTM_Autoencoder_CMAPSS",
