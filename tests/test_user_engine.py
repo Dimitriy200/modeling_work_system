@@ -11,7 +11,7 @@ from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
-from src.config import (
+from modeling_work_system.config import (
     PATH_LOG,
     PATH_SKALERS,
 
@@ -27,15 +27,15 @@ from src.config import (
 )
 
 from pathlib import Path
-from src.pipeline.pipeline import Pipeline
-from src.preprocessing.scaler import Scaler
-from src.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.load_data_add import LoadDataTrainAdd
+from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.preprocessing.scaler import Scaler
+from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
+from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 # from src.training.experiment import Experiment
-from src.training.experiment_new import Experiment
-from src.models import autoencoder
-from src.training.trainer import train_model
-from src.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
+from modeling_work_system.training.experiment_new import Experiment
+from modeling_work_system.models import autoencoder
+from modeling_work_system.training.trainer import train_model
+from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
 
 
 # ======================================================
