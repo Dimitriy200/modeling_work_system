@@ -10,10 +10,6 @@ class BaseAnomalyDetector(ABC):
     Единый интерфейс для всех моделей детекции аномалий.
     Все модели должны реализовывать эти три метода.
     """
-    
-    @abstractmethod
-    def get_model(self):
-        pass
 
 
     @abstractmethod
@@ -34,10 +30,4 @@ class BaseAnomalyDetector(ABC):
         Для автоэнкодеров: MSE реконструкции.
         Для sklearn-моделей: отрицательный decision_function.
         """
-        pass
-
-
-    @abstractmethod
-    def get_name(self) -> str:
-        """Название модели для отчётов и логирования."""
         pass

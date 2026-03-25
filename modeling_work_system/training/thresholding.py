@@ -8,9 +8,17 @@ import pandas as pd
 import mlflow
 import matplotlib.pyplot as plt
 
-from sklearn.metrics import (accuracy_score, precision_score, recall_score, 
-                             f1_score, roc_auc_score, roc_curve, precision_recall_curve)
+from sklearn.metrics import (
+    accuracy_score, 
+    precision_score, 
+    recall_score,
+    f1_score,
+    roc_auc_score, 
+    roc_curve, 
+    precision_recall_curve
+)
 from .metrics import compute_mse
+from models.autoencoder import BaseAnomalyDetector
 
 
 # ======================================================
@@ -88,7 +96,7 @@ def choose_optimal_threshold_stadart(
 # Поиск разделяющей поверхности новым образом
 # ======================================================
 def choose_optimal_threshold_un(
-        model, 
+        model: BaseAnomalyDetector, 
         X_val: pd.DataFrame, 
         y_val: pd.Series, 
         feature_names: list = None,
@@ -146,11 +154,11 @@ def choose_optimal_threshold_un(
     
     # Нормализация меток: приводим к бинарному виду (1 = норма, 0 = аномалия)
     # Поддерживаем разные форматы: 'Norm'/'Anom', 1/0, True/False
-    if y_val.dtype == object or y_val.dtype == str:
-        y_val_binary = (y_val == self.split_info.get('normal_label', 'Norm')).astype(int)
-    else:
-        # Если уже числа, предполагаем 1=норма, 0=аномалия (как в исходном коде)
-        y_val_binary = y_val.values if hasattr(y_val, 'values') else np.array(y_val)
+    # if y_val.dtype == object or y_val.dtype == str:
+    #     y_val_binary = (y_val == self.split_info.get('normal_label', 'Norm')).astype(int)
+    # else:
+    #     # Если уже числа, предполагаем 1=норма, 0=аномалия (как в исходном коде)
+    y_val_binary = y_val.values if hasattr(y_val, 'values') else np.array(y_val)
     
     logging.info(f"Валидация: {len(X_val_features)} образцов, норма: {y_val_binary.sum()}, аномалия: {(1-y_val_binary).sum()}")
     

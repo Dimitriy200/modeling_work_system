@@ -11,12 +11,15 @@ import json
 
 # from numpy import load_csv_to_numpy
 from mlflow.models import infer_signature
-# from models.autoencoder import create_contractive_autoencoder
-from .metrics import compute_rmse
-from .trainer import train_model
-from .thresholding import choose_optimal_threshold_stadart
-from sklearn.metrics import (precision_score, recall_score, f1_score, 
-                                         roc_auc_score, accuracy_score, confusion_matrix)
+from sklearn.metrics import (
+    precision_score, 
+    recall_score, 
+    f1_score, 
+    roc_auc_score, 
+    accuracy_score, 
+    confusion_matrix
+)
+
 
 class Experiment:
 
@@ -365,46 +368,46 @@ class Experiment:
         
         except Exception as e:
             raise RuntimeError(f"Не удалось загрузить модель из MLflow по URI '{model_uri}': {e}")
-        
-# ======================================================
-    def train_model(
-        self,
-        model: keras.Model,
-        train_df: np.ndarray,
-        test_df: np.ndarray
-    ) -> keras.Model:
-        
-        """Обучает модель автокодировщика на нормальных данных."""
-        history = model.fit(
-            train_df, 
-            train_df,
-            validation_data = (test_df, test_df),
-            epochs = self.epochs,
-            batch_size = self.batch_size,
-            shuffle = True,
-            verbose = 1 )
-
-        return model, history.history
 
 # ======================================================
-    def compare_weights(
-            self, 
-            model1: keras.Model, 
-            model2: keras.Model,
-            tolerance=1e-5):
-        weights1 = model1.get_weights()
-        weights2 = model2.get_weights()
-        """
-        Сравнивает веса двух моделей
-        """
+    # def train_model(
+    #     self,
+    #     model: keras.Model,
+    #     train_df: np.ndarray,
+    #     test_df: np.ndarray
+    # ) -> keras.Model:
         
-        if len(weights1) != len(weights2):
-            print("Модели имеют разное количество слоев с весами")
-            return False
+    #     """Обучает модель автокодировщика на нормальных данных."""
+    #     history = model.fit(
+    #         train_df, 
+    #         train_df,
+    #         validation_data = (test_df, test_df),
+    #         epochs = self.epochs,
+    #         batch_size = self.batch_size,
+    #         shuffle = True,
+    #         verbose = 1 )
+
+    #     return model, history.history
+
+# ======================================================
+    # def compare_weights(
+    #         self, 
+    #         model1: keras.Model, 
+    #         model2: keras.Model,
+    #         tolerance=1e-5):
+    #     weights1 = model1.get_weights()
+    #     weights2 = model2.get_weights()
+    #     """
+    #     Сравнивает веса двух моделей
+    #     """
         
-        for i, (w1, w2) in enumerate(zip(weights1, weights2)):
-            if not np.allclose(w1, w2, rtol=tolerance, atol=tolerance):
-                print(f"Различие в весах на слое {i}")
-                return False
+    #     if len(weights1) != len(weights2):
+    #         print("Модели имеют разное количество слоев с весами")
+    #         return False
+        
+    #     for i, (w1, w2) in enumerate(zip(weights1, weights2)):
+    #         if not np.allclose(w1, w2, rtol=tolerance, atol=tolerance):
+    #             print(f"Различие в весах на слое {i}")
+    #             return False
             
-        return True
+    #     return True

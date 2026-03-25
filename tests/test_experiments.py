@@ -32,7 +32,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.training.experiment_new import Experiment
-from modeling_work_system.models import autoencoder
+from modeling_work_system.models.autoencoder import AutoEncoder
 from modeling_work_system.training.thresholding import choose_optimal_threshold_un
 
 
@@ -76,19 +76,23 @@ experiment_AE = Experiment(
 )
 
 # СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
-model_autoencoder = 
+model_autoencoder = AutoEncoder()
 
+# ОБУЧАЕМ МОДЕЛИ
+result_train_ae = model_autoencoder.fit(
+    X_train=final_dataframes['X_train'],
+    X_test=final_dataframes["X_val"])
 
 # ПОДБОР ЗНАЧЕНИЯ РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
 results_threshold = choose_optimal_threshold_un(
-    model=trained_model,
+    model=result_train_ae["model"],
     X_val=final_dataframes["X_val"],
     y_val=final_dataframes["y_val"]
 )
 
 run_id = experiment_AE.send_experiment_to_mlflow_new(
-    model=trained_model,
-    training_history=history,
+    model=result_train_ae["model"],
+    training_history=result_train_ae["history"],
     split_data=final_dataframes,
     threshold_result=results_threshold
 )
