@@ -9,6 +9,7 @@ import logging
 
 from typing import Type, Dict
 from sklearn.base import BaseEstimator
+from sklearn.preprocessing import StandardScaler
 from ..preprocessing.load_data_first import LoadDataTrain
 from ..preprocessing.preprocessing import Preprocess
 from ..preprocessing.load_data_add import LoadDataTrainAdd
@@ -22,16 +23,21 @@ class Pipeline:
             self,
 
             path_data_dir: str,
-            path_scaler: str,
             scaler_manager: Type[Scaler],
             loader: Type[LoadData],
-            processor: Preprocess = Preprocess()
+            processor: Preprocess = Preprocess(),
+            path_scaler: str = None
+
         ):
 
         self.scaler_manager = scaler_manager
         self.loader = loader
         self.processor = processor
-        self.scaler = scaler_manager.load_scaler(path_scaler)
+
+        if path_scaler is None:
+            self.scaler = StandardScaler()
+        else:
+            self.scaler = scaler_manager.load_scaler(path_scaler)
         
         if path_data_dir is None:
             logging.error("data_raw_dir is None!!!")

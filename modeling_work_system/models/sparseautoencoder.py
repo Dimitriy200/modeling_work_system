@@ -1,12 +1,11 @@
 import keras
 import numpy as np
-
 from keras.metrics import MeanAbsoluteError, RootMeanSquaredError
 from .basedetector import BaseAnomalyDetector
 from typing import Dict, Any
 
 
-class AutoEncoder(BaseAnomalyDetector):
+class SparseAutoEncoder(BaseAnomalyDetector):
     
     def __init__(self):
         self.model: keras.Model = None
@@ -16,9 +15,9 @@ class AutoEncoder(BaseAnomalyDetector):
     def build_model(self, input_dim: int=26)->keras.Model:
         model = keras.Sequential([
             keras.layers.Dense(input_dim, activation='elu', input_shape=(input_dim,)),
-            keras.layers.Dense(16, activation='elu'),
-            keras.layers.Dense(10, activation='elu'),
-            keras.layers.Dense(16, activation='elu'),
+            keras.layers.Dense(30, activation='elu'),
+            keras.layers.Dense(50, activation='elu'),
+            keras.layers.Dense(30, activation='elu'),
             keras.layers.Dense(input_dim, activation='elu')
         ])
 

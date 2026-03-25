@@ -148,7 +148,7 @@ def choose_optimal_threshold_un(
         # Автоматически исключаем не-сенсоры
         exclude = ['unit_number', 'cycle', 'label', 'is_anom', 'RUL']
         feature_names = [c for c in X_val.columns if c not in exclude and np.issubdtype(X_val[c].dtype, np.number)]
-        logging.info(f"[Auto] Выбрано признаков: {len(feature_names)}")
+        logging.info(f"[Auto] Features selected: {len(feature_names)}")
     
     X_val_features = X_val[feature_names].values
     
@@ -160,10 +160,13 @@ def choose_optimal_threshold_un(
     #     # Если уже числа, предполагаем 1=норма, 0=аномалия (как в исходном коде)
     y_val_binary = y_val.values if hasattr(y_val, 'values') else np.array(y_val)
     
-    logging.info(f"Валидация: {len(X_val_features)} образцов, норма: {y_val_binary.sum()}, аномалия: {(1-y_val_binary).sum()}")
+    logging.info(f"Validation: {len(X_val_features)} samples, Norm: {y_val_binary.sum()}, Anom: {(1-y_val_binary).sum()}")
     
     # --- 2. Предсказание и расчет ошибки ---
     X_val_recon = model.predict(X_val_features, verbose=0)
+
+    logging.info(f"X_val_features:\n{X_val_features}")
+    logging.info(f"X_val_recon:\n{X_val_recon}")
     mse_errors = np.mean(np.square(X_val_features - X_val_recon), axis=1)
     
     # --- 3. Сбор результатов ---

@@ -32,8 +32,10 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.training.experiment_new import Experiment
-from modeling_work_system.models.autoencoder import AutoEncoder
 from modeling_work_system.training.thresholding import choose_optimal_threshold_un
+
+from modeling_work_system.models.autoencoder import AutoEncoder
+from modeling_work_system.models.zscoredetector import ZScoreDetector
 
 
 # ======================================================
@@ -46,7 +48,7 @@ scaler_manager = Scaler()
 pipeline = Pipeline(
     # path_data_dir = PATH_TRAIN_RAW,
     path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
-    path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
+    # path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
     scaler_manager=scaler_manager,
     loader=loader
     )
@@ -75,24 +77,63 @@ experiment_AE = Experiment(
     experiment_name='test_ae_experiment'
 )
 
+experiment_z1 = Experiment(
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN,
+
+    train_data=final_dataframes,
+
+    model_name='test_z1_model',
+    experiment_name='test_z1_experiment'
+)
+
 # СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
+# ======================================================
 model_autoencoder = AutoEncoder()
+model_z1_score = ZScoreDetector() # Нет истории обучения
+# ======================================================
 
 # ОБУЧАЕМ МОДЕЛИ
-result_train_ae = model_autoencoder.fit(
+# ======================================================
+result_ae = model_autoencoder.fit(
     X_train=final_dataframes['X_train'],
     X_test=final_dataframes["X_val"])
 
+# result_z1 = model_z1_score.fit(X_train=final_dataframes['X_train'])
+# ======================================================
+
 # ПОДБОР ЗНАЧЕНИЯ РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
-results_threshold = choose_optimal_threshold_un(
-    model=result_train_ae["model"],
+# ======================================================
+results_threshold_ae = choose_optimal_threshold_un(
+    model=result_ae["model"],
     X_val=final_dataframes["X_val"],
     y_val=final_dataframes["y_val"]
 )
 
-run_id = experiment_AE.send_experiment_to_mlflow_new(
-    model=result_train_ae["model"],
-    training_history=result_train_ae["history"],
+# results_threshold_z1 = choose_optimal_threshold_un(
+#     model=result_z1,
+#     X_val=final_dataframes["X_val"],
+#     y_val=final_dataframes["y_val"]
+# )
+# ======================================================
+
+# ЛОГИРУЕМ В MLFLOW
+# ======================================================
+run_id_ae = experiment_AE.send_experiment_to_mlflow_new(
+    model=result_ae["model"],
+    training_history=result_ae["history"],
     split_data=final_dataframes,
-    threshold_result=results_threshold
+    threshold_result=results_threshold_ae
 )
+
+# run_id_z1 = experiment_z1.send_experiment_to_mlflow_new(
+#     model=result_z1,
+#     training_history=None,
+#     split_data=final_dataframes,
+#     threshold_result=results_threshold_z1
+# )
+# ======================================================

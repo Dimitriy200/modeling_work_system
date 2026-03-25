@@ -8,13 +8,10 @@ modeling_work_system.egg-info/dependency_links.txt
 modeling_work_system.egg-info/requires.txt
 modeling_work_system.egg-info/top_level.txt
 modeling_work_system/models/__init__.py
-modeling_work_system/models/autoencoders/__init__.py
-modeling_work_system/models/autoencoders/autoencoder.py
-modeling_work_system/models/autoencoders/contractive_autoencoder.py
-modeling_work_system/models/autoencoders/sparse_autoencoder.py
-modeling_work_system/models/lstm/__init__.py
-modeling_work_system/models/z_score/__init__.py
-modeling_work_system/models/z_score/z_score.py
+modeling_work_system/models/autoencoder.py
+modeling_work_system/models/basedetector.py
+modeling_work_system/models/sparseautoencoder.py
+modeling_work_system/models/zscoredetector.py
 modeling_work_system/pipeline/__init__.py
 modeling_work_system/pipeline/pipeline.py
 modeling_work_system/preprocessing/__init__.py
@@ -24,7 +21,6 @@ modeling_work_system/preprocessing/load_data_first.py
 modeling_work_system/preprocessing/preprocessing.py
 modeling_work_system/preprocessing/scaler.py
 modeling_work_system/training/__init__.py
-modeling_work_system/training/experiment.py
 modeling_work_system/training/experiment_new.py
 modeling_work_system/training/metrics.py
 modeling_work_system/training/thresholding.py
