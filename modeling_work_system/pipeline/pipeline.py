@@ -111,6 +111,13 @@ class Pipeline:
             'y_val': final_Y__val,
             'y_test': final_Y__test
             })
+        
+        logging.info(f"Results: final_X_train: {result_dataframes["X_train"]}")
+        logging.info(f"final_X_test: {result_dataframes["X_test"]}")
+        logging.info(f"final_X_val: {result_dataframes["X_val"]}")
+        logging.info(f"Results: final_y_train: {result_dataframes["y_train"]}")
+        logging.info(f"final_y_test: {result_dataframes["y_test"]}")
+        logging.info(f"final_y_val: {result_dataframes["y_val"]}")
 
         logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
         logging.info(" === BIG DATA PREPROCESSING STAGE COMPLETED === ")

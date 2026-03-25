@@ -80,69 +80,9 @@ class Experiment:
         return None
 
 # ======================================================
-    def send_experiment_to_mlflow(
-        self,
-        model: keras.Model,
-        training_history,
-
-        X_train: np.ndarray,
-        X_test: np.ndarray,
-        X_val: np.ndarray,
-
-        threshold: float,
-        threshold_accuracy: float,
-        df_threshold_results: pd.DataFrame,
-        ):
-        """
-        Логирует уже ОБУЧЕННУЮ модель и связанные метрики в MLflow.
-        Вычисляет метрики самостоятельно.
-        """
-
-        mlflow.set_experiment(self.experiment_name)
-
-        with mlflow.start_run() as run:
-
-            # Кастомные метрики
-            X_recon_val = model.predict(X_test)
-            rmse_val = float(keras.metrics.RootMeanSquaredError()(X_test, X_recon_val).numpy())
-
-            mlflow.log_metric("rmse_validation", rmse_val)
-            mlflow.log_metric("anomaly_threshold", threshold)
-            mlflow.log_metric("anomaly_detection_accuracy", threshold_accuracy)
-
-            # Параметры
-            mlflow.log_param("epochs", self.epochs)
-            mlflow.log_param("batch_size", self.batch_size)
-            mlflow.log_param("input_dim", X_train.shape[1])
-
-            # История обучения по эпохам
-            for epoch, (loss, val_loss) in enumerate(
-                zip(training_history["loss"], training_history["val_loss"])
-            ):
-                mlflow.log_metric("train_loss", loss, step=epoch)
-                mlflow.log_metric("val_loss", val_loss, step=epoch)
-
-            # Модель
-            signature = infer_signature(X_train, model.predict(X_train[:min(10, len(X_train))]))
-            mlflow.keras.log_model(
-                model,
-                artifact_path = "autoencoder",
-                registered_model_name = self.model_name,
-                signature = signature
-            )
-
-            # Артефакт: результаты подбора порога
-            with tempfile.TemporaryDirectory() as tmp_dir:
-                csv_path = os.path.join(tmp_dir, "threshold_analysis.csv")
-                df_threshold_results.to_csv(csv_path, index=False)
-                mlflow.log_artifact(csv_path)
-
-            return run.info.run_id
-
-# ======================================================
     def send_experiment_to_mlflow_new(
         self,
-        model: keras.Model,
+        model,
         training_history: dict,
 
         split_data: dict,

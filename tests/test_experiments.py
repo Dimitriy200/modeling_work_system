@@ -32,7 +32,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.training.experiment_new import Experiment
-from modeling_work_system.models.autoencoders import autoencoder
+from modeling_work_system.models import autoencoder
 from modeling_work_system.training.thresholding import choose_optimal_threshold_un
 
 
@@ -55,19 +55,12 @@ pipeline = Pipeline(
 # 2 Предобработка данных
 # ======================================================
 final_dataframes = pipeline.run_new()
-logging.info(f"Results: final_X_train: {final_dataframes["X_train"]}")
-logging.info(f"final_X_test: {final_dataframes["X_test"]}")
-logging.info(f"final_X_val: {final_dataframes["X_val"]}")
-
-logging.info(f"Results: final_y_train: {final_dataframes["y_train"]}")
-logging.info(f"final_y_test: {final_dataframes["y_test"]}")
-logging.info(f"final_y_val: {final_dataframes["y_val"]}")
 
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
 
-# Эксперимент для autoencoder
+# СОЗДАЕМ ЭКСПЕРИМЕНТЫ ПОД КАЖДЫЙ ВИД МОДЕЛИ
 experiment_AE = Experiment(
     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
     mlflow_repo_owner=MLFLOW_REPO_OWNER,
@@ -82,22 +75,11 @@ experiment_AE = Experiment(
     experiment_name='test_ae_experiment'
 )
 
-# ======================================================
-# 4 ЭКСПЕРИМЕНТЫ С МОДЕЛЯМИ
-# ======================================================
+# СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
+model_autoencoder = 
 
-# ЗАГРУЗКА МОДЕЛИ ИЗ MLFLOW
-# model_ae = experiment.load_model_from_mlflow()
 
-# model_ae = 
-
-trained_model, history = experiment_AE.train_model(
-    # model = encoder,
-    model=model_ae,
-    train_df=final_dataframes["X_train"], 
-    test_df=final_dataframes["X_val"]
-)
-
+# ПОДБОР ЗНАЧЕНИЯ РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
 results_threshold = choose_optimal_threshold_un(
     model=trained_model,
     X_val=final_dataframes["X_val"],
