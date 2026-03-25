@@ -238,8 +238,8 @@ def choose_optimal_threshold_un(
     results_df['pred_class'] = final_pred
     results_df['is_correct'] = (final_pred == y_val_binary).astype(int)
     
-    logging.info(f"✓ Порог: {best_threshold:.6f}")
-    logging.info(f"✓ Метрики: F1={final_metrics['f1']:.4f}, Prec={final_metrics['precision']:.4f}, Rec={final_metrics['recall']:.4f}")
+    logging.info(f"✓ Threshold: {best_threshold:.6f}")
+    logging.info(f"✓ Metrics: F1={final_metrics['f1']:.4f}, Prec={final_metrics['precision']:.4f}, Rec={final_metrics['recall']:.4f}")
     
     # --- 6. Визуализация (опционально, для статьи) ---
     # plot_path = None

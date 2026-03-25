@@ -31,11 +31,11 @@ class Preprocess:
         # Удаляем строки с None
         initial_rows = len(dataframe)
         dataframe.dropna(inplace=True)
-        print(f"Удалено строк с None: {initial_rows - len(dataframe)}")
+        print(f"Rows deleted None: {initial_rows - len(dataframe)}")
 
         # Финальная проверка
-        print(f"Размер dataframe: {dataframe.shape}")
-        print(f"Остались ли NAN: {dataframe.isna().any().any()}")
+        print(f"Size dataframe: {dataframe.shape}")
+        print(f"Left NAN: {dataframe.isna().any().any()}")
 
         return dataframe
 
@@ -60,7 +60,7 @@ class Preprocess:
         # Проверка наличия обязательных столбцов
         missing = [col for col in required_cols if col not in dataframe.columns]
         if missing:
-            raise ValueError(f"Отсутствуют обязательные столбцы: {missing}")
+            raise ValueError(f"Required columns are missing.: {missing}")
 
         # Работаем с копией, чтобы не мутировать исходный dataframe
         dataframe_out = dataframe.copy()
@@ -82,8 +82,8 @@ class Preprocess:
         avg_per_unit = total / units if units > 0 else 0
 
         logging.info(
-            f"different_norm_anom: обработано {units} юнитов, "
-            f"всего {total} записей, аномалий = {anom_count} ({anom_count/total:.1%})"
+            f"different_norm_anom: Processed {units} units, "
+            f"Total {total} entries, Anomalies = {anom_count} ({anom_count/total:.1%})"
         )
         
         # Опционально: проверка, что аномалии действительно в конце по времени
@@ -122,8 +122,7 @@ class Preprocess:
 
             return normal_data, anomal_data
         else:
-            logging.info("Отсутствует столбец is_anom")
-            print("Отсутствует столбец is_anom")
+            logging.info("The is_anom column is missing.")
             
             return 0
 
@@ -196,22 +195,22 @@ class Preprocess:
     
         # Проверка колонок
         if unit_col not in dataframe.columns:
-            raise ValueError(f"Колонка '{unit_col}' не найдена! Доступны: {dataframe.columns.tolist()}")
+            raise ValueError(f"Column '{unit_col}' Not found! Available: {dataframe.columns.tolist()}")
         if label_col not in dataframe.columns:
-            raise ValueError(f"Колонка '{label_col}' не найдена! Доступны: {dataframe.columns.tolist()}")
+            raise ValueError(f"Column '{label_col}' Not found! Available: {dataframe.columns.tolist()}")
             
         # Определение меток
         # value_counts = data[label_col].value_counts
         if label_col in dataframe.columns:
             normal_label = False
             anomaly_label = True
-            logging.info(f"[INFO] Обнаружена колонка '{label_col}'. Используем булеву логику: False=Norm, True=Anom.")
+            logging.info(f"[INFO] Column is detected '{label_col}'. Using Boolean Logic: False=Norm, True=Anom.")
             
         # Разделение двигателей
         unique_units = dataframe[unit_col].unique()
         
         if len(unique_units) < 3:
-            raise ValueError(f"Слишком мало двигателей ({len(unique_units)}) для разделения!")
+            raise ValueError(f"Too few engines ({len(unique_units)}) to split!")
         
         train_units, temp_units = train_test_split(
             unique_units, 
@@ -237,8 +236,8 @@ class Preprocess:
         # Проверка на пустой Train
         if df_train.empty:
             raise ValueError(
-                f"Train набор пуст! Проверьте: метка нормы='{normal_label}', "
-                f"колонка метки='{label_col}', данные размечены."
+                f"The training set is empty! Check: Normal label='{normal_label}', "
+                f"Label column='{label_col}', The data has been labeled."
             )
         
         # Формирование результата
@@ -290,7 +289,7 @@ class Preprocess:
         if not dataframe.empty:
             return dataframe.to_numpy()
         else:
-            logging.info("dataframe пуст")
-            print("dataframe пуст")
+            logging.info("DataFrame is empty.")
+            print("DataFrame is empty.")
 
             return None
