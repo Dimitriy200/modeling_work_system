@@ -245,7 +245,7 @@ def choose_optimal_threshold_un(
     # plot_path = None
     # if plot:
     #     plot_path = self._plot_threshold_analysis(
-    #         results_df, final_metrics, best_threshold, 
+    #         results_df, final_metrics, best_threshold,
     #         metric, run_id or 'threshold_analysis'
     #     )
     

@@ -17,6 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator
 from pathlib import Path
 
+
 class Scaler():
     def __init__(self):
         pass

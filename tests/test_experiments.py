@@ -77,24 +77,24 @@ experiment_AE = Experiment(
     experiment_name='test_ae_experiment'
 )
 
-experiment_z1 = Experiment(
-    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-    mlflow_repo_owner=MLFLOW_REPO_OWNER,
-    mlflow_repo_name=MLFLOW_REPO_NAME,
-    mlflow_username=MLFLOW_USERNAME,
-    mlflow_pass=MLFLOW_REPO_PASSWORD,
-    mlflow_token=MLFLOW_REPO_TOKEN,
+# experiment_z1 = Experiment(
+#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
+#     mlflow_repo_name=MLFLOW_REPO_NAME,
+#     mlflow_username=MLFLOW_USERNAME,
+#     mlflow_pass=MLFLOW_REPO_PASSWORD,
+#     mlflow_token=MLFLOW_REPO_TOKEN,
 
-    train_data=final_dataframes,
+#     train_data=final_dataframes,
 
-    model_name='test_z1_model',
-    experiment_name='test_z1_experiment'
-)
+#     model_name='test_z1_model',
+#     experiment_name='test_z1_experiment'
+# )
 
 # СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
 # ======================================================
 model_autoencoder = AutoEncoder()
-model_z1_score = ZScoreDetector() # Нет истории обучения
+# model_z1_score = ZScoreDetector() # Нет истории обучения
 # ======================================================
 
 # ОБУЧАЕМ МОДЕЛИ
