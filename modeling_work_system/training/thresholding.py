@@ -142,8 +142,13 @@ def choose_optimal_threshold_un(
     }
     """
     
-    # --- 1. Подготовка данных ---
+    logging.info(f"=== START CHOOSE THRESHOLD ===")
+
+    # ======================================================
+    # 1. Подготовка данных
+    # ======================================================
     # Если передан DataFrame, берем только нужные фичи
+    logging.info(f"Deleted non sensors columns...")
     if feature_names is None:
         # Автоматически исключаем не-сенсоры
         exclude = ['unit_number', 'cycle', 'label', 'is_anom', 'RUL']
@@ -151,6 +156,7 @@ def choose_optimal_threshold_un(
         logging.info(f"[Auto] Features selected: {len(feature_names)}")
     
     X_val_features = X_val[feature_names].values
+
     
     # Нормализация меток: приводим к бинарному виду (1 = норма, 0 = аномалия)
     # Поддерживаем разные форматы: 'Norm'/'Anom', 1/0, True/False
@@ -161,24 +167,40 @@ def choose_optimal_threshold_un(
     y_val_binary = y_val.values if hasattr(y_val, 'values') else np.array(y_val)
     
     logging.info(f"Validation: {len(X_val_features)} samples, Norm: {y_val_binary.sum()}, Anom: {(1-y_val_binary).sum()}")
+    logging.info(f"Validation: {len(X_val_features)} samples, Norm: {y_val_binary}, Anom: {(1-y_val_binary)}")
     
-    # --- 2. Предсказание и расчет ошибки ---
-    X_val_recon = model.predict(X_val_features, verbose=0)
 
+    # ======================================================
+    # 2. Предсказание и расчет ошибки 
+    # ======================================================
+    X_val_recon = model.predict(X_val_features, verbose=0)
     logging.info(f"X_val_features:\n{X_val_features}")
     logging.info(f"X_val_recon:\n{X_val_recon}")
-    mse_errors = np.mean(np.square(X_val_features - X_val_recon), axis=1)
     
-    # --- 3. Сбор результатов ---
+    # Для алгоритма z1_core этот этам пропускаем
+    if X_val_features.shape == X_val_recon.shape and X_val_recon.shape == 2 and X_val_recon.shape == 2:
+        mtk_errors = np.mean(np.square(X_val_features - X_val_recon), axis=1)
+    else:
+        mtk_errors = X_val_recon
+    logging.info(f"Reconstruction mse_errors:\n{mtk_errors}")
+
+    # ======================================================
+    # 3. Сбор результатов
+    # ======================================================
     results_df = pd.DataFrame({
-        'mse': mse_errors,
+        'mse': mtk_errors,
         'true_class': y_val_binary,  # 1 = норма, 0 = аномалия
         'true_label': y_val.values if hasattr(y_val, 'values') else y_val  # оригинальная метка для отладки
     })
     
-    # --- 4. Перебор порогов ---
+    
+    # ======================================================
+    # 4. Перебор порогов 
+    # ======================================================
     # Оптимизация: берем не все уникальные MSE, а перцентили для скорости
-    candidate_thresholds = np.percentile(mse_errors, np.linspace(0, 100, 500))
+    candidate_thresholds = np.percentile(mtk_errors, np.linspace(0, 100, 500))
+    logging.info(f"Candidate thresholds:\n{candidate_thresholds}")
+
     
     best_threshold = None
     best_score = -1
@@ -186,7 +208,7 @@ def choose_optimal_threshold_un(
     
     for thr in candidate_thresholds:
         # Предсказание: MSE < порог → норма (1), иначе аномалия (0)
-        pred_class = (mse_errors < thr).astype(int)
+        pred_class = (mtk_errors < thr).astype(int)
         
         # Защита от деления на ноль и пустых предсказаний
         if pred_class.sum() == 0 or pred_class.sum() == len(pred_class):
@@ -216,16 +238,19 @@ def choose_optimal_threshold_un(
             best_threshold = thr
     
     if best_threshold is None:
-        raise ValueError("Не удалось подобрать порог. Проверьте данные и метрики.")
+        raise ValueError("Unable to find threshold. Please check your data and metrics..")
     
-    # --- 5. Финальные метрики ---
-    final_pred = (mse_errors < best_threshold).astype(int)
+
+    # ======================================================
+    # 5. Финальные метрики
+    # ======================================================
+    final_pred = (mtk_errors < best_threshold).astype(int)
     final_metrics = {
         'precision': precision_score(y_val_binary, final_pred, zero_division=0),
         'recall': recall_score(y_val_binary, final_pred, zero_division=0),
         'f1': f1_score(y_val_binary, final_pred, zero_division=0),
         'accuracy': (final_pred == y_val_binary).mean(),
-        'roc_auc': roc_auc_score(y_val_binary, -mse_errors),  # инвертируем, т.к. меньше MSE = лучше
+        'roc_auc': roc_auc_score(y_val_binary, -mtk_errors),  # инвертируем, т.к. меньше MSE = лучше
         'threshold': best_threshold,
         'n_predictions': {
             'predicted_normal': int((final_pred == 1).sum()),
@@ -238,8 +263,8 @@ def choose_optimal_threshold_un(
     results_df['pred_class'] = final_pred
     results_df['is_correct'] = (final_pred == y_val_binary).astype(int)
     
-    logging.info(f"✓ Threshold: {best_threshold:.6f}")
-    logging.info(f"✓ Metrics: F1={final_metrics['f1']:.4f}, Prec={final_metrics['precision']:.4f}, Rec={final_metrics['recall']:.4f}")
+    logging.info(f"Threshold: {best_threshold:.6f}")
+    logging.info(f"Metrics: F1={final_metrics['f1']:.4f}, Prec={final_metrics['precision']:.4f}, Rec={final_metrics['recall']:.4f}")
     
     # --- 6. Визуализация (опционально, для статьи) ---
     # plot_path = None
