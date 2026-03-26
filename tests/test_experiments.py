@@ -130,10 +130,10 @@ results_threshold_z1 = choose_optimal_threshold_un(
 #     threshold_result=results_threshold_ae
 # )
 
-# run_id_z1 = model_z1_score_fit.send_experiment_to_mlflow_zscore(
-#     model=model_z1_score_fit,
-#     training_history=None,
-#     split_data=final_dataframes,
-#     threshold_result=None
-# )
+run_id_z1 = experiment_z1.send_experiment_to_mlflow_new(
+    model=model_z1_score_fit,
+    training_history=None,
+    split_data=final_dataframes,
+    threshold_result=results_threshold_z1
+)
 # ======================================================

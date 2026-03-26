@@ -178,10 +178,12 @@ def choose_optimal_threshold_un(
     logging.info(f"X_val_recon:\n{X_val_recon}")
     
     # Для алгоритма z1_core этот этам пропускаем
-    if X_val_features.shape == X_val_recon.shape and X_val_recon.shape == 2 and X_val_recon.shape == 2:
-        mtk_errors = np.mean(np.square(X_val_features - X_val_recon), axis=1)
-    else:
-        mtk_errors = X_val_recon
+    # if X_val_features.shape == X_val_recon.shape and X_val_recon.shape == 2 and X_val_recon.shape == 2:
+    #     mtk_errors = np.mean(np.square(X_val_features - X_val_recon), axis=1)
+    # else:
+    #     mtk_errors = X_val_recon
+    mtk_errors = np.nanmax(np.square(X_val_features - X_val_recon), axis=1)
+    
     logging.info(f"Reconstruction mse_errors:\n{mtk_errors}")
 
     # ======================================================
