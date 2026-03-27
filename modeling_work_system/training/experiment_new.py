@@ -177,17 +177,18 @@ class Experiment:
             # ================== МЕТРИКИ ОБУЧЕНИЯ ==================
             # ======================================================
             # История по эпохам
-            for epoch, (loss, val_loss) in enumerate(
-                zip(training_history.get("loss", []), training_history.get("val_loss", []))
-            ):
-                mlflow.log_metric("train_loss", float(loss), step=epoch)
-                mlflow.log_metric("val_loss", float(val_loss), step=epoch)
-            
-            # Финальные потери
-            if training_history.get("loss"):
-                mlflow.log_metric("final_train_loss", float(training_history["loss"][-1]))
-                mlflow.log_metric("final_val_loss", float(training_history.get("val_loss", [-1])[-1]))
-            
+            if training_history is not None:
+                for epoch, (loss, val_loss) in enumerate(
+                    zip(training_history.get("loss", []), training_history.get("val_loss", []))
+                ):
+                    mlflow.log_metric("train_loss", float(loss), step=epoch)
+                    mlflow.log_metric("val_loss", float(val_loss), step=epoch)
+                
+                # Финальные потери
+                if training_history.get("loss"):
+                    mlflow.log_metric("final_train_loss", float(training_history["loss"][-1]))
+                    mlflow.log_metric("final_val_loss", float(training_history.get("val_loss", [-1])[-1]))
+                
             # ======================================================
             # ============= МЕТРИКИ ПОРОГА (VALIDATION) ============
             # ======================================================
@@ -213,8 +214,13 @@ class Experiment:
             # Пересчитываем метрики на тесте с использованием подобранного порога
             X_test_features = split_data['X_test'][feature_names].values if feature_names else split_data['X_test'].values
             X_test_recon = model.predict(X_test_features, verbose=0)
-            test_mse = np.mean(np.square(X_test_features - X_test_recon), axis=1)
-            
+
+            # if X_test_features.shape == X_test_recon.shape and X_test_features.shape == 2 and X_test_recon.shape == 2:
+            #     test_mse = np.max(np.square(X_test_features - X_test_recon), axis=1)
+            # else:
+            #     test_mse = X_test_recon
+            test_mse = np.nanmax(np.square(X_test_features - X_test_recon), axis=1)
+
             # Бинаризация меток для теста
             y_test_true = (split_data['y_test'] == split_data['info']['normal_label']).astype(int)
             y_test_pred = (test_mse < threshold_result['threshold']).astype(int)
@@ -253,6 +259,7 @@ class Experiment:
             X_sample = split_data['X_train'][feature_names].values[:sample_size] if feature_names else split_data['X_train'].values[:sample_size]
             signature = infer_signature(X_sample, model.predict(X_sample, verbose=0))
             
+            # Работет тоько для моделей  [keras|sclearn]
             mlflow.keras.log_model(
                 model,
                 artifact_path="model",

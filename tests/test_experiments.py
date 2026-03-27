@@ -77,24 +77,24 @@ experiment_AE = Experiment(
     experiment_name='test_ae_experiment'
 )
 
-# experiment_z1 = Experiment(
-#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
-#     mlflow_repo_name=MLFLOW_REPO_NAME,
-#     mlflow_username=MLFLOW_USERNAME,
-#     mlflow_pass=MLFLOW_REPO_PASSWORD,
-#     mlflow_token=MLFLOW_REPO_TOKEN,
+experiment_z1 = Experiment(
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN,
 
-#     train_data=final_dataframes,
+    train_data=final_dataframes,
 
-#     model_name='test_z1_model',
-#     experiment_name='test_z1_experiment'
-# )
+    model_name='test_z1_model',
+    experiment_name='test_z1_experiment'
+)
 
 # СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
 # ======================================================
 model_autoencoder = AutoEncoder()
-# model_z1_score = ZScoreDetector() # Нет истории обучения
+model_z1_score = ZScoreDetector() # Нет истории обучения
 # ======================================================
 
 # ОБУЧАЕМ МОДЕЛИ
@@ -103,37 +103,37 @@ result_ae = model_autoencoder.fit(
     X_train=final_dataframes['X_train'],
     X_test=final_dataframes["X_val"])
 
-# result_z1 = model_z1_score.fit(X_train=final_dataframes['X_train'])
+model_z1_score_fit = model_z1_score.fit(X_train=final_dataframes['X_train'])
 # ======================================================
 
 # ПОДБОР ЗНАЧЕНИЯ РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
 # ======================================================
-results_threshold_ae = choose_optimal_threshold_un(
-    model=result_ae["model"],
-    X_val=final_dataframes["X_val"],
-    y_val=final_dataframes["y_val"]
-)
-
-# results_threshold_z1 = choose_optimal_threshold_un(
-#     model=result_z1,
+# results_threshold_ae = choose_optimal_threshold_un(
+#     model=result_ae["model"],
 #     X_val=final_dataframes["X_val"],
 #     y_val=final_dataframes["y_val"]
 # )
+
+results_threshold_z1 = choose_optimal_threshold_un(
+    model=model_z1_score_fit,
+    X_val=final_dataframes["X_val"],
+    y_val=final_dataframes["y_val"]
+)
 # ======================================================
 
 # ЛОГИРУЕМ В MLFLOW
 # ======================================================
-run_id_ae = experiment_AE.send_experiment_to_mlflow_new(
-    model=result_ae["model"],
-    training_history=result_ae["history"],
-    split_data=final_dataframes,
-    threshold_result=results_threshold_ae
-)
-
-# run_id_z1 = experiment_z1.send_experiment_to_mlflow_new(
-#     model=result_z1,
-#     training_history=None,
+# run_id_ae = experiment_AE.send_experiment_to_mlflow_new(
+#     model=result_ae["model"],
+#     training_history=result_ae["history"],
 #     split_data=final_dataframes,
-#     threshold_result=results_threshold_z1
+#     threshold_result=results_threshold_ae
 # )
+
+run_id_z1 = experiment_z1.send_experiment_to_mlflow_new(
+    model=model_z1_score_fit,
+    training_history=None,
+    split_data=final_dataframes,
+    threshold_result=results_threshold_z1
+)
 # ======================================================

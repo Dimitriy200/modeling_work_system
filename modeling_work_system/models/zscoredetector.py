@@ -2,8 +2,20 @@
 import numpy as np
 import logging
 
-from typing import Optional
+from typing import Optional, Union
 from .basedetector import BaseAnomalyDetector
+import mlflow
+import numpy as np
+import pandas as pd
+import tempfile
+import os
+import json
+import joblib
+import logging
+from sklearn.metrics import (
+    precision_score, recall_score, f1_score, 
+    roc_auc_score, accuracy_score, confusion_matrix
+)
 
 
 class ZScoreDetector(BaseAnomalyDetector):
@@ -47,9 +59,12 @@ class ZScoreDetector(BaseAnomalyDetector):
         X_array = X.to_numpy() if hasattr(X, 'to_numpy') else np.asarray(X)
         # Вычисляем z-scores для КАЖДОГО признака
         z_scores = np.abs((X_array - self.mean_) / self.std_)
+        logging.info(f"Z scores: \n{z_scores}")
         
         if self.aggregation == 'max':
-            return np.max(z_scores, axis=1)
+            # res = np.nanmax(z_scores, axis=1)
+            # logging.info(f"Z scores max result: \n{res}")
+            return z_scores
         elif self.aggregation == 'mean':
             return np.mean(z_scores, axis=1)
         elif self.aggregation == 'l2':
