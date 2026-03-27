@@ -56,13 +56,6 @@ pipeline = Pipeline(
 # 2 Предобработка данных
 # ======================================================
 final_dataframes = pipeline.run_new()
-logging.info(f"Results: final_X_train: {final_dataframes["X_train"]}")
-logging.info(f"final_X_test: {final_dataframes["X_test"]}")
-logging.info(f"final_X_val: {final_dataframes["X_val"]}")
-
-logging.info(f"Results: final_y_train: {final_dataframes["y_train"]}")
-logging.info(f"final_y_test: {final_dataframes["y_test"]}")
-logging.info(f"final_y_val: {final_dataframes["y_val"]}")
 
 # ======================================================
 # 3 Проведение эксперимента
@@ -83,14 +76,14 @@ ld_model = experiment.load_model_from_mlflow()
 trained_model, history = experiment.train_model(
     # model = encoder,
     model=ld_model,
-    train_df=final_dataframes["X_train"], 
-    test_df=final_dataframes["X_val"]
+    train_df=final_dataframes['X_train'], 
+    test_df=final_dataframes['X_val']
 )
 
 results_threshold = choose_optimal_threshold_un(
     model=trained_model,
-    X_val=final_dataframes["X_val"],
-    y_val=final_dataframes["y_val"]
+    X_val=final_dataframes['X_val'],
+    y_val=final_dataframes['y_val']
 )
 
 run_id = experiment.send_experiment_to_mlflow_new(

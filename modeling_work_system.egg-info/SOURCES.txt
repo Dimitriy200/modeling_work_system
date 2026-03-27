@@ -10,6 +10,7 @@ modeling_work_system.egg-info/top_level.txt
 modeling_work_system/models/__init__.py
 modeling_work_system/models/autoencoder.py
 modeling_work_system/models/basedetector.py
+modeling_work_system/models/isolation_forest_detector.py
 modeling_work_system/models/sparseautoencoder.py
 modeling_work_system/models/zscoredetector.py
 modeling_work_system/pipeline/__init__.py

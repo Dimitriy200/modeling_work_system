@@ -93,19 +93,19 @@ class Pipeline:
         # ======================================================
         # 3 Обучение и нормализация c Scaler
         # ======================================================
-        std_scaler = self.scaler_manager.fit_scaler(result_dataframes["X_train"], cols) # Обучаем Scaller только на нормальных данных!!!
+        std_scaler = self.scaler_manager.fit_scaler(result_dataframes['X_train'], cols) # Обучаем Scaller только на нормальных данных!!!
 
-        final_X_train = self.scaler_manager.apply_scaler(std_scaler, result_dataframes["X_train"], cols)
-        final_X__val = self.scaler_manager.apply_scaler(std_scaler, result_dataframes["X_val"], cols)
-        final_X__test = self.scaler_manager.apply_scaler(std_scaler, result_dataframes["X_test"], cols)
+        final_X_train = self.scaler_manager.apply_scaler(std_scaler, result_dataframes['X_train'], cols)
+        final_X__val = self.scaler_manager.apply_scaler(std_scaler, result_dataframes['X_val'], cols)
+        final_X__test = self.scaler_manager.apply_scaler(std_scaler, result_dataframes['X_test'], cols)
 
 
         # ======================================================
         # 4 Финальные преобразования меток
         # ======================================================
-        final_Y_train = self.processor.pd_to_numpy(result_dataframes["y_train"])
-        final_Y__val = self.processor.pd_to_numpy(result_dataframes["y_val"])
-        final_Y__test = self.processor.pd_to_numpy(result_dataframes["y_test"])
+        final_Y_train = self.processor.pd_to_numpy(result_dataframes['y_train'])
+        final_Y__val = self.processor.pd_to_numpy(result_dataframes['y_val'])
+        final_Y__test = self.processor.pd_to_numpy(result_dataframes['y_test'])
         
 
         result_dataframes.update({
@@ -118,12 +118,12 @@ class Pipeline:
             'y_test': final_Y__test
             })
         
-        logging.info(f"Results: final_X_train: {result_dataframes["X_train"]}")
-        logging.info(f"final_X_test: {result_dataframes["X_test"]}")
-        logging.info(f"final_X_val: {result_dataframes["X_val"]}")
-        logging.info(f"Results: final_y_train: {result_dataframes["y_train"]}")
-        logging.info(f"final_y_test: {result_dataframes["y_test"]}")
-        logging.info(f"final_y_val: {result_dataframes["y_val"]}")
+        logging.info(f"Results: final_X_train: {result_dataframes['X_train']}")
+        logging.info(f"final_X_test: {result_dataframes['X_test']}")
+        logging.info(f"final_X_val: {result_dataframes['X_val']}")
+        logging.info(f"Results: final_y_train: {result_dataframes['y_train']}")
+        logging.info(f"final_y_test: {result_dataframes['y_test']}")
+        logging.info(f"final_y_val: {result_dataframes['y_val']}")
 
         logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
         logging.info(" === BIG DATA PREPROCESSING STAGE COMPLETED === ")
