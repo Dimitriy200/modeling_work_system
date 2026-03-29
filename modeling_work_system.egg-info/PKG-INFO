@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: modeling-work-system
-Version: 0.3.2
+Version: 0.3.3
 Summary: Anomaly detection with autoencoders
 Requires-Python: >=3.9
 Requires-Dist: mlflow>=2.0

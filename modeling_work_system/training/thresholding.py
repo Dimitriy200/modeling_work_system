@@ -18,7 +18,7 @@ from sklearn.metrics import (
     precision_recall_curve
 )
 from .metrics import compute_mse
-from models.autoencoder import BaseAnomalyDetector
+from ..models.basedetector import BaseAnomalyDetector
 
 
 # ======================================================

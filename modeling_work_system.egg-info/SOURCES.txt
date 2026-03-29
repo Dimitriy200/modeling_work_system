@@ -15,6 +15,7 @@ modeling_work_system/models/sparseautoencoder.py
 modeling_work_system/models/zscoredetector.py
 modeling_work_system/pipeline/__init__.py
 modeling_work_system/pipeline/pipeline.py
+modeling_work_system/pipeline/pipeline_spec.py
 modeling_work_system/preprocessing/__init__.py
 modeling_work_system/preprocessing/load_data.py
 modeling_work_system/preprocessing/load_data_add.py

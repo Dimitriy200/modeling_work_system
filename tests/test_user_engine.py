@@ -27,7 +27,7 @@ from modeling_work_system.config import (
 )
 
 from pathlib import Path
-from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.pipeline.pipeline_spec import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
