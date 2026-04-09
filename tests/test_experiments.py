@@ -31,7 +31,7 @@ from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
-from modeling_work_system.training.experiment_new import Experiment
+from modeling_work_system.training.experiment import Experiment
 from modeling_work_system.training.thresholding import choose_optimal_threshold_un
 
 from modeling_work_system.models.autoencoder import AutoEncoder

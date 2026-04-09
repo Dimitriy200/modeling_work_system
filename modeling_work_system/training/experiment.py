@@ -10,6 +10,7 @@ import os
 import json
 
 # from numpy import load_csv_to_numpy
+from pathlib import Path
 from mlflow.models import infer_signature
 from sklearn.metrics import (
     precision_score, 
@@ -351,34 +352,69 @@ class Experiment:
         self,
         model,
         training_history: dict,
-        threshold_result: dict,
+        threshold_result: dict = None,
 
-        X_train: np.ndarray,
-        Y_train: np.ndarray,
+        X_train: np.ndarray = None,
+        Y_train: np.ndarray = None,
 
-        X_test: np.ndarray,
-        Y_test: np.ndarray,
+        X_test: np.ndarray = None,
+        Y_test: np.ndarray = None,
 
-        X_val: np.ndarray,
-        Y_val: np.ndarray,
+        X_val: np.ndarray = None,
+        Y_val: np.ndarray = None,
 
-        f1_score: float | np.ndarray,
-        precision_score,
-        recall_score,
-        accuracy_score,
-        roc_auc_score,
-        rmse_score
+        f1_score: float | np.ndarray = None,
+        precision_score = None,
+        recall_score = None,
+        accuracy_score = None,
+        roc_auc_score = None,
+        rmse_score = None
     ):
+        
+        """
+        Простой метод логирования эксперимента в MLflow.
+        Совместим с Python 3.10+ и MLflow >= 2.10
+        """
         
         # Устанавливаем эксперимент
         mlflow.set_experiment(self.experiment_name)
 
         with mlflow.start_run(run_name=f"{self.model_name}_run") as run:
             
-            # ==================== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ====================
-            mlflow.log_param("model_type", self.model_type)
+            mlflow.keras.log_model(model=model,  artifact_path="model")
+            try:
+                print(f"🔄 Логирование модели: {type(model)}")
+                mlflow.keras.log_model(
+                    model=model,
+                    artifact_path="model",  # ← это обязательно!
+                    registered_model_name=self.model_name
+                    # signature=mlflow.models.infer_signature(X_train, model.predict(X_train[:100])) if X_train is not None else None,
+                    # input_example=X_train[:1] if X_train is not None else None,
+                )
+                print("✅ Модель успешно залогирована в папку 'model'")
+            except Exception as e:
+                print(f"⚠️ Ошибка при логировании модели: {e}")
+                #Фолбэк: сохраняем модель вручную в файл и логируем как артефакт
+                fallback_path = Path("artifacts") / "model_fallback.keras"
+                fallback_path.parent.mkdir(exist_ok=True)
+                model.save(str(fallback_path))  # нативный save Keras
+                mlflow.log_artifact(str(fallback_path), artifact_path="artifacts")
+                print(f"💾 Модель сохранена как артефакт: {fallback_path}")
+
+
+            # mlflow.log_metric("train_loss", training_history)
+            for epoch, (loss, val_loss) in enumerate(
+                    zip(training_history.get("loss", []), training_history.get("val_loss", []))
+                ):
+                    mlflow.log_metric("train_loss", float(loss), step=epoch)
+                    mlflow.log_metric("val_loss", float(val_loss), step=epoch)
+
             mlflow.log_param("epochs", self.epochs)
             mlflow.log_param("batch_size", self.batch_size)
+            # mlflow.log_param("threshold_result", threshold_result)
+
+        
+            return run.info.run_id
 
 
 # ======================================================
@@ -411,15 +447,18 @@ class Experiment:
             mlflow.set_tracking_uri(self.mlflow_tracking_uri)
 
         # Формируем URI модели в формате MLflow
-        model_uri = f"models:/{self.model_name}/{stage}"
+        model_uri = f"models:/{self.model_name}/latest"
 
         try:
-            model = mlflow.keras.load_model(model_uri, compile=False)
-            logging.info(f"Модель загружена из mlflow: {model_uri}")
+            model = mlflow.keras.load_model(
+                model_uri 
+                # compile=False
+                )
+            logging.info(f"The model is loaded from mlflow: {model_uri}")
             return model
         
         except Exception as e:
-            raise RuntimeError(f"Не удалось загрузить модель из MLflow по URI '{model_uri}': {e}")
+            raise RuntimeError(f"Failed to load model from MLflow by URI '{model_uri}': {e}")
 
 # ======================================================
     def train_model(
@@ -437,7 +476,7 @@ class Experiment:
             epochs = self.epochs,
             batch_size = self.batch_size,
             shuffle = True,
-            verbose = 1 )
+            verbose = 1)
 
         return model, history.history
 
