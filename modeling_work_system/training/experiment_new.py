@@ -44,7 +44,8 @@ class Experiment:
 
             epochs: int = 3,
             batch_size: int = 80,
-            
+
+            model_type="Autoencoder",
             model_name: str = "test_model",
             experiment_name: str = "Autoencoder_Anomaly_v2"
             ):
@@ -76,6 +77,7 @@ class Experiment:
         self.epochs = epochs
         self.batch_size = batch_size
 
+        self.model_type = model_type
         self.model_name = model_name
         self.experiment_name = experiment_name
         logging.info("--- EXPERIMENT CONFIGURATION COMPLETE ---")
@@ -192,41 +194,49 @@ class Experiment:
             # ======================================================
             # ============= МЕТРИКИ ПОРОГА (VALIDATION) ============
             # ======================================================
-            threshold_metrics = threshold_result.get('metrics', {})
             
-            mlflow.log_metric("optimal_threshold", threshold_result['threshold'])
-            mlflow.log_metric("val_f1_score", threshold_metrics.get('f1', 0.0))
-            mlflow.log_metric("val_precision", threshold_metrics.get('precision', 0.0))
-            mlflow.log_metric("val_recall", threshold_metrics.get('recall', 0.0))
-            mlflow.log_metric("val_accuracy", threshold_metrics.get('accuracy', 0.0))
-            mlflow.log_metric("val_roc_auc", threshold_metrics.get('roc_auc', 0.0))
+            if threshold_result is not None:
+                threshold_metrics = threshold_result.get('metrics', {})
+                
+                mlflow.log_metric("optimal_threshold", threshold_result['threshold'])
+                mlflow.log_metric("val_f1_score", threshold_metrics.get('f1', 0.0))
+                mlflow.log_metric("val_precision", threshold_metrics.get('precision', 0.0))
+                mlflow.log_metric("val_recall", threshold_metrics.get('recall', 0.0))
+                mlflow.log_metric("val_accuracy", threshold_metrics.get('accuracy', 0.0))
+                mlflow.log_metric("val_roc_auc", threshold_metrics.get('roc_auc', 0.0))
             
-            # Статистика предсказаний на валидации
-            n_preds = threshold_metrics.get('n_predictions', {})
-            mlflow.log_metric("val_pred_normal", n_preds.get('predicted_normal', 0))
-            mlflow.log_metric("val_pred_anomaly", n_preds.get('predicted_anomaly', 0))
-            mlflow.log_metric("val_true_normal", n_preds.get('true_normal', 0))
-            mlflow.log_metric("val_true_anomaly", n_preds.get('true_anomaly', 0))
+                # Статистика предсказаний на валидации
+                n_preds = threshold_metrics.get('n_predictions', {})
+                mlflow.log_metric("val_pred_normal", n_preds.get('predicted_normal', 0))
+                mlflow.log_metric("val_pred_anomaly", n_preds.get('predicted_anomaly', 0))
+                mlflow.log_metric("val_true_normal", n_preds.get('true_normal', 0))
+                mlflow.log_metric("val_true_anomaly", n_preds.get('true_anomaly', 0))
 
             # ======================================================
             # ================== МЕТРИКИ НА ТЕСТЕ ==================
             # ======================================================
             # Пересчитываем метрики на тесте с использованием подобранного порога
             X_test_features = split_data['X_test'][feature_names].values if feature_names else split_data['X_test'].values
-            X_test_recon = model.predict(X_test_features, verbose=0)
+            X_test_recon = model.predict(
+                X_test_features 
+                # verbose=0
+                )
 
-            # if X_test_features.shape == X_test_recon.shape and X_test_features.shape == 2 and X_test_recon.shape == 2:
-            #     test_mse = np.max(np.square(X_test_features - X_test_recon), axis=1)
-            # else:
-            #     test_mse = X_test_recon
-            test_mse = np.nanmax(np.square(X_test_features - X_test_recon), axis=1)
+            if X_test_features.shape == X_test_recon.shape and X_test_features.shape == 2 and X_test_recon.shape == 2:
+                test_mse = np.max(np.square(X_test_features - X_test_recon), axis=1)
+            else:
+                test_mse = X_test_recon
+            # test_mse = np.nanmax(np.square(X_test_features - X_test_recon), axis=1)
 
             # Бинаризация меток для теста
             y_test_true = (split_data['y_test'] == split_data['info']['normal_label']).astype(int)
-            y_test_pred = (test_mse < threshold_result['threshold']).astype(int)
+
+            if threshold_result is not None:
+                y_test_pred = (test_mse < threshold_result['threshold']).astype(int)
+            else:
+                y_test_pred = (test_mse < np.percentile(test_mse, 95).astype(int))
             
  
-            
             test_metrics = {
                 'test_f1': f1_score(y_test_true, y_test_pred, zero_division=0),
                 'test_precision': precision_score(y_test_true, y_test_pred, zero_division=0),
@@ -337,6 +347,41 @@ class Experiment:
             return run.info.run_id
 
 # ======================================================
+    def send_experiment_to_mlflow_mini(
+        self,
+        model,
+        training_history: dict,
+        threshold_result: dict,
+
+        X_train: np.ndarray,
+        Y_train: np.ndarray,
+
+        X_test: np.ndarray,
+        Y_test: np.ndarray,
+
+        X_val: np.ndarray,
+        Y_val: np.ndarray,
+
+        f1_score: float | np.ndarray,
+        precision_score,
+        recall_score,
+        accuracy_score,
+        roc_auc_score,
+        rmse_score
+    ):
+        
+        # Устанавливаем эксперимент
+        mlflow.set_experiment(self.experiment_name)
+
+        with mlflow.start_run(run_name=f"{self.model_name}_run") as run:
+            
+            # ==================== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ====================
+            mlflow.log_param("model_type", self.model_type)
+            mlflow.log_param("epochs", self.epochs)
+            mlflow.log_param("batch_size", self.batch_size)
+
+
+# ======================================================
     def load_model_from_mlflow(
         self,
         stage: str = "None"  # или "Staging", "None", либо конкретная версия как строка "1"
@@ -369,7 +414,7 @@ class Experiment:
         model_uri = f"models:/{self.model_name}/{stage}"
 
         try:
-            model = mlflow.keras.load_model(model_uri)
+            model = mlflow.keras.load_model(model_uri, compile=False)
             logging.info(f"Модель загружена из mlflow: {model_uri}")
             return model
         

@@ -24,15 +24,20 @@ class IsolationForestDetector(BaseAnomalyDetector):
         self.model = None
 
 # ======================================================
-    def fit(self, X_train: np.ndarray, y_train: Optional[np.ndarray] = None,
+    def fit(self, 
+            X_train: np.ndarray, 
+            y_train: Optional[np.ndarray] = None,
             X_val: Optional[np.ndarray] = None) -> 'IsolationForestDetector':
+        
         self.model = IsolationForest(
             n_estimators=self.n_estimators,
             contamination=self.contamination,
             random_state=self.random_state,
             **self.kwargs
         )
+
         self.model.fit(X_train)
+        
         return self
     
 # ======================================================
