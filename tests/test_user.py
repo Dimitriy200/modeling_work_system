@@ -27,12 +27,12 @@ from modeling_work_system.config import (
 )
 
 from pathlib import Path
-from modeling_work_system.pipeline.pipeline_spec import Pipeline
+from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 # from src.training.experiment import Experiment
-from modeling_work_system.training.experiment_new import Experiment
+from modeling_work_system.training.experiment import Experiment
 from modeling_work_system.models import autoencoder
 from modeling_work_system.training.trainer import train_model
 from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
@@ -86,9 +86,14 @@ results_threshold = choose_optimal_threshold_un(
     y_val=final_dataframes['y_val']
 )
 
-run_id = experiment.send_experiment_to_mlflow_new(
+
+# run_id = experiment.send_experiment_to_mlflow_new(
+#     model=trained_model,
+#     training_history=history,
+#     split_data=final_dataframes,
+#     threshold_result=results_threshold
+
+run_id = experiment.send_experiment_to_mlflow_mini(
     model=trained_model,
-    training_history=history,
-    split_data=final_dataframes,
-    threshold_result=results_threshold
+    training_history=history
 )
