@@ -11,7 +11,7 @@ from pathlib import Path
 parent_dir = Path(__file__).parent.parent
 sys.path.append(str(parent_dir))
 
-from src.config import (
+from modeling_work_system.config import (
     PATH_LOG,
     PATH_SKALERS,
 
@@ -21,99 +21,74 @@ from src.config import (
     MLFLOW_TRACKING_URI,
     MLFLOW_USERNAME,
     MLFLOW_REPO_OWNER,
-    MLFLOW_REPO_NAME
+    MLFLOW_REPO_NAME,
+    MLFLOW_REPO_TOKEN,
+    MLFLOW_REPO_PASSWORD
 )
 
 from pathlib import Path
-from src.pipeline.pipeline import Pipeline
-from src.preprocessing.scaler import Scaler
-from src.preprocessing.load_data_first import LoadDataTrain
-from src.preprocessing.load_data_add import LoadDataTrainAdd
-from src.training.experiment import Experiment
-from src.models import autoencoder
-from src.training.trainer import train_model
-from src.training.thresholding import choose_optimal_threshold_stadart
+from modeling_work_system.pipeline.pipeline_spec import Pipeline
+from modeling_work_system.preprocessing.scaler import Scaler
+from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
+from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
+# from src.training.experiment import Experiment
+from modeling_work_system.training.experiment_new import Experiment
+from modeling_work_system.models import autoencoder
+from modeling_work_system.training.trainer import train_model
+from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
 
 
 # ======================================================
-# 1 Подготовка Loader
+# 1 Подготовка Loader и Scaller
 # ======================================================
-# loader = LoadDataTrain()
 loader = LoadDataTrainAdd()
-
-# ======================================================
-# 2 Подготовка Scaler
-# ======================================================
 scaler_manager = Scaler()
-scaler = scaler_manager.load_scaler(Path(PATH_SKALERS).joinpath("test_skaller.pkl"))
 
-# ======================================================
-# 3 Запуск Pipeline
-# ======================================================
 pipeline = Pipeline(
     # path_data_dir = PATH_TRAIN_RAW,
-    path_data_dir = Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
-    path_scaler = Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
-    scaler_manager = scaler_manager,
-    loader = loader
-        )
-
-# Если берем данные с датсчиков то n_anom ближе к нулю
-final_train, final_test, final_valid, final_anomal = pipeline.run(n_anom=3)
-
-logging.info(f"Results: final_train:{final_train}\n final_test:{final_test}\n final_valid:{final_valid}\n final_anomal:{final_anomal}\n")
-
+    path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
+    path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
+    scaler_manager=scaler_manager,
+    loader=loader
+    )
 
 # ======================================================
-# 4 Проведение эксперимента
+# 2 Предобработка данных
+# ======================================================
+final_dataframes = pipeline.run_new()
+
+# ======================================================
+# 3 Проведение эксперимента
 # ======================================================
 
 experiment = Experiment(
-    mlflow_tracking_uri = MLFLOW_TRACKING_URI,
-    mlflow_repo_owner = MLFLOW_REPO_OWNER,
-    mlflow_repo_name = MLFLOW_REPO_NAME,
-    mlflow_username = MLFLOW_USERNAME
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN,
+    train_data=final_dataframes
 )
 
-MODEL_NAME = "test_model"
-EXPERIMENT_NAME = "Autoencoder_Anomaly_v2"
-epohs = 3
-batch_size = 80
+ld_model = experiment.load_model_from_mlflow()
 
-# ВАРИАНТ 1 - создаем новую модель
-# encoder = autoencoder.create_default_autoencoder()
-
-# ВАРИАНТ 2 - загружаем модел из mlflow
-  
-
-
-trained_model, history = train_model(
+trained_model, history = experiment.train_model(
     # model = encoder,
-    model = ld_model,
-    train_df = final_train, 
-    test_df = final_test, 
-    epochs = epohs, 
-    batch_size = batch_size)
+    model=ld_model,
+    train_df=final_dataframes['X_train'], 
+    test_df=final_dataframes['X_val']
+)
 
-threshold, best_accuracy, results_df = choose_optimal_threshold_stadart(
-    model = trained_model,
-    normal_control_df = final_valid, 
-    anomaly_control_df = final_anomal)
+results_threshold = choose_optimal_threshold_un(
+    model=trained_model,
+    X_val=final_dataframes['X_val'],
+    y_val=final_dataframes['y_val']
+)
 
-run_id = experiment.send_experiment_to_mlflow(
-    model = trained_model,
-    training_history = history,
-
-    X_train = final_train,
-    X_test = final_test,
-    X_val = final_valid,
-    X_anomaly = final_anomal,
-
-    threshold = threshold,
-    threshold_accuracy = best_accuracy,
-    df_threshold_results = results_df,
-
-    experiment_name = EXPERIMENT_NAME,
-    registered_model_name = MODEL_NAME,
-    epochs = epohs,
-    batch_size = batch_size)
+run_id = experiment.send_experiment_to_mlflow_new(
+    model=trained_model,
+    training_history=history,
+    split_data=final_dataframes,
+    threshold_result=results_threshold
+)
