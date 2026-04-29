@@ -460,25 +460,25 @@ class Experiment:
         except Exception as e:
             raise RuntimeError(f"Failed to load model from MLflow by URI '{model_uri}': {e}")
 
-# ======================================================
-    def train_model(
-        self,
-        model: keras.Model,
-        train_df: np.ndarray,
-        test_df: np.ndarray
-    ) -> keras.Model:
+# # ======================================================
+#     def train_model(
+#         self,
+#         model: keras.Model,
+#         train_df: np.ndarray,
+#         test_df: np.ndarray
+#     ) -> keras.Model:
         
-        """Обучает модель автокодировщика на нормальных данных."""
-        history = model.fit(
-            train_df, 
-            train_df,
-            validation_data = (test_df, test_df),
-            epochs = self.epochs,
-            batch_size = self.batch_size,
-            shuffle = True,
-            verbose = 1)
+#         """Обучает модель автокодировщика на нормальных данных."""
+#         history = model.fit(
+#             train_df, 
+#             train_df,
+#             validation_data = (test_df, test_df),
+#             epochs = self.epochs,
+#             batch_size = self.batch_size,
+#             shuffle = True,
+#             verbose = 1)
 
-        return model, history.history
+#         return model, history.history
 
 # ======================================================
     # def compare_weights(

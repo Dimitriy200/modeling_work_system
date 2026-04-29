@@ -38,7 +38,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.preprocessing import Preprocess
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
-from modeling_work_system.training.experiment import Experiment
+from modeling_work_system.experiment.experiment import Experiment
 from modeling_work_system.models.autoencoders import autoencoder
 from modeling_work_system.training.thresholding import choose_optimal_threshold_un
 

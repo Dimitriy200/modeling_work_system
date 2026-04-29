@@ -7,17 +7,17 @@ import logging
 # from numpy import load_csv_to_numpy
 from mlflow.models import infer_signature
 # from models.autoencoder import create_contractive_autoencoder
-from .metrics import compute_rmse
+from typing import Dict, Any, Tuple
+from ..metrics.metrics import compute_rmse
 from .thresholding import choose_optimal_threshold_stadart
 
 
-def train_model(
+def train_ae(
     model: keras.Model,
     train_df: np.ndarray,
     test_df: np.ndarray,
     epochs: int = 10,
-    batch_size: int = 80
-) -> keras.Model:
+    batch_size: int = 80 ) -> Tuple[keras.Model, Dict[str, Any]]:
     
     """Обучает модель автокодировщика на нормальных данных."""
     history = model.fit(

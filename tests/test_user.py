@@ -31,10 +31,9 @@ from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
-# from src.training.experiment import Experiment
-from modeling_work_system.training.experiment import Experiment
+from modeling_work_system.experiment.experiment import Experiment
 from modeling_work_system.models import autoencoder
-from modeling_work_system.training.trainer import train_model
+from modeling_work_system.training.trainer import train_ae
 from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
 
 
@@ -73,7 +72,16 @@ experiment = Experiment(
 
 ld_model = experiment.load_model_from_mlflow()
 
-trained_model, history = experiment.train_model(
+# ======================================================
+# 3.1 Инференс
+# ======================================================
+
+
+
+# ======================================================
+# 3.2 Дообучение (Опционально)
+# ======================================================
+trained_model, history = train_ae(
     # model = encoder,
     model=ld_model,
     train_df=final_dataframes['X_train'], 
@@ -86,6 +94,10 @@ results_threshold = choose_optimal_threshold_un(
     y_val=final_dataframes['y_val']
 )
 
+
+# ======================================================
+# 4 Логирование в Mlflow
+# ======================================================
 run_id = experiment.send_experiment_to_mlflow_mini(
     model=trained_model,
     training_history=history
