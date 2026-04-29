@@ -8,6 +8,7 @@ import pandas as pd
 import tempfile
 import os
 import json
+import warnings
 
 # from numpy import load_csv_to_numpy
 from pathlib import Path
@@ -21,7 +22,7 @@ from sklearn.metrics import (
     confusion_matrix
 )
 
-
+@warnings.deprecated("Этот класс устарел, используйте mlflowservice вместо него")
 class Experiment:
 
     """
