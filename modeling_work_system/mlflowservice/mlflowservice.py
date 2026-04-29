@@ -10,6 +10,7 @@ import os
 import json
 
 # from numpy import load_csv_to_numpy
+from ..models.autoencoders.basedetector_interface import BaseAnomalyDetector
 from pathlib import Path
 from mlflow.models import infer_signature
 from sklearn.metrics import (
@@ -113,3 +114,67 @@ class Mlflowservice:
             raise RuntimeError(f"Failed to load model from MLflow by URI '{model_uri}': {e}")
 
 
+# ======================================================
+    def save_model_to_mlflow(
+        self,
+        model: BaseAnomalyDetector,
+
+        training_history: dict,
+        threshold: dict,
+        epochs,
+        batch_size,
+
+        
+        model_name: str = "test_model",
+        experiment_name: str = "Autoencoder_Anomaly_v2",
+        feature_names: list = None,
+
+        additional_params: dict = None,
+        log_predictions: bool = False,
+        max_samples_log: int = 100
+    ):
+        
+        # Устанавливаем эксперимент
+        mlflow.set_experiment(experiment_name)
+
+        with mlflow.start_run(run_name=f"{model_name}_run") as run:
+            
+            # ==================== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ====================
+            mlflow.log_param("model_type", "Autoencoder")
+            mlflow.log_param("epochs", epochs)
+            mlflow.log_param("batch_size", batch_size)
+
+            # ======================================================
+            # ================== МЕТРИКИ ОБУЧЕНИЯ ==================
+            # ======================================================
+            # История по эпохам
+            if training_history is not None:
+                for epoch, (loss, val_loss) in enumerate(
+                    zip(training_history.get("loss", []), training_history.get("val_loss", []))
+                ):
+                    mlflow.log_metric("train_loss", float(loss), step=epoch)
+                    mlflow.log_metric("val_loss", float(val_loss), step=epoch)
+                
+                # Финальные потери
+                if training_history.get("loss"):
+                    mlflow.log_metric("final_train_loss", float(training_history["loss"][-1]))
+                    mlflow.log_metric("final_val_loss", float(training_history.get("val_loss", [-1])[-1]))
+            
+            # ======================================================
+            # ============= МЕТРИКИ ПОРОГА (VALIDATION) ============
+            # ======================================================
+            mlflow.log_metric("optimal_threshold", threshold)
+
+            # ======================================================
+            # ======================= МОДЕЛЬ =======================
+            # ======================================================
+            # Работет тоько для моделей  [keras|sclearn]
+            mlflow.keras.log_model(
+                model=model.get_model_core(),
+                artifact_path="model",
+                registered_model_name=model_name,
+                # signature=signature
+                # input_example=X_sample[:1]  # Пример входа для Model Registry
+            )
+
+            return run.info.run_id

@@ -96,9 +96,10 @@ class AutoEncoder(BaseAnomalyDetector):
         logging.info(f"Threshold selection is complete. \nThreshold is {self.threshold}")
         
         train_result = {
-            "model": self.model_core,
             "threshold": self.threshold,
-            "history":self.history.history
+            "history": self.history.history,
+            "epochs": epochs,
+            "batch_size": batch_size
         }
 
         return train_result

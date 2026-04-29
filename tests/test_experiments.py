@@ -83,13 +83,20 @@ mlfs = Mlflowservice(
 
 model_core = mlfs.load_model_from_mlflow()
 model_ae = AutoEncoder(model_core=model_core)
-model_ae.fit(
-    X_train=final_dataframes['X_train'],
-    X_test=final_dataframes['X_test'],
-    X_val=final_dataframes['X_val'],
-    Y_val=final_dataframes['y_val'])
+train_result = model_ae.fit(
+    X_train=final_dataframes["X_train"],
+    X_test=final_dataframes["X_test"],
+    X_val=final_dataframes["X_val"],
+    Y_val=final_dataframes["y_val"])
 
-
+# Логируем эксперимент в mlflow
+mlfs.save_model_to_mlflow(
+    model=model_ae,
+    training_history=train_result["history"],
+    threshold=train_result["threshold"],
+    epochs=train_result["threshold"],
+    batch_size=train_result["batch_size"]
+)
 
 
 
