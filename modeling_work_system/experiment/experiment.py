@@ -34,20 +34,20 @@ class Experiment:
 
     def __init__(
             self,
-            mlflow_tracking_uri: str, 
-            mlflow_repo_owner: str, 
-            mlflow_repo_name: str, 
-            mlflow_username: str,
-            mlflow_pass: str,
-            mlflow_token: str,
+            # mlflow_tracking_uri: str, 
+            # mlflow_repo_owner: str, 
+            # mlflow_repo_name: str, 
+            # mlflow_username: str,
+            # mlflow_pass: str,
+            # mlflow_token: str,
 
-            train_data: dict[str, np.ndarray],
+            # train_data: dict[str, np.ndarray],
 
-            # epochs: int = 3,
-            # batch_size: int = 80,
+            # # epochs: int = 3,
+            # # batch_size: int = 80,
 
-            model_type="Autoencoder",
-            # model_name: str = "test_model",
+            # model_type="Autoencoder",
+            # # model_name: str = "test_model",
             experiment_name: str = "Autoencoder_Anomaly_v2"
             ):
     

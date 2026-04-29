@@ -32,6 +32,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.experiment.experiment import Experiment
+from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 # from modeling_work_system.models.zscoredetector import ZScoreDetector
@@ -61,18 +62,32 @@ final_dataframes = pipeline.run_new()
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
-model_ae = AutoEncoder()
+
+# 3.1 Создаем модель с нуля
+# model_ae = AutoEncoder()
+# model_ae.fit(
+#     X_train=final_dataframes['X_train'],
+#     X_test=final_dataframes['X_test'],
+#     X_val=final_dataframes['X_val'],
+#     Y_val=final_dataframes['y_val'])
+
+# 3.2 Выгружаем модель из Mlflow
+mlfs = Mlflowservice(
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN
+)
+
+model_core = mlfs.load_model_from_mlflow()
+model_ae = AutoEncoder(model_core=model_core)
 model_ae.fit(
     X_train=final_dataframes['X_train'],
     X_test=final_dataframes['X_test'],
     X_val=final_dataframes['X_val'],
-    Y_val=final_dataframes['y_val']
-
-)
-
-
-
-
+    Y_val=final_dataframes['y_val'])
 
 
 
@@ -128,7 +143,7 @@ model_ae.fit(
 # ======================================================
 # model_autoencoder = AutoEncoder()
 # model_z1_score = ZScoreDetector() # Нет истории обучения
-model_is = IsolationForestDetector()
+# model_is = IsolationForestDetector()
 # ======================================================
 
 # ОБУЧАЕМ МОДЕЛИ
@@ -139,11 +154,6 @@ model_is = IsolationForestDetector()
 
 # model_z1_score_fit = model_z1_score.fit(X_train=final_dataframes['X_train'])
 
-model_isf = model_is.fit(
-    X_train=final_dataframes['X_train'],
-    y_train=final_dataframes['y_train'],
-    X_val=final_dataframes['X_val']
-)
 # ======================================================
 
 # ПОДБОР ЗНАЧЕНИЯ РАЗДЕЛЯЮЩЕЙ ПОВЕРХНОСТИ
@@ -177,10 +187,10 @@ model_isf = model_is.fit(
 #     threshold_result=results_threshold_z1
 # )
 
-run_id_if = experiment_IF.send_experiment_to_mlflow_new(
-    model=model_isf,
-    training_history=None,
-    split_data=final_dataframes,
-    threshold_result=None
-)
+# run_id_if = experiment_IF.send_experiment_to_mlflow_new(
+#     model=model_isf,
+#     training_history=None,
+#     split_data=final_dataframes,
+#     threshold_result=None
+# )
 # ======================================================
