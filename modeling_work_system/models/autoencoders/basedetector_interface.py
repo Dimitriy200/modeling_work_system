@@ -1,16 +1,31 @@
 
-
+import numpy as np
+import keras
 
 from abc import ABC, abstractmethod
-import numpy as np
 from typing import Optional
+
 
 class BaseAnomalyDetector(ABC):
     """
     Единый интерфейс для всех моделей детекции аномалий.
     Все модели должны реализовывать эти три метода.
     """
+    @abstractmethod
+    def get_model_core():
+        """
+        Хук: возвращает объект для сохранения в MLflow.
+        По умолчанию: self (подходит для sklearn, ZScore).
+        """
+        pass
 
+    @abstractmethod
+    def set_model_core(model: keras.Model):
+        """
+        Хук: сохранение внутренней модели.
+        По умолчанию: joblib (подходит для sklearn, ZScore).
+        """
+        pass
 
     @abstractmethod
     def fit(

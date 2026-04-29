@@ -43,11 +43,11 @@ class Experiment:
 
             train_data: dict[str, np.ndarray],
 
-            epochs: int = 3,
-            batch_size: int = 80,
+            # epochs: int = 3,
+            # batch_size: int = 80,
 
             model_type="Autoencoder",
-            model_name: str = "test_model",
+            # model_name: str = "test_model",
             experiment_name: str = "Autoencoder_Anomaly_v2"
             ):
     

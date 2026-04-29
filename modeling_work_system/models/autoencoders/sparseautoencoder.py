@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 from keras.metrics import MeanAbsoluteError, RootMeanSquaredError
-from .basedetector import BaseAnomalyDetector
+from .basedetector_interface import BaseAnomalyDetector
 from typing import Dict, Any
 
 

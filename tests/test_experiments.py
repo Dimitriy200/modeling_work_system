@@ -32,11 +32,10 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.experiment.experiment import Experiment
-from modeling_work_system.training.thresholding import choose_optimal_threshold_un
 
-from modeling_work_system.models.autoencoder import AutoEncoder
-from modeling_work_system.models.zscoredetector import ZScoreDetector
-from modeling_work_system.models.isolation_forest_detector import IsolationForestDetector
+from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
+# from modeling_work_system.models.zscoredetector import ZScoreDetector
+# from modeling_work_system.models.isolation_forest_detector import IsolationForestDetector
 
 
 # ======================================================
@@ -62,6 +61,24 @@ final_dataframes = pipeline.run_new()
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
+model_ae = AutoEncoder()
+model_ae.fit(
+    X_train=final_dataframes['X_train'],
+    X_test=final_dataframes['X_test'],
+    X_val=final_dataframes['X_val'],
+    Y_val=final_dataframes['y_val']
+
+)
+
+
+
+
+
+
+
+
+
+
 
 # СОЗДАЕМ ЭКСПЕРИМЕНТЫ ПОД КАЖДЫЙ ВИД МОДЕЛИ
 # experiment_AE = Experiment(
@@ -92,19 +109,19 @@ final_dataframes = pipeline.run_new()
 #     experiment_name='test_z1_experiment'
 # )
 
-experiment_IF = Experiment(
-    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-    mlflow_repo_owner=MLFLOW_REPO_OWNER,
-    mlflow_repo_name=MLFLOW_REPO_NAME,
-    mlflow_username=MLFLOW_USERNAME,
-    mlflow_pass=MLFLOW_REPO_PASSWORD,
-    mlflow_token=MLFLOW_REPO_TOKEN,
+# experiment_IF = Experiment(
+#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
+#     mlflow_repo_name=MLFLOW_REPO_NAME,
+#     mlflow_username=MLFLOW_USERNAME,
+#     mlflow_pass=MLFLOW_REPO_PASSWORD,
+#     mlflow_token=MLFLOW_REPO_TOKEN,
 
-    train_data=final_dataframes,
+#     train_data=final_dataframes,
 
-    model_name='test_IF_model',
-    experiment_name='test_IF_experiment'
-)
+#     model_name='test_IF_model',
+#     experiment_name='test_IF_experiment'
+# )
 
 
 # СОЗДАЕМ ВСЕ ВИДЫ МОДЕЛЕЙ
