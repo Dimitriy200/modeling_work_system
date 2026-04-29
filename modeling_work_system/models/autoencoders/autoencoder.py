@@ -30,7 +30,7 @@ class AutoEncoder(BaseAnomalyDetector):
         return model
 
 # ======================================================
-    def fit(self, 
+    def fit(self,
             X_train: np.ndarray,
             X_test: np.ndarray,
             epochs: int=5,

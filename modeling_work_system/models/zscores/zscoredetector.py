@@ -3,7 +3,7 @@ import numpy as np
 import logging
 
 from typing import Optional, Union
-from .basedetector import BaseAnomalyDetector
+from ..autoencoders.basedetector import BaseAnomalyDetector
 import mlflow
 import numpy as np
 import pandas as pd
