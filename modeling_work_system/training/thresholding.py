@@ -17,8 +17,13 @@ from sklearn.metrics import (
     roc_curve, 
     precision_recall_curve
 )
+<<<<<<< HEAD
 from ..metrics.metrics import compute_mse
 from ..models.basedetector import BaseAnomalyDetector
+=======
+from .metrics import compute_mse
+from ..models.autoencoders.basedetector import BaseAnomalyDetector
+>>>>>>> 5692e35dfbb3c4b67ae83b54b024489542487cf7
 
 
 # ======================================================

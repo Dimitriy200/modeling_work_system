@@ -95,9 +95,18 @@ results_threshold = choose_optimal_threshold_un(
 )
 
 
+
 # ======================================================
 # 4 Логирование в Mlflow
 # ======================================================
+
+# run_id = experiment.send_experiment_to_mlflow_new(
+#     model=trained_model,
+#     training_history=history,
+#     split_data=final_dataframes,
+#     threshold_result=results_threshold
+
+
 run_id = experiment.send_experiment_to_mlflow_mini(
     model=trained_model,
     training_history=history
