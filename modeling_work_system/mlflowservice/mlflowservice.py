@@ -108,10 +108,33 @@ class Mlflowservice:
                 # compile=False
                 )
             logging.info(f"The model is loaded from mlflow: {model_uri}")
+            
             return model
         
         except Exception as e:
             raise RuntimeError(f"Failed to load model from MLflow by URI '{model_uri}': {e}")
+
+
+#======================================================
+    def load_threshold_from_mlflow(
+            self,
+            model_name: str = "test_model",
+            experiment_name: str = "test_model_run",
+            run_id: str = None):
+        
+        if run_id is None:
+            run = self._get_run_mlflow(
+                model_name=model_name,
+                experiment_name=experiment_name
+            )
+        else:
+            run = mlflow.get_run(run_id)
+
+        # Получение конкретной метрики
+        threshold = run.data.metrics.get("threshold")
+        logging.info(f"Latest threshold is {threshold}")
+
+        return threshold
 
 
 # ======================================================
@@ -188,3 +211,45 @@ class Mlflowservice:
             )
 
             return run.info.run_id
+
+
+#======================================================
+    def _get_run_mlflow(
+            self,
+            model_name: str,
+            experiment_name: str):
+        
+        client = mlflow.tracking.MlflowClient()
+
+        
+
+        # Поиск последнего запуска по имени эксперимента
+        logging.info(f"experiment_name = {experiment_name}")
+        experiment = client.get_experiment_by_name(experiment_name)
+
+        if experiment is None:
+            available = [e.name for e in client.search_experiments()]
+            logging.error(
+                f"Experiment '{experiment_name}' NOT FOUND! "
+                f"Available: {available}"
+            )
+            return None
+
+        logging.info(f"Found experiment ID: {experiment.experiment_id}")
+        
+
+        runs = client.search_runs(
+            experiment_ids=[experiment.experiment_id],
+            # filter_string="tags.mlflow.runName LIKE '%DenseAE%'",
+            order_by=["start_time DESC"],  # Новые сверху
+            max_results=1
+            )
+
+        if runs:
+            run_id = runs[0].info.run_id
+            logging.info(f"Latest run_id is {run_id}")
+        
+        # Получение данных запуска
+        run = mlflow.get_run(run_id)
+
+        return run
