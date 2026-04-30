@@ -31,8 +31,9 @@ from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
-from modeling_work_system.experiment.experiment import Experiment
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
+from modeling_work_system.metrics.metrics import ExperimentMetric
+from modeling_work_system.metrics.aemetrics import AEMetricResult
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 # from modeling_work_system.models.zscoredetector import ZScoreDetector
@@ -89,6 +90,14 @@ train_result = model_ae.fit(
     X_val=final_dataframes["X_val"],
     Y_val=final_dataframes["y_val"])
 
+metrics = ExperimentMetric()
+ae_metrics = metrics.compute_all_metrics(
+    y_true=final_dataframes["y_test"],
+    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
+    scores=model_ae.predict_scores(final_dataframes["X_test"]),
+    threshold=train_result["threshold"]
+    )
+
 # Логируем эксперимент в mlflow
 mlfs.save_model_to_mlflow(
     model=model_ae,
@@ -96,7 +105,7 @@ mlfs.save_model_to_mlflow(
     threshold=train_result["threshold"],
     epochs=train_result["threshold"],
     batch_size=train_result["batch_size"]
-)
+    )
 
 
 

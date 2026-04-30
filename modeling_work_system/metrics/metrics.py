@@ -27,9 +27,14 @@ class ExperimentMetric:
         normal_label: int = 1,
         anomaly_label: int = 0,
         zero_division: float = 0.0):
-        
-        pass
+            
+        self.normal_label = normal_label
+        self.anomaly_label = anomaly_label
+        self.zero_division = zero_division
 
+        return None
+    
+# ======================================================
     def compute_all_metrics(
         self,
         y_true: np.ndarray,
@@ -59,8 +64,10 @@ class ExperimentMetric:
         MetricResult
             Объект со всеми метриками.
         """
+
+
         # Валидация входных данных
-        self._validate_inputs(y_true, y_pred, scores)
+        # self._validate_inputs(y_true, y_pred, scores)
         
         # Базовые метрики
         precision = precision_score(
@@ -105,6 +112,23 @@ class ExperimentMetric:
         n_true_negative = int(cm[1, 1])  # Правильно предсказанная аномалия
         n_false_positive = int(cm[0, 1])  # Ложная тревога
         n_false_negative = int(cm[1, 0])  # Пропущенная аномалия
+
+        logging.info("Metrics calculation completed:")
+        logging.info(f"precision = {precision}")
+        logging.info(f"recall = {recall}")
+        logging.info(f"f1 = {f1}")
+        logging.info(f"accuracy = {accuracy}")
+        logging.info(f"roc_auc = {roc_auc}")
+        logging.info(f"pr_auc = {pr_auc}")
+        logging.info(f"n_samples = {n_samples}")
+        logging.info(f"n_true_normal = {n_true_normal}")
+        logging.info(f"n_true_anomaly = {n_true_anomaly}")
+        logging.info(f"n_pred_normal = {n_pred_normal}")
+        logging.info(f"n_pred_anomaly = {n_pred_anomaly}")
+        logging.info(f"n_true_positive = {n_true_positive}")
+        logging.info(f"n_true_negative = {n_true_negative}")
+        logging.info(f"n_false_positive = {n_false_positive}")
+        logging.info(f"n_false_negative = {n_false_negative}")
         
         return AEMetricResult(
             precision=float(precision),

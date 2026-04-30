@@ -139,7 +139,7 @@ class AutoEncoder(BaseAnomalyDetector):
         '''
         Возвращает матрицу рконтрукций
         '''
-        X_recon = self.model.predict(X, verbose=0)
+        X_recon = self.model_core.predict(X, verbose=0)
         logging.info(f"The reconstruction is complete")
 
         res = np.mean(np.square(X - X_recon), axis=1)

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from typing import Dict, List, Optional, Tuple, Union
 from dataclasses import dataclass, field, asdict
 
