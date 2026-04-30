@@ -124,7 +124,8 @@ class Mlflowservice:
         epochs,
         batch_size,
 
-        
+        metrics: dict,
+
         model_name: str = "test_model",
         experiment_name: str = "Autoencoder_Anomaly_v2",
         feature_names: list = None,
@@ -139,10 +140,19 @@ class Mlflowservice:
 
         with mlflow.start_run(run_name=f"{model_name}_run") as run:
             
-            # ==================== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ====================
+            # ======================================================
+            # =============== ПАРАМЕТРЫ ЭКСПЕРИМЕНТА ===============
+            # ======================================================
             mlflow.log_param("model_type", "Autoencoder")
             mlflow.log_param("epochs", epochs)
             mlflow.log_param("batch_size", batch_size)
+
+            # ======================================================
+            # ================ МЕТРИКИ ЭКСПЕРИМЕНТА ================
+            # ======================================================
+            for key, value in metrics.items():
+                if isinstance(value, (int, float)):
+                    mlflow.log_metric(key, float(value))
 
             # ======================================================
             # ================== МЕТРИКИ ОБУЧЕНИЯ ==================

@@ -101,6 +101,8 @@ ae_metrics = metrics.compute_all_metrics(
 # Логируем эксперимент в mlflow
 mlfs.save_model_to_mlflow(
     model=model_ae,
+    metrics=ae_metrics.to_dict(),
+    
     training_history=train_result["history"],
     threshold=train_result["threshold"],
     epochs=train_result["threshold"],
