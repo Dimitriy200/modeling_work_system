@@ -239,7 +239,7 @@ class Mlflowservice:
         
 
         runs = client.search_runs(
-            experiment_ids=[experiment.experiment_id],
+            experiment_ids=[experiment.experiment_id], # Тут проблема - experiment возвращает None (эксперимент ненаходится, хотя все верно указано)
             # filter_string="tags.mlflow.runName LIKE '%DenseAE%'",
             order_by=["start_time DESC"],  # Новые сверху
             max_results=1
