@@ -30,7 +30,7 @@ class AutoEncoder(BaseAnomalyDetector):
 
         self.history = None
         self.model_name = model_name
-
+    
 # ======================================================
     def get_model_core(self) -> keras.Model:
         return self.model_core

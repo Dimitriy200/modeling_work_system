@@ -60,6 +60,7 @@ pipeline = Pipeline(
 # ======================================================
 final_dataframes = pipeline.run_new()
 
+
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
@@ -72,45 +73,10 @@ final_dataframes = pipeline.run_new()
 #     X_val=final_dataframes['X_val'],
 #     Y_val=final_dataframes['y_val'])
 
+
+# ======================================================
 # 3.2 Выгружаем модель из Mlflow
-# mlfs = Mlflowservice(
-#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
-#     mlflow_repo_name=MLFLOW_REPO_NAME,
-#     mlflow_username=MLFLOW_USERNAME,
-#     mlflow_pass=MLFLOW_REPO_PASSWORD,
-#     mlflow_token=MLFLOW_REPO_TOKEN
-# )
-
-# model_core = mlfs.load_model_from_mlflow()
-# model_ae = AutoEncoder(model_core=model_core)
-# train_result = model_ae.fit(
-#     X_train=final_dataframes["X_train"],
-#     X_test=final_dataframes["X_test"],
-#     X_val=final_dataframes["X_val"],
-#     Y_val=final_dataframes["y_val"])
-
-# metrics = ExperimentMetric()
-# ae_metrics = metrics.compute_all_metrics(
-#     y_true=final_dataframes["y_test"],
-#     y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
-#     scores=model_ae.predict_scores(final_dataframes["X_test"]),
-#     threshold=train_result["threshold"]
-#     )
-
-# # Логируем эксперимент в mlflow
-# run_id = mlfs.save_model_to_mlflow(
-#     model=model_ae,
-#     metrics=ae_metrics.to_dict(),
-
-#     training_history=train_result["history"],
-#     threshold=train_result["threshold"],
-#     epochs=train_result["threshold"],
-#     batch_size=train_result["batch_size"]
-#     )
-
-
-# # 3.3 Выгружаем модель из Mlflow. Только Predict
+# ======================================================
 mlfs = Mlflowservice(
     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
     mlflow_repo_owner=MLFLOW_REPO_OWNER,
@@ -121,7 +87,51 @@ mlfs = Mlflowservice(
 )
 
 model_core = mlfs.load_model_from_mlflow()
-threshold = mlfs.load_threshold_from_mlflow(run_id="3db630f8e6b848b58470ecf6df74f03d")
+model_ae = AutoEncoder(model_core=model_core)
+train_result = model_ae.fit(
+    X_train=final_dataframes["X_train"],
+    X_test=final_dataframes["X_test"],
+    X_val=final_dataframes["X_val"],
+    Y_val=final_dataframes["y_val"])
+
+metrics = ExperimentMetric()
+ae_metrics = metrics.compute_all_metrics(
+    y_true=final_dataframes["y_test"],
+    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
+    scores=model_ae.predict_scores(final_dataframes["X_test"]),
+    threshold=train_result["threshold"]
+    )
+
+# Логируем эксперимент в mlflow
+run_id = mlfs.save_model_to_mlflow(
+    model=model_ae,
+    metrics=ae_metrics.to_dict(),
+
+    training_history=train_result["history"],
+    threshold=train_result["threshold"],
+    epochs=train_result["threshold"],
+    batch_size=train_result["batch_size"]
+    )
+
+
+
+
+
+
+# ======================================================
+# 3.3 Выгружаем модель из Mlflow. Только Predict
+# ======================================================
+mlfs = Mlflowservice(
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN
+)
+
+model_core = mlfs.load_model_from_mlflow()
+threshold = mlfs.load_threshold_from_mlflow(run_id="")
 model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
 
 metrics = ExperimentMetric()

@@ -136,6 +136,18 @@ class Mlflowservice:
 
         return threshold
 
+#======================================================
+def load_skaller_from_mlflow(
+        self,
+        run_id: str,
+        model_name: str = "test_model",
+        experiment_name: str = "test_model_run"
+    ):
+    scaler_uri = f"runs:/{run_id}/scaler"
+    scaler = mlflow.sklearn.load_model(scaler_uri)
+
+    return scaler
+        
 
 # ======================================================
     def save_model_to_mlflow(
@@ -155,7 +167,9 @@ class Mlflowservice:
 
         additional_params: dict = None,
         log_predictions: bool = False,
-        max_samples_log: int = 100
+        max_samples_log: int = 100,
+        
+        scaler = None
     ):
         
         # Устанавливаем эксперимент
@@ -209,6 +223,17 @@ class Mlflowservice:
                 # signature=signature
                 # input_example=X_sample[:1]  # Пример входа для Model Registry
             )
+
+            # ======================================================
+            # ======================= SCALLER ======================
+            # ======================================================
+            if scaler is not None:
+                try:
+                    # MLflow сам упакует скалер в правильный формат
+                    mlflow.sklearn.log_model(scaler, artifact_path="scaler")
+                    print("✅ Scaler logged to MLflow")
+                except Exception as e:
+                    print(f"⚠️ Failed to log scaler: {e}")
 
             return run.info.run_id
 

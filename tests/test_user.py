@@ -31,10 +31,13 @@ from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
-from modeling_work_system.experiment.experiment import Experiment
-from modeling_work_system.models import autoencoder
-from modeling_work_system.training.trainer import train_ae
-from modeling_work_system.training.thresholding import choose_optimal_threshold_stadart, choose_optimal_threshold_un
+from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
+from modeling_work_system.metrics.metrics import ExperimentMetric
+from modeling_work_system.metrics.aemetrics import AEMetricResult
+
+from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
+# from modeling_work_system.models.zscoredetector import ZScoreDetector
+# from modeling_work_system.models.isolation_forest_detector import IsolationForestDetector
 
 
 # ======================================================
@@ -43,10 +46,11 @@ from modeling_work_system.training.thresholding import choose_optimal_threshold_
 loader = LoadDataTrainAdd()
 scaler_manager = Scaler()
 
+
 pipeline = Pipeline(
     # path_data_dir = PATH_TRAIN_RAW,
     path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
-    path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
+    # path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
     scaler_manager=scaler_manager,
     loader=loader
     )
@@ -56,58 +60,75 @@ pipeline = Pipeline(
 # ======================================================
 final_dataframes = pipeline.run_new()
 
+
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
 
-experiment = Experiment(
+# ======================================================
+# 3.2 До-обучение
+# ======================================================
+mlfs = Mlflowservice(
     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
     mlflow_repo_owner=MLFLOW_REPO_OWNER,
     mlflow_repo_name=MLFLOW_REPO_NAME,
     mlflow_username=MLFLOW_USERNAME,
     mlflow_pass=MLFLOW_REPO_PASSWORD,
-    mlflow_token=MLFLOW_REPO_TOKEN,
-    train_data=final_dataframes
+    mlflow_token=MLFLOW_REPO_TOKEN
 )
 
-ld_model = experiment.load_model_from_mlflow()
+model_core = mlfs.load_model_from_mlflow()
+model_ae = AutoEncoder(model_core=model_core)
+train_result = model_ae.fit(
+    X_train=final_dataframes["X_train"],
+    X_test=final_dataframes["X_test"],
+    X_val=final_dataframes["X_val"],
+    Y_val=final_dataframes["y_val"])
+
+metrics = ExperimentMetric()
+ae_metrics = metrics.compute_all_metrics(
+    y_true=final_dataframes["y_test"],
+    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
+    scores=model_ae.predict_scores(final_dataframes["X_test"]),
+    threshold=train_result["threshold"]
+    )
+
+# Логируем эксперимент в mlflow
+run_id = mlfs.save_model_to_mlflow(
+    model=model_ae,
+    metrics=ae_metrics.to_dict(),
+
+    training_history=train_result["history"],
+    threshold=train_result["threshold"],
+    epochs=train_result["threshold"],
+    batch_size=train_result["batch_size"]
+    )
+
 
 # ======================================================
-# 3.1 Инференс
+# 3.3 Predict
 # ======================================================
-
-
-
-# ======================================================
-# 3.2 Дообучение (Опционально)
-# ======================================================
-trained_model, history = train_ae(
-    # model = encoder,
-    model=ld_model,
-    train_df=final_dataframes['X_train'], 
-    test_df=final_dataframes['X_val']
+mlfs = Mlflowservice(
+    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+    mlflow_repo_owner=MLFLOW_REPO_OWNER,
+    mlflow_repo_name=MLFLOW_REPO_NAME,
+    mlflow_username=MLFLOW_USERNAME,
+    mlflow_pass=MLFLOW_REPO_PASSWORD,
+    mlflow_token=MLFLOW_REPO_TOKEN
 )
 
-results_threshold = choose_optimal_threshold_un(
-    model=trained_model,
-    X_val=final_dataframes['X_val'],
-    y_val=final_dataframes['y_val']
-)
+model_core = mlfs.load_model_from_mlflow()
+threshold = mlfs.load_threshold_from_mlflow(run_id="")
+model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
 
+metrics = ExperimentMetric()
 
+# Предсказание класса [НОРМА/АНОМАЛИЯ]
+y_pred=model_ae.predict(X=final_dataframes["X_test"], threshold=threshold)
 
-# ======================================================
-# 4 Логирование в Mlflow
-# ======================================================
-
-# run_id = experiment.send_experiment_to_mlflow_new(
-#     model=trained_model,
-#     training_history=history,
-#     split_data=final_dataframes,
-#     threshold_result=results_threshold
-
-
-run_id = experiment.send_experiment_to_mlflow_mini(
-    model=trained_model,
-    training_history=history
-)
+ae_metrics = metrics.compute_all_metrics(
+    y_true=final_dataframes["y_test"],
+    y_pred=y_pred,
+    scores=model_ae.predict_scores(final_dataframes["X_test"]),
+    threshold=threshold
+    )
