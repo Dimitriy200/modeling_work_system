@@ -137,16 +137,16 @@ class Mlflowservice:
         return threshold
 
 #======================================================
-def load_skaller_from_mlflow(
-        self,
-        run_id: str,
-        model_name: str = "test_model",
-        experiment_name: str = "test_model_run"
-    ):
-    scaler_uri = f"runs:/{run_id}/scaler"
-    scaler = mlflow.sklearn.load_model(scaler_uri)
+    def load_skaller_from_mlflow(
+            self,
+            run_id: str,
+            model_name: str = "test_model",
+            experiment_name: str = "test_model_run"
+        ):
+        scaler_uri = f"runs:/{run_id}/scaler"
+        scaler = mlflow.sklearn.load_model(scaler_uri)
 
-    return scaler
+        return scaler
         
 
 # ======================================================
