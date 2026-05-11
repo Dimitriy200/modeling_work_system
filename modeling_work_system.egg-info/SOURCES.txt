@@ -33,6 +33,9 @@ modeling_work_system/preprocessing/load_data_add.py
 modeling_work_system/preprocessing/load_data_first.py
 modeling_work_system/preprocessing/preprocessing.py
 modeling_work_system/preprocessing/scaler.py
+tests/test_add_train.py
 tests/test_all_metods.py
 tests/test_experiments.py
+tests/test_full_train.py
+tests/test_inference.py
 tests/test_user.py

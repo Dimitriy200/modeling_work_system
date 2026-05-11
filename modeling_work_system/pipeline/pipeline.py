@@ -26,7 +26,7 @@ class Pipeline:
             scaler_manager: Type[Scaler],
             loader: Type[LoadData],
             processor: Preprocess = Preprocess(),
-            path_scaler: str = None
+            scaler: str = None
 
         ):
 
@@ -34,10 +34,10 @@ class Pipeline:
         self.loader = loader
         self.processor = processor
 
-        if path_scaler is None:
+        if scaler is None:
             self.scaler = StandardScaler()
         else:
-            self.scaler = scaler_manager.load_scaler(path_scaler)
+            self.scaler = scaler
         
         if path_data_dir is None:
             logging.error("data_raw_dir is None!!!")
@@ -45,7 +45,11 @@ class Pipeline:
             self.data_raw_dir = path_data_dir
     
 # ======================================================
-    def run(self, n_anom = 10) -> Dict[str, pd.DataFrame]:
+    def run(
+            self, 
+            n_anom = 10, 
+            fit_scaller: bool = False
+            ) -> Dict[str, pd.DataFrame]:
         """
         Запускает процесс предобработки данных
          1. Читает данные из указанной директории. Способ чтения зависит от Loader-а.
@@ -93,11 +97,12 @@ class Pipeline:
         # ======================================================
         # 3 Обучение и нормализация c Scaler
         # ======================================================
-        std_scaler = self.scaler_manager.fit_scaler(result_pipeline_info['X_train'], cols) # Обучаем Scaller только на нормальных данных!!!
-
-        final_X_train = self.scaler_manager.apply_scaler(std_scaler, result_pipeline_info['X_train'], cols)
-        final_X__val = self.scaler_manager.apply_scaler(std_scaler, result_pipeline_info['X_val'], cols)
-        final_X__test = self.scaler_manager.apply_scaler(std_scaler, result_pipeline_info['X_test'], cols)
+        if fit_scaller:
+            self.scaler = self.scaler_manager.fit_scaler(result_pipeline_info['X_train'], cols) # Обучаем Scaller только на нормальных данных!!!
+        else:
+            final_X_train = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_train'], cols)
+            final_X__val = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_val'], cols)
+            final_X__test = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_test'], cols)
 
 
         # ======================================================
@@ -117,7 +122,7 @@ class Pipeline:
             'y_val': final_Y__val,
             'y_test': final_Y__test,
 
-            'scaller': std_scaler
+            'scaller': self.scaler
             })
         
         logging.info(f"Results: final_X_train: {result_pipeline_info['X_train']}")
@@ -131,3 +136,6 @@ class Pipeline:
         logging.info(" === BIG DATA PREPROCESSING STAGE COMPLETED === ")
 
         return result_pipeline_info
+
+
+# ======================================================

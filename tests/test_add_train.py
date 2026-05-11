@@ -9,9 +9,10 @@ sys.path.append(str(parent_dir))
 
 from modeling_work_system.config import (
     PATH_LOG,
-    PATH_SKALERS,
 
-    PATH_TRAIN_RAW,
+    RUN_ID_SCALLER,
+    RUN_ID_TRESHOLD,
+
     PATH_TRAIN_ADD_RAW,
 
     MLFLOW_TRACKING_URI,
@@ -25,26 +26,20 @@ from modeling_work_system.config import (
 from pathlib import Path
 from modeling_work_system.pipeline.pipeline import Pipeline
 from modeling_work_system.preprocessing.scaler import Scaler
-from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
+from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
 from modeling_work_system.metrics.aemetrics import AEMetricResult
-from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 
+from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 
 # ======================================================
 # I Подготовка сервисов
 # ======================================================
-loader = LoadDataTrain()
+loader = LoadDataTrainAdd()
 scaler_manager = Scaler()
 metrics = ExperimentMetric()
-model_ae = AutoEncoder()
-
-pipeline = Pipeline(
-    path_data_dir = PATH_TRAIN_RAW,
-    scaler_manager=scaler_manager,
-    loader=loader
-    )
+# model_ae = AutoEncoder()
 
 mlfs = Mlflowservice(
     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
@@ -53,36 +48,49 @@ mlfs = Mlflowservice(
     mlflow_username=MLFLOW_USERNAME,
     mlflow_pass=MLFLOW_REPO_PASSWORD,
     mlflow_token=MLFLOW_REPO_TOKEN
-)
+    )
+
+# ======================================================
+# II Скачивание модели, разделяющей поверхности и scaller-a
+# ======================================================
+model_core = mlfs.load_model_from_mlflow()
+threshold = mlfs.load_threshold_from_mlflow(run_id=RUN_ID_TRESHOLD)
+scaller = mlfs.load_skaller_from_mlflow()
+
+model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
 
 
 # ======================================================
-# II Предобработка данных
+# III Предобработка данных
 # ======================================================
-final_pipeline = pipeline.run(fit_scaller=True)
+pipeline = Pipeline(
+    path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
+    scaler_manager=scaler_manager,
+    loader=loader,
+    scaler=scaller
+    )
 
+final_dataframes = pipeline.run()
 
 # ======================================================
-# III Проведение эксперимента
+# IV Проведение эксперимента [До-обучение]
 # ======================================================
-
-# Обучение
 train_result = model_ae.fit(
-    X_train=final_pipeline["X_train"],
-    X_test=final_pipeline["X_test"],
-    X_val=final_pipeline["X_val"],
-    Y_val=final_pipeline["y_val"])
+    X_train=final_dataframes["X_train"],
+    X_test=final_dataframes["X_test"],
+    X_val=final_dataframes["X_val"],
+    Y_val=final_dataframes["y_val"]
+    )
 
-# Сбор метрик
 ae_metrics = metrics.compute_all_metrics(
-    y_true=final_pipeline["y_test"],
-    y_pred=model_ae.predict(X=final_pipeline["X_test"],threshold=train_result["threshold"]),
-    scores=model_ae.predict_scores(final_pipeline["X_test"]),
+    y_true=final_dataframes["y_test"],
+    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
+    scores=model_ae.predict_scores(final_dataframes["X_test"]),
     threshold=train_result["threshold"]
     )
 
 # ======================================================
-# IV Логирование данных
+# V Логирование эксперимента в Mlflow
 # ======================================================
 run_id = mlfs.save_model_to_mlflow(
     model=model_ae,
@@ -91,9 +99,5 @@ run_id = mlfs.save_model_to_mlflow(
     training_history=train_result["history"],
     threshold=train_result["threshold"],
     epochs=train_result["threshold"],
-    batch_size=train_result["batch_size"],
-    scaler=final_pipeline["scaller"],
-
-    experiment_name="scaller_save",
-    model_name="scaller_save"
+    batch_size=train_result["batch_size"]
     )

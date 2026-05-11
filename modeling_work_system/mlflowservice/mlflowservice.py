@@ -139,11 +139,12 @@ class Mlflowservice:
 #======================================================
     def load_skaller_from_mlflow(
             self,
-            run_id: str,
-            model_name: str = "test_model",
-            experiment_name: str = "test_model_run"
-        ):
-        scaler_uri = f"runs:/{run_id}/scaler"
+            # run_id: str,
+            model_name: str = "scaller_save",
+            # experiment_name: str = "test_model_run",
+            versions="latest"):
+        
+        scaler_uri = f"models:/{model_name}/{versions}"
         scaler = mlflow.sklearn.load_model(scaler_uri)
 
         return scaler
@@ -230,10 +231,15 @@ class Mlflowservice:
             if scaler is not None:
                 try:
                     # MLflow сам упакует скалер в правильный формат
-                    mlflow.sklearn.log_model(scaler, artifact_path="scaler")
-                    print("--- Scaler logged to MLflow ---")
+                    mlflow.sklearn.log_model(
+                        scaler, 
+                        artifact_path="scaler",
+                        registered_model_name="scaller_save"
+                        )
+                    
+                    logging.info("--- Scaler logged to MLflow ---")
                 except Exception as e:
-                    print(f"⚠️ Failed to log scaler: {e}")
+                    logging.info(f"--- Failed to log scaler: {e} ---")
 
             return run.info.run_id
 
