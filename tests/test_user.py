@@ -36,9 +36,11 @@ from modeling_work_system.metrics.metrics import ExperimentMetric
 from modeling_work_system.metrics.aemetrics import AEMetricResult
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-# from modeling_work_system.models.zscoredetector import ZScoreDetector
-# from modeling_work_system.models.isolation_forest_detector import IsolationForestDetector
 
+
+# ======================================================
+# I Проведение 
+# ======================================================
 
 # ======================================================
 # 1 Подготовка Loader и Scaller
@@ -64,6 +66,7 @@ final_dataframes = pipeline.run_new()
 # ======================================================
 # 3 Проведение эксперимента
 # ======================================================
+
 
 # ======================================================
 # 3.2 До-обучение

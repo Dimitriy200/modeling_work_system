@@ -231,7 +231,7 @@ class Mlflowservice:
                 try:
                     # MLflow сам упакует скалер в правильный формат
                     mlflow.sklearn.log_model(scaler, artifact_path="scaler")
-                    print("✅ Scaler logged to MLflow")
+                    print("--- Scaler logged to MLflow ---")
                 except Exception as e:
                     print(f"⚠️ Failed to log scaler: {e}")
 
