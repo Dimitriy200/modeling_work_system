@@ -1,0 +1,140 @@
+% !TeX TS-program = pdflatex
+\documentclass[14pt, a4paper, oneside]{extreport}
+\usepackage{extsizes} % Поддержка 14pt
+
+% Кодировки и язык
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+% Геометрия страницы (ГОСТ Р 7.0.11-2011)
+\usepackage{geometry}
+\geometry{left=30mm, right=10mm, top=20mm, bottom=20mm}
+
+% Интервалы и абзацы
+\usepackage{setspace}
+\onehalfspacing % 1.5 межстрочный интервал
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\usepackage{indentfirst}
+
+% Математика и формулы
+\usepackage{amsmath, amssymb, mathtools}
+\numberwithin{equation}{section} % Нумерация формул: (1.1), (2.3) и т.д.
+
+% Рисунки, таблицы, подписи
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{labelsep=period, font=normal}
+
+% Заголовки и нумерация разделов
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\bfseries\centering\large}{\thechapter}{1em}{}
+\titleformat{\section}[hang]{\bfseries\normalsize}{\thesection}{1em}{}
+\titleformat{\subsection}[hang]{\bfseries\normalsize}{\thesubsection}{1em}{}
+\titlespacing*{\chapter}{0pt}{0pt}{1em}
+\titlespacing*{\section}{0pt}{1em}{0.5em}
+\titlespacing*{\subsection}{0pt}{1em}{0.5em}
+
+% Убираем слово "Глава", оставляем только номер
+\addto\captionsrussian{\renewcommand{\chaptername}{}}
+\renewcommand{\contentsname}{СОДЕРЖАНИЕ}
+
+% Ссылки
+\usepackage{hyperref}
+\hypersetup{colorlinks=false, pdfborder={0 0 0}}
+
+\begin{document}
+
+% ==========================================
+% НУМЕРАЦИЯ НАЧИНАЕТСЯ С 6-Й СТРАНИЦЫ
+% ==========================================
+\pagenumbering{arabic}
+\setcounter{page}{6}
+
+\tableofcontents
+\clearpage
+
+% ==========================================
+% ВВЕДЕНИЕ
+% ==========================================
+\chapter*{ВВЕДЕНИЕ}
+\addcontentsline{toc}{chapter}{ВВЕДЕНИЕ}
+% ВСТАВЬТЕ СЮДА ТЕКСТ ВВЕДЕНИЯ
+\clearpage
+
+% ==========================================
+% ГЛАВА 1
+% ==========================================
+\chapter{АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И СУЩЕСТВУЮЩИХ АНАЛОГОВ}
+\section{Обзор исследований и моделей машинного обучения для решения аналогичных задач}
+\subsection{Применение классических и глубоких автокодировщиков для оценки состояния оборудования}
+% Текст 1.1.1
+\subsection{Вариационные автокодировщики в задачах вероятностного прогнозирования и генерации временных рядов}
+% Текст 1.1.2
+\subsection{Сравнительный анализ генеративных архитектур (GAN, Diffusion, VAE) для моделирования циклических процессов}
+% Текст 1.1.3
+\subsection{Адаптация функции ELBO и амортизированный вывод для многошагового прогнозирования состояний}
+% Текст 1.1.4
+
+\section{Критерии оценки и валидации генеративных моделей в промышленной диагностике}
+% Текст 1.2
+
+\subsection*{Научная новизна}
+\addcontentsline{toc}{subsection}{Научная новизна}
+\begin{itemize}
+    \item Предложена адаптация вариационной нижней оценки...
+    \item Разработан метод формирования скалярного индикатора...
+    \item Создан двухэтапный алгоритм генерации...
+\end{itemize}
+
+\subsection*{Теоретическая и практическая значимость}
+\addcontentsline{toc}{subsection}{Теоретическая и практическая значимость}
+% Текст значимости
+
+\subsection*{Положения, выносимые на защиту}
+\addcontentsline{toc}{subsection}{Положения, выносимые на защиту}
+\begin{enumerate}
+    \item Математическая модель оценки состояния...
+    \item Алгоритм двухэтапной генерации...
+    \item Методика валидации генеративной модели...
+\end{enumerate}
+
+\section*{1.3 Выводы}
+\addcontentsline{toc}{section}{1.3 Выводы}
+% Текст выводов
+\clearpage
+
+% ==========================================
+% ГЛАВА 2
+% ==========================================
+\chapter{ПРОЕКТИРОВАНИЕ СИСТЕМЫ МОДЕЛИРОВАНИЯ ДАННЫХ}
+\section{Постановка задачи}
+\subsection{Формальная постановка задачи моделирования состояния оборудования}
+% Текст 2.1.1 + формулы
+\begin{equation}
+X_{1:n} = \{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}
+\end{equation}
+
+% Добавьте остальные подразделы главы 2 по необходимости
+\clearpage
+
+% ==========================================
+% ЗАКЛЮЧЕНИЕ
+% ==========================================
+\chapter*{ЗАКЛЮЧЕНИЕ}
+\addcontentsline{toc}{chapter}{ЗАКЛЮЧЕНИЕ}
+% Текст заключения
+\clearpage
+
+% ==========================================
+% СПИСОК ИСТОЧНИКОВ
+% ==========================================
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+\bibitem{1} Пример источника...
+\bibitem{2} Jia Guo, G. Liu, Y. Zuo, J. Wu. An Anomaly Detection Framework...
+% Добавьте остальные источники
+\end{thebibliography}
+
+\end{document}
