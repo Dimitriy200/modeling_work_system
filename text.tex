@@ -28,19 +28,28 @@
 
 \usepackage{tocloft}
 
-% Настройка заголовка "СОДЕРЖАНИЕ"
+% Название оглавления
 \renewcommand{\contentsname}{СОДЕРЖАНИЕ}
-\renewcommand{\cfttoctitlefont}{\normalfont\normalsize\bfseries\hspace{1.25cm}} % 14pt, жирный, красная строка
-\setlength{\cftbeforetoctitleskip}{0pt}  % Убираем отступ сверху
-\setlength{\cftaftertoctitleskip}{1em}   % Отступ после заголовка до списка
 
-% Настройка отступов для записей оглавления
-% \setlength{\cftchapindent}{1.25cm}
-% \setlength{\cftsecindent}{1.25cm}
-% \setlength{\cftsubsecindent}{1.25cm}
+% Шрифт заголовка "СОДЕРЖАНИЕ" (строго 14pt, жирный, с красной строкой)
+\renewcommand{\cfttoctitlefont}{\normalfont\bfseries\hspace{1.25cm}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{1em}
+
+% Отступы для записей оглавления (красная строка 1.25 см)
+\setlength{\cftchapindent}{0cm}
+\setlength{\cftsecindent}{0cm}
+\setlength{\cftsubsecindent}{0cm}
+
+% Ширина поля под номер (0pt, так как нумерация ручная)
 \setlength{\cftchapnumwidth}{0pt}
 \setlength{\cftsecnumwidth}{0pt}
 \setlength{\cftsubsecnumwidth}{0pt}
+
+% Точки-заполнители до номера страницы
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
 
 \usepackage{hyperref}
 \hypersetup{colorlinks=false, pdfborder={0 0 0}}
