@@ -2,7 +2,7 @@ import numpy as np
 
 from typing import Optional
 from sklearn.ensemble import IsolationForest
-from .basedetector import BaseAnomalyDetector
+from ..autoencoders.basedetector import BaseAnomalyDetector
 
 
 class IsolationForestDetector(BaseAnomalyDetector):
