@@ -73,7 +73,7 @@ class Mlflowservice:
         self,
         model_name: str = "test_model",
         # experiment_name: str = "Autoencoder_Anomaly_v2",
-        stage: str = "None"  # или "Staging", "None", либо конкретная версия как строка "1"
+        stage: str = "latest"  # или "Staging", "None", либо конкретная версия как строка "1"
         ) -> keras.Model:
         
         """
@@ -100,7 +100,7 @@ class Mlflowservice:
             mlflow.set_tracking_uri(self.mlflow_tracking_uri)
 
         # Формируем URI модели в формате MLflow
-        model_uri = f"models:/{model_name}/latest"
+        model_uri = f"models:/{model_name}/{stage}"
 
         try:
             model = mlflow.keras.load_model(

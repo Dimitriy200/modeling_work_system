@@ -6,3 +6,5 @@
 /mlruns
 /logs
 /dist
+/docs/*
+!/docs/tex.tex

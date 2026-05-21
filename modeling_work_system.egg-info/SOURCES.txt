@@ -25,6 +25,7 @@ modeling_work_system/models/zscores/__init__.py
 modeling_work_system/models/zscores/zscoredetector.py
 modeling_work_system/pipeline/__init__.py
 modeling_work_system/pipeline/pipeline.py
+modeling_work_system/pipeline/pipeline_add.py
 modeling_work_system/pipeline/pipeline_spec.py
 modeling_work_system/plots/__init__.py
 modeling_work_system/preprocessing/__init__.py
