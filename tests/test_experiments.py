@@ -36,6 +36,8 @@ from modeling_work_system.metrics.metrics import ExperimentMetric
 from modeling_work_system.metrics.aemetrics import AEMetricResult
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
+from modeling_work_system.plots.history import  plot_training_curves
+
 # from modeling_work_system.models.zscoredetector import ZScoreDetector
 # from modeling_work_system.models.isolation_forest_detector import IsolationForestDetector
 
@@ -48,8 +50,8 @@ scaler_manager = Scaler()
 
 
 pipeline = Pipeline(
-    # path_data_dir = PATH_TRAIN_RAW,
-    path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
+    path_data_dir = PATH_TRAIN_RAW,
+    # path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
     # path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
     scaler_manager=scaler_manager,
     loader=loader
@@ -58,7 +60,7 @@ pipeline = Pipeline(
 # ======================================================
 # 2 Предобработка данных
 # ======================================================
-final_dataframes = pipeline.run_new()
+final_dataframes = pipeline.run()
 
 
 # ======================================================
@@ -66,52 +68,53 @@ final_dataframes = pipeline.run_new()
 # ======================================================
 
 # 3.1 Создаем модель с нуля
-# model_ae = AutoEncoder()
-# model_ae.fit(
-#     X_train=final_dataframes['X_train'],
-#     X_test=final_dataframes['X_test'],
-#     X_val=final_dataframes['X_val'],
-#     Y_val=final_dataframes['y_val'])
+model_ae = AutoEncoder()
+train_result = model_ae.fit(
+    X_train=final_dataframes['X_train'],
+    X_test=final_dataframes['X_test'],
+    X_val=final_dataframes['X_val'],
+    Y_val=final_dataframes['y_val'],
+    epochs=20)
 
 
 # ======================================================
 # 3.2 Выгружаем модель из Mlflow
 # ======================================================
-mlfs = Mlflowservice(
-    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-    mlflow_repo_owner=MLFLOW_REPO_OWNER,
-    mlflow_repo_name=MLFLOW_REPO_NAME,
-    mlflow_username=MLFLOW_USERNAME,
-    mlflow_pass=MLFLOW_REPO_PASSWORD,
-    mlflow_token=MLFLOW_REPO_TOKEN
-)
+# mlfs = Mlflowservice(
+#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
+#     mlflow_repo_name=MLFLOW_REPO_NAME,
+#     mlflow_username=MLFLOW_USERNAME,
+#     mlflow_pass=MLFLOW_REPO_PASSWORD,
+#     mlflow_token=MLFLOW_REPO_TOKEN
+# )
 
-model_core = mlfs.load_model_from_mlflow()
-model_ae = AutoEncoder(model_core=model_core)
-train_result = model_ae.fit(
-    X_train=final_dataframes["X_train"],
-    X_test=final_dataframes["X_test"],
-    X_val=final_dataframes["X_val"],
-    Y_val=final_dataframes["y_val"])
+# model_core = mlfs.load_model_from_mlflow()
+# model_ae = AutoEncoder(model_core=model_core)
+# train_result = model_ae.fit(
+#     X_train=final_dataframes["X_train"],
+#     X_test=final_dataframes["X_test"],
+#     X_val=final_dataframes["X_val"],
+#     Y_val=final_dataframes["y_val"])
 
-metrics = ExperimentMetric()
-ae_metrics = metrics.compute_all_metrics(
-    y_true=final_dataframes["y_test"],
-    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
-    scores=model_ae.predict_scores(final_dataframes["X_test"]),
-    threshold=train_result["threshold"]
-    )
+# metrics = ExperimentMetric()
+# ae_metrics = metrics.compute_all_metrics(
+#     y_true=final_dataframes["y_test"],
+#     y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=train_result["threshold"]),
+#     scores=model_ae.predict_scores(final_dataframes["X_test"]),
+#     threshold=train_result["threshold"]
+#     )
 
-# Логируем эксперимент в mlflow
-run_id = mlfs.save_model_to_mlflow(
-    model=model_ae,
-    metrics=ae_metrics.to_dict(),
+# # Логируем эксперимент в mlflow
+# run_id = mlfs.save_model_to_mlflow(
+#     model=model_ae,
+#     metrics=ae_metrics.to_dict(),
 
-    training_history=train_result["history"],
-    threshold=train_result["threshold"],
-    epochs=train_result["threshold"],
-    batch_size=train_result["batch_size"]
-    )
+#     training_history=train_result["history"],
+#     threshold=train_result["threshold"],
+#     epochs=train_result["threshold"],
+#     batch_size=train_result["batch_size"]
+#     )
 
 
 
@@ -121,31 +124,33 @@ run_id = mlfs.save_model_to_mlflow(
 # ======================================================
 # 3.3 Выгружаем модель из Mlflow. Только Predict
 # ======================================================
-mlfs = Mlflowservice(
-    mlflow_tracking_uri=MLFLOW_TRACKING_URI,
-    mlflow_repo_owner=MLFLOW_REPO_OWNER,
-    mlflow_repo_name=MLFLOW_REPO_NAME,
-    mlflow_username=MLFLOW_USERNAME,
-    mlflow_pass=MLFLOW_REPO_PASSWORD,
-    mlflow_token=MLFLOW_REPO_TOKEN
-)
+# mlfs = Mlflowservice(
+#     mlflow_tracking_uri=MLFLOW_TRACKING_URI,
+#     mlflow_repo_owner=MLFLOW_REPO_OWNER,
+#     mlflow_repo_name=MLFLOW_REPO_NAME,
+#     mlflow_username=MLFLOW_USERNAME,
+#     mlflow_pass=MLFLOW_REPO_PASSWORD,
+#     mlflow_token=MLFLOW_REPO_TOKEN
+# )
 
-model_core = mlfs.load_model_from_mlflow()
-threshold = mlfs.load_threshold_from_mlflow(run_id="")
-model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
+# model_core = mlfs.load_model_from_mlflow()
+# threshold = mlfs.load_threshold_from_mlflow(run_id="")
+# model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
 
-metrics = ExperimentMetric()
-ae_metrics = metrics.compute_all_metrics(
-    y_true=final_dataframes["y_test"],
-    y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=threshold),
-    scores=model_ae.predict_scores(final_dataframes["X_test"]),
-    threshold=threshold
-    )
-
-
+# metrics = ExperimentMetric()
+# ae_metrics = metrics.compute_all_metrics(
+#     y_true=final_dataframes["y_test"],
+#     y_pred=model_ae.predict(X=final_dataframes["X_test"],threshold=threshold),
+#     scores=model_ae.predict_scores(final_dataframes["X_test"]),
+#     threshold=threshold
+#     )
 
 
+# ======================================================
+# 4 Рссчет метрик
+# ======================================================
 
+plot_training_curves(train_result["history"])
 
 
 
