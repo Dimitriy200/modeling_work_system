@@ -17,7 +17,12 @@ from ..preprocessing.load_data import LoadData
 from ..preprocessing.scaler import Scaler
 
 
-class Pipeline:
+class PipelinePredict:
+    """
+    Pipeline для дообучения.
+    Scaller не обучается.
+    На выходе Тот же объем данных что и на входе, но предобработанный Scaller-ом
+    """
     
     def __init__(
             self,
@@ -54,14 +59,7 @@ class Pipeline:
         Запускает процесс предобработки данных
          1. Читает данные из указанной директории. Способ чтения зависит от Loader-а.
          2. Удаляет пропуски.
-         3. Маркирует и диференцирует данные на нормальные и аномальные
-         4. Применяет к данным указанный Scaler.
-         5. Разделяет датафрейм на TRAIN и TEST.
-         6. Преобразовывает в numpy наборы данных и возвращает в порядке:
-          - TRAIN
-          - TEST
-          - VALID
-          - ANOMAL
+         3. Применяет к данным указанный Scaler.
         """
 
         # ======================================================
@@ -80,62 +78,32 @@ class Pipeline:
         # ======================================================
         # 2.1 Удаление пропусков
         no_null_df = self.processor.delete_nan(raw_df)
-
-        # logging.info(no_null_df)
         logging.info(" --- DATA DELETION COMPLETE --- ")
-
-        # 2.2 Определение Norm и Anom и добавление столбца с меткой
-        marking_df = self.processor.marking_norm_anom(no_null_df)
-        # marking_df.to_csv(Path(PATH_TRAIN_PROCESSED).joinpath("marking_df.csv"))
-        # logging.info(f"marking_df\n{marking_df}")
-        logging.info(" --- MARKING OF NORMAL AND ANOMAL DATA IS COMPLETE --- ")
-
-        result_pipeline_info = self.processor.split_by_engine_train_test_val(dataframe=marking_df)
-        logging.info(" --- DATA DISTRIBUTION TO ENGINES IS COMPLETE --- ")
 
 
         # ======================================================
         # 3 Обучение и нормализация c Scaler
         # ======================================================
-        if fit_scaller:
-            self.scaler = self.scaler_manager.fit_scaler(result_pipeline_info['X_train'], cols) # Обучаем Scaller только на нормальных данных!!!
-        else:
-            final_X_train = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_train'], cols)
-            final_X__val = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_val'], cols)
-            final_X__test = self.scaler_manager.apply_scaler(self.scaler, result_pipeline_info['X_test'], cols)
+        scaled_X = self.scaler_manager.apply_scaler(self.scaler, no_null_df, cols)
 
 
         # ======================================================
         # 4 Финальные преобразования меток
         # ======================================================
-        final_Y_train = self.processor.pd_to_numpy(result_pipeline_info['y_train'])
-        final_Y__val = self.processor.pd_to_numpy(result_pipeline_info['y_val'])
-        final_Y__test = self.processor.pd_to_numpy(result_pipeline_info['y_test'])
+        final_X = self.processor.pd_to_numpy(scaled_X)
         
 
-        result_pipeline_info.update({
-            'X_train': final_X_train,
-            'X_val': final_X__val,
-            'X_test': final_X__test,
-
-            'y_train': final_Y_train,
-            'y_val': final_Y__val,
-            'y_test': final_Y__test,
-
+        result_pipeline = ({
+            'final_X': final_X,
             'scaller': self.scaler
             })
         
-        logging.info(f"Results: final_X_train: {result_pipeline_info['X_train']}")
-        logging.info(f"final_X_test: {result_pipeline_info['X_test']}")
-        logging.info(f"final_X_val: {result_pipeline_info['X_val']}")
-        logging.info(f"Results: final_y_train: {result_pipeline_info['y_train']}")
-        logging.info(f"final_y_test: {result_pipeline_info['y_test']}")
-        logging.info(f"final_y_val: {result_pipeline_info['y_val']}")
+        logging.info(f"Results: result_pipeline: {result_pipeline['final_X']}")
 
         logging.info(" --- APPLICATION OF SCALER TO TRAIN TEST AND VAL COMPLETED --- ")
         logging.info(" === BIG DATA PREPROCESSING STAGE COMPLETED === ")
 
-        return result_pipeline_info
+        return result_pipeline
 
 
 # ======================================================

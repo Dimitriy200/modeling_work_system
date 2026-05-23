@@ -17,7 +17,12 @@ from ..preprocessing.load_data import LoadData
 from ..preprocessing.scaler import Scaler
 
 
-class Pipeline:
+class PipelineFit:
+    """
+    Основной Pipeline предобработки данных.
+    Возможно обучение Scaller-а.
+    На выходе наборы данных [Train, Test, Val]
+    """
     
     def __init__(
             self,
@@ -26,7 +31,7 @@ class Pipeline:
             scaler_manager: Type[Scaler],
             loader: Type[LoadData],
             processor: Preprocess = Preprocess(),
-            scaler: str = None
+            scaler: BaseEstimator = None
 
         ):
 

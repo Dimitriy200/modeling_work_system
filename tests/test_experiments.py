@@ -27,7 +27,7 @@ from modeling_work_system.config import (
 )
 
 from pathlib import Path
-from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
@@ -49,7 +49,7 @@ loader = LoadDataTrainAdd()
 scaler_manager = Scaler()
 
 
-pipeline = Pipeline(
+pipeline = PipelineFit(
     path_data_dir = PATH_TRAIN_RAW,
     # path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
     # path_scaler=Path(PATH_SKALERS).joinpath("test_skaller.pkl"),
