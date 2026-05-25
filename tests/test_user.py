@@ -102,6 +102,7 @@ mlfs = Mlflowservice(
 )
 
 model_core = mlfs.load_model_from_mlflow()
+model_core = mlfs.load_model_from_mlflow(stage="Production")
 model_ae = AutoEncoder(model_core=model_core)
 train_result = model_ae.fit(
     X_train=final_dataframes_fit["X_train"],
