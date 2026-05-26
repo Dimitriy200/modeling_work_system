@@ -24,7 +24,7 @@ from modeling_work_system.config import (
 )
 
 from pathlib import Path
-from modeling_work_system.pipeline.pipeline import Pipeline
+from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_add import LoadDataTrainAdd
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
@@ -63,7 +63,7 @@ model_ae = AutoEncoder(model_core=model_core, threshold=threshold)
 # ======================================================
 # III Предобработка данных
 # ======================================================
-pipeline = Pipeline(
+pipeline = PipelineFit(
     path_data_dir=Path(PATH_TRAIN_ADD_RAW).joinpath("2024-07-02_2024-07-03_2024-07-04"),
     scaler_manager=scaler_manager,
     loader=loader,

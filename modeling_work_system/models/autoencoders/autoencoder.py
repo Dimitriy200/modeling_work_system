@@ -5,6 +5,8 @@ import pandas as pd
 
 from keras.metrics import MeanAbsoluteError, RootMeanSquaredError
 from .basedetector_interface import BaseAnomalyDetector
+from ...metrics.aemetrics import AEMetricResult
+from ...metrics.metrics import ExperimentMetric
 from typing import Dict, Any, Optional
 from sklearn.metrics import (
     accuracy_score, 
@@ -30,6 +32,7 @@ class AutoEncoder(BaseAnomalyDetector):
 
         self.history = None
         self.model_name = model_name
+        self.metrics = ExperimentMetric()
     
 # ======================================================
     def get_model_core(self) -> keras.Model:
@@ -147,7 +150,6 @@ class AutoEncoder(BaseAnomalyDetector):
 
         return res
     
-
 # ======================================================
     def choose_optimal_threshold(
             self,
@@ -349,3 +351,10 @@ class AutoEncoder(BaseAnomalyDetector):
         #     'score_history': pd.DataFrame(all_scores)
         #     # 'plot_path': plot_path
         # }
+
+# ======================================================
+    def __gt__(
+            self, 
+            other_model: BaseAnomalyDetector):
+        
+        self.metrics.compute_all_metrics()

@@ -9,10 +9,12 @@ import tempfile
 import os
 import json
 
+from typing import Literal, Optional
 # from numpy import load_csv_to_numpy
 from ..models.autoencoders.basedetector_interface import BaseAnomalyDetector
 from pathlib import Path
 from mlflow.models import infer_signature
+from mlflow.tracking import MlflowClient
 from sklearn.metrics import (
     precision_score, 
     recall_score, 
@@ -21,6 +23,10 @@ from sklearn.metrics import (
     accuracy_score, 
     confusion_matrix
 )
+
+
+StageVersion = Literal["Production", "Staging", "Archived"]
+threshol_name = "optimal_threshold"
 
 
 class Mlflowservice:
@@ -73,7 +79,7 @@ class Mlflowservice:
         self,
         model_name: str = "test_model",
         # experiment_name: str = "Autoencoder_Anomaly_v2",
-        stage: str = "latest"  # или "Staging", "None", либо конкретная версия как строка "1"
+        stage: StageVersion = "latest"
         ) -> keras.Model:
         
         """
@@ -120,21 +126,82 @@ class Mlflowservice:
             self,
             model_name: str = "test_model",
             experiment_name: str = "test_model_run",
-            run_id: str = None):
+            run_id: str = None,
+            stage: StageVersion = "latest"):
+        """
+        Загружает порог (threshold) для указанной модели из MLflow.
+        Порог берётся из метрик того run'а, в котором модель была зарегистрирована.
+        """
         
-        if run_id is None:
-            run = self._get_run_mlflow(
-                model_name=model_name,
-                experiment_name=experiment_name
+        client = MlflowClient()
+
+
+        # 1 Определяем версию модели
+        if stage == "latest":
+            # Ищем последнюю версию по номеру (любой стадии)
+            versions = client.search_model_versions(
+                f"name='{model_name}'",
+                order_by=["version_number DESC"],
+                max_results=1
             )
+            if not versions:
+                raise ValueError(f"Модель '{model_name}' не найдена в MLflow Registry")
+            model_version = versions[0]
+            
+        elif stage.isdigit():
+            # Если передан номер версии как строка: "3"
+            model_version = client.get_model_version(model_name, stage)
+            
         else:
-            run = mlflow.get_run(run_id)
-
-        # Получение конкретной метрики
-        threshold = run.data.metrics.get("threshold")
-        logging.info(f"Latest threshold is {threshold}")
-
+            # Если передана стадия: "Production", "Staging", etc.
+            versions = client.get_latest_versions(model_name, stages=[stage])
+            if not versions:
+                raise ValueError(f"Не найдено версий модели '{model_name}' в стадии '{stage}'")
+            model_version = versions[0]
+        
+        # 2 Получаем run_id, в котором была создана эта версия
+        run_id = model_version.run_id
+        if not run_id:
+            raise RuntimeError(
+                f"Не удалось найти run_id для модели {model_name} версии {model_version.version}. "
+                "Возможно, модель была зарегистрирована без привязки к run."
+            )
+        
+        # 3 Загружаем порог из метрик этого run'а
+        run = mlflow.get_run(run_id)
+        threshold = run.data.metrics.get(threshol_name)  # ← убедитесь, что так логируете!
+        
+        if threshold is None:
+            # Пробуем альтернативные имена (если логировали под другим ключом)
+            threshold = run.data.metrics.get(threshol_name)
+        
+        if threshold is None:
+            logging.warning(
+                f"⚠️ Порог не найден в метриках run {run_id}. "
+                f"Доступные метрики: {list(run.data.metrics.keys())}"
+            )
+            return None
+        
+        logging.info(
+            f"✅ Порог загружен для {model_name} v{model_version.version} "
+            f"(stage: {model_version.current_stage}, run: {run_id}): {threshold}"
+        )
         return threshold
+
+
+        # if run_id is None:
+        #     run = self._get_run_mlflow(
+        #         model_name=model_name,
+        #         experiment_name=experiment_name
+        #     )
+        # else:
+        #     run = mlflow.get_run(run_id)
+
+        # # Получение конкретной метрики
+        # threshold = run.data.metrics.get("threshold")
+        # logging.info(f"Latest threshold is {threshold}")
+
+        # return threshold
 
 #======================================================
     def load_skaller_from_mlflow(
@@ -164,6 +231,7 @@ class Mlflowservice:
 
         model_name: str = "test_model",
         experiment_name: str = "Autoencoder_Anomaly_v2",
+        stage: Optional[StageVersion] = None,  # "Production", "Staging", "Archived" или None
         feature_names: list = None,
 
         additional_params: dict = None,
@@ -211,7 +279,7 @@ class Mlflowservice:
             # ======================================================
             # ============= МЕТРИКИ ПОРОГА (VALIDATION) ============
             # ======================================================
-            mlflow.log_metric("optimal_threshold", threshold)
+            mlflow.log_metric(threshol_name, threshold)
 
             # ======================================================
             # ======================= МОДЕЛЬ =======================
@@ -219,11 +287,44 @@ class Mlflowservice:
             # Работет тоько для моделей  [keras|sclearn]
             mlflow.keras.log_model(
                 model=model.get_model_core(),
-                artifact_path="model",
+                name=model_name,
                 registered_model_name=model_name,
                 # signature=signature
                 # input_example=X_sample[:1]  # Пример входа для Model Registry
             )
+
+            # ======================================================
+            # ============= ПЕРЕВОД В СТАДИЮ (Production) ==========
+            # ======================================================
+            if stage is not None:  # type: ignore
+                try:
+                    client = MlflowClient()
+                    
+                    # Получаем последнюю версию модели (только что созданную)
+                    latest_versions = client.get_latest_versions(
+                        model_name, 
+                        stages=["None"]  # версии без стадии = только что созданные
+                    )
+                    
+                    if latest_versions:
+                        version = latest_versions[0].version
+                        
+                        # Если stage == "Archived", не архивируем другие
+                        # Чтобы в "Production" всегда была только одна активная версия
+                        archive_existing = (stage == "Production")
+                        
+                        client.transition_model_version_stage(
+                            name=model_name,
+                            version=version,
+                            stage=stage,
+                            archive_existing_versions=archive_existing
+                        )
+                        logging.info(f"Model {model_name} v{version} transferred to '{stage}'")
+                    else:
+                        logging.warning(f"No new version of {model_name} found for translation '{stage}'")
+                        
+                except Exception as e:
+                    logging.error(f"Error translating model {model_name} to '{stage}': {e}")
 
             # ======================================================
             # ======================= SCALLER ======================

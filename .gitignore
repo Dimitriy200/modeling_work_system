@@ -6,5 +6,10 @@
 /mlruns
 /logs
 /dist
-/docs/*
-!/docs/pz_v1/tex.tex
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.gz
+*.toc
+*.png

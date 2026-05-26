@@ -1,0 +1,204 @@
+\documentclass[14pt, a4paper, oneside]{extreport}
+\usepackage{extsizes}
+
+\usepackage{cmap} % Улучшает отображение символов в PDF
+% \usepackage{plantuml}
+
+% \usepackage{microtype}       % Улучшает переносы и плотность текста
+% \usepackage[htt]{hyphenat}   % Позволяет переносить слова с дефисами и URL
+
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{geometry}
+\geometry{left=30mm, right=10mm, top=20mm, bottom=20mm}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\usepackage{indentfirst}
+
+% ==========================================
+% ФОРМАТИРОВАНИЕ (ВСЁ В ПРЕАМБУЛЕ)
+% ==========================================
+
+
+\usepackage{amsmath, amssymb, mathtools}
+% \numberwithin{equation}{section} % Нумерация формул (1.1), (2.3)
+
+\usepackage{titlesec}
+\titleformat{\chapter}[block]{\normalfont\normalsize\normalsize}{}{0pt}{\hspace{1.25cm}}
+\titleformat{\section}[block]{\normalfont\normalsize\normalsize}{}{0pt}{\hspace{1.25cm}}
+\titleformat{\subsection}[block]{\normalfont\normalsize\normalsize}{}{0pt}{\hspace{1.25cm}}
+\titlespacing*{\chapter}{0pt}{0pt}{1em}
+\titlespacing*{\section}{0pt}{1em}{0.5em}
+\titlespacing*{\subsection}{0pt}{1em}{0.5em}
+
+\usepackage{tocloft}
+
+% Название оглавления (правильный способ для babel)
+\addto\captionsrussian{\renewcommand{\contentsname}{СОДЕРЖАНИЕ}}
+\addto\captionsrussian{\renewcommand{\bibname}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}}
+
+% Шрифт заголовка "СОДЕРЖАНИЕ" (строго 14pt, жирный, с красной строкой)
+\renewcommand{\cfttoctitlefont}{\normalfont\normalsize\hspace{1.25cm}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{1em}
+
+% Отступы для записей оглавления (красная строка 1.25 см)
+\setlength{\cftchapindent}{0cm}
+\setlength{\cftsecindent}{0cm}
+\setlength{\cftsubsecindent}{0cm}
+
+% Ширина поля под номер (0pt, так как нумерация ручная)
+\setlength{\cftchapnumwidth}{0pt}
+\setlength{\cftsecnumwidth}{0pt}
+\setlength{\cftsubsecnumwidth}{0pt}
+
+% Точки-заполнители до номера страницы
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=false, pdfborder={0 0 0}}
+
+% Настройка маркированных списков (тире с висячим отступом)
+\usepackage{enumitem}
+% \usepackage{enumitem}
+
+\setlist[itemize]{
+    label=---,
+    leftmargin=1.25pt,            % Общий отступ списка = 0
+    itemindent=1.92cm,         % Первая строка с красной строки
+    listparindent=0pt,         % Вторая строка без отступа
+    % labelsep=0.5em,
+    itemsep=0cm,
+    topsep=0pt,
+    partopsep=0pt,
+    parsep=0cm,
+    after=\vspace{0em}
+    % label=---,
+    wide=1.25cm,               % Начало маркера строго с красной строки
+    % leftmargin=1.25cm,         % Вторая и последующие строки выровнены по маркеру
+    % labelsep=0.3em,            % Небольшой пробел между тире и текстом
+    % itemsep=0pt,
+    % topsep=0pt,
+    % partopsep=0pt,
+    % parsep=0pt
+}
+
+% Настройка нумерованных списков (enumerate) - если нужно тоже с тире
+\setlist[enumerate]{
+    label=(\arabic*),
+    leftmargin=1.25pt,
+    itemindent=1.92cm,
+    listparindent=0pt,
+    labelsep=0.5em,
+    itemsep=0pt,
+    topsep=0pt,
+    partopsep=0pt,
+    parsep=0pt,
+    after=\vspace{0em} % ← Убирает отступ после списка
+    % label=\arabic*),
+    wide=1.25cm,               % Начало цифры строго с красной строки
+    % leftmargin=1.25cm,         % Вторая строка выровнена ровно под цифру
+    % labelsep=0.4em,            % Пробел после скобки
+    % itemsep=0pt,
+    % topsep=0pt,
+    % partopsep=0pt,
+    % parsep=0pt
+}
+
+
+% НАСТРОЙКА РИСУНКОВ
+\usepackage[russian]{babel}
+\usepackage{caption}
+
+% Переопределение формата: Рисунок 1 - Название
+\DeclareCaptionLabelSeparator{hyphen}{ --- }
+\captionsetup[figure]{labelsep=hyphen, name=Рисунок, justification=centering,}
+
+% \usepackage{caption}
+
+% % Настройка подписей к рисункам
+% \captionsetup[figure]{
+%     name=Рисунок,
+%     labelsep=period,
+%     font=normal,
+%     skip=1em,
+%     justification=centering,
+%     singlelinecheck=off
+% }
+% \captionsetup[figure]{
+%     name=Рисунок,
+%     labelsep=hyphen,
+% }
+
+
+
+% ==========================================
+% НАЧАЛО ДОКУМЕНТА
+% ==========================================
+
+\begin{document}
+% Убираем нумерацию для содержания
+\makeatletter
+\renewcommand{\numberline}[1]{}
+\makeatother
+
+
+% ==========================================
+% НУМЕРАЦИЯ НАЧИНАЕТСЯ С 6-Й СТРАНИЦЫ
+% ==========================================
+\pagenumbering{arabic}
+\setcounter{page}{6}
+
+\tableofcontents
+\clearpage
+
+
+
+% ==========================================
+% ВВЕДЕНИЕ
+% ==========================================
+\section{ВВЕДЕНИЕ}
+\vspace{1em}
+В современных условиях эксплуатации сложных технологических систем крайне важно не только учитывать текущее состояние составляющих систему модулей, но и уметь прогнозировать их поведение на несколько эксплуатационных циклов вперёд. Прогнозирование выхода параметров за допустимые границы позволяет не только снизить риски аварийной эксплуатации, но и повысить общую эффективность производственного процесса, предотвратив экономические издержки, связанные с незапланированными простоями или преждевременным снятием с эксплуатации ещё ресурсных узлов.
+
+Оценка и моделирование текущего состояния оборудования являются ключевыми факторами перехода к предиктивному обслуживанию. Своевременное формирование вероятностных сценариев развития состояния дает возможность использовать оборудование с максимальной эффективностью и оптимизировать графики технического обслуживания. В работах [2–10] рассматривается решение проблем обнаружения аномалий и прогнозирования остаточного ресурса технологического оборудования с использованием моделей глубокого обучения. Особое внимание в современных исследованиях уделяется генеративным архитектурам, способным моделировать распределения временных рядов и синтезировать правдоподобные траектории развития отказов.
+
+Особенностью данной работы является применение вариационного автокодировщика (VAE) в качестве основы системы. Модель решает две сопряженные задачи: классическую задачу восстановления текущих параметров и задачу генерации последующих n эксплуатационных циклов. Амортизация параметров латентного распределения z выполняется не по полному временному ряду, а на основе начальных n циклов, что позволяет эффективно оперировать скалярными показателями состояния St (не являющимися векторами) и генерировать элементы выходной последовательности. 
+Математический аппарат алгоритма базируется на адаптации вариационной нижней оценки (ELBO) под задачу последовательного прогнозирования.
+
+Данная работа имеет практическую значимость в областях производства и эксплуатации технологически сложного оборудования, в частности турбовентиляторных двигателей и промышленных агрегатов. Её применение позволяет формировать прогнозы будущих показателей циклов, выявлять скрытые закономерности деградации и поддерживать принятие решений в условиях неполных или зашумленных данных.
+
+В связи с этим целью данной работы являлось снижение эксплуатационных рисков и повышение экономической эффективности за счет создания системы моделирования состояния оборудования на базе вариационного автокодировщика, обеспечивающей генерацию последующих циклов и точную оценку технического состояния.
+
+\clearpage
+
+
+
+% ==========================================
+% РАЗДЕЛ I
+% ==========================================
+\section{1 АНАЛИЗ ПРЕДМЕТНОЙ ОБЛАСТИ И СУЩЕСТВУЮЩИХ АНАЛОГОВ}
+\begin{itemize}
+    \item Итем 1
+    \item Итем 2
+\end{itemize}
+
+\vspace{1em}
+\section{2.7 Концептуальное проектирование системы}
+\vspace{1em}
+
+Взаимодействие компонентов и потоки данных представлены на рисунке~\ref{fig:system_architecture}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../img/system_architecture.png}
+    \caption{Система, обеспечивающая работу с данными и моделями для решения поставленной задачи}
+    \label{fig:system_architecture}
+\end{figure}
+
+\end{document}
