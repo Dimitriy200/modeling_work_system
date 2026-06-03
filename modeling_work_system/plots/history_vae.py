@@ -140,7 +140,7 @@ def plot_training_curves(
                 f"Возможно переобучение — рассмотрите EarlyStopping."
             )
         else:
-            logging.info("✅ Val Loss стабильно снижается — модель сходится.")
+            logging.info("✅ Val Loss steadily decreasing - the model converges.")
     
     # Анализ KL-Annealing
     if len(history['train_kld']) >= 2:
@@ -150,5 +150,5 @@ def plot_training_curves(
                 "Увеличьте WARMUP_EPOCHS или проверьте архитектуру."
             )
         else:
-            logging.info(f"✅ KL Divergence активна ({history['train_kld'][-1]:.4f}) — "
-                         f"латентное пространство используется.")
+            logging.info(f"✅ KL Divergence is active ({history['train_kld'][-1]:.4f}) — "
+                         f"latent space is used.")
