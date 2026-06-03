@@ -10,9 +10,10 @@ from typing import Dict, List, Optional, Any
 
 def run_reconstruction_comparison_table(
     models: Dict[str, Any],
-    norm_engines: List[np.ndarray],
-    anom_engines: List[np.ndarray],
-    threshold: Optional[float] = None,
+    norm_engines: pd.DataFrame,
+    anom_engines: pd.DataFrame,
+    engine_col: str = 'unit number',
+    features: Optional[List[str]] = None,
     n_bootstrap: int = 200,
     confidence_level: float = 0.95,
     seed: int = 42,
@@ -20,51 +21,50 @@ def run_reconstruction_comparison_table(
 ) -> pd.DataFrame:
     """
     Сравнивает модели через кластерный бутстрап по двигателям.
-    Возвращает таблицу с метриками и погрешностями.
-    
-    Parameters
-    ----------
-    models : dict
-        {имя_модели: объект_модели}
-    norm_engines, anom_engines : list[np.ndarray]
-        Списки массивов, где каждый элемент = данные одного двигателя
-    threshold : float, optional
-        Порог для расчёта F1/Accuracy. Если None, метрики будут NaN.
-    n_bootstrap : int
-        Количество бутстрап-итераций
-    confidence_level : float
-        Уровень доверительного интервала (по умолчанию 0.95)
-    seed : int
-        Сид для воспроизводимости
-    return_raw : bool
-        Если True, возвращает кортеж (summary_df, raw_df)
-        
-    Returns
-    -------
-    pd.DataFrame
-        Таблица с мультииндексом колонок: (метрика, статистика)
+    Принимает pd.DataFrame, автоматически группирует по engine_col.
+    Метрики: ROC-AUC и RMSE.
     """
     rng = np.random.default_rng(seed)
-    n_eng_norm = len(norm_engines)
-    n_eng_anom = len(anom_engines)
+    
+    # 1️⃣ Определяем признаки
+    if features is None:
+        features = [c for c in norm_engines.columns]
+        anom_features = [c for c in anom_engines.columns]
+        if set(features) != set(anom_features):
+            raise ValueError("Несовпадение признаков в norm_engines и anom_engines")
+    
+    # 2️⃣ Группируем по двигателям ОДИН раз
+    norm_groups = {name: group[features].values for name, group in norm_engines.groupby(engine_col)}
+    anom_groups = {name: group[features].values for name, group in anom_engines.groupby(engine_col)}
+    
+    norm_ids = list(norm_groups.keys())
+    anom_ids = list(anom_groups.keys())
+    
+    if not norm_ids or not anom_ids:
+        raise ValueError("Не найдены двигатели в одном из датафреймов")
+    
+    n_eng_norm = len(norm_ids)
+    n_eng_anom = len(anom_ids)
+    
+    logging.info(f"Cluster bootstrap: {n_eng_norm} normal engines, {n_eng_anom} anomal")
     
     # Хранилище сырых результатов
     raw_records = []
     
     for b in range(n_bootstrap):
-        # 1️⃣ Кластерный бутстрап: выбираем индексы двигателей с возвращением
-        idx_norm = rng.choice(n_eng_norm, size=n_eng_norm, replace=True)
-        idx_anom = rng.choice(n_eng_anom, size=n_eng_anom, replace=True)
+        # 1️⃣ Кластерный бутстрап: выбираем ID двигателей с возвращением
+        sampled_norm_ids = rng.choice(norm_ids, size=n_eng_norm, replace=True)
+        sampled_anom_ids = rng.choice(anom_ids, size=n_eng_anom, replace=True)
         
         # 2️⃣ Склеиваем целые двигатели в единые массивы
-        X_norm_bs = np.concatenate([norm_engines[i] for i in idx_norm])
-        X_anom_bs = np.concatenate([anom_engines[i] for i in idx_anom])
+        X_norm_bs = np.concatenate([norm_groups[eid] for eid in sampled_norm_ids])
+        X_anom_bs = np.concatenate([anom_groups[eid] for eid in sampled_anom_ids])
         
-        # 3️ Предсказания и метрики для каждой модели
+        # 3️⃣ Предсказания и метрики для каждой модели
         for name, model in models.items():
-            # Предполагаем, что predict_score() возвращает реконструкцию
-            X_rec_norm = model.predict_score(X_norm_bs)
-            X_rec_anom = model.predict_score(X_anom_bs)
+            # Предполагаем, что reconstruct() возвращает реконструкцию
+            X_rec_norm = model.reconstruct(X_norm_bs)
+            X_rec_anom = model.reconstruct(X_anom_bs)
             
             # Ошибки реконструкции по объектам
             err_norm = np.mean((X_norm_bs - X_rec_norm) ** 2, axis=1)
@@ -82,21 +82,13 @@ def run_reconstruction_comparison_table(
                     np.vstack([X_rec_norm, X_rec_anom])
                 ))
             }
-            
-            if threshold is not None:
-                preds = (y_scores > threshold).astype(int)
-                rec['f1'] = f1_score(y_true, preds)
-                rec['accuracy'] = accuracy_score(y_true, preds)
-            else:
-                rec['f1'] = np.nan
-                rec['accuracy'] = np.nan
                 
             raw_records.append(rec)
             
     raw_df = pd.DataFrame(raw_records)
     
     # 📊 Агрегация статистик
-    metrics_cols = ['roc_auc', 'rmse', 'f1', 'accuracy']
+    metrics_cols = ['roc_auc', 'rmse']
     alpha = 1 - confidence_level
     ci_low_pct = (alpha / 2) * 100
     ci_high_pct = (1 - alpha / 2) * 100
@@ -117,7 +109,6 @@ def run_reconstruction_comparison_table(
             else:
                 model_stats[(col, 'mean')] = vals.mean()
                 model_stats[(col, 'std')] = vals.std(ddof=1)
-                # Percentile bootstrap CI
                 model_stats[(col, 'ci_low')] = np.percentile(vals, ci_low_pct)
                 model_stats[(col, 'ci_high')] = np.percentile(vals, ci_high_pct)
                 model_stats[(col, 'se')] = vals.std(ddof=1) / np.sqrt(len(vals))
@@ -128,6 +119,9 @@ def run_reconstruction_comparison_table(
     cols = pd.MultiIndex.from_product([metrics_cols, ['mean', 'std', 'ci_low', 'ci_high', 'se']])
     summary_df = pd.DataFrame(summary_data).T.reindex(columns=cols)
     summary_df.index.name = 'model'
+
+    logging.info(f"raw_df: \n{raw_df}")
+    logging.info(f"summary_df: \n{summary_df}")
     
     return (summary_df, raw_df) if return_raw else summary_df
 

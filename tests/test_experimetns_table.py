@@ -65,6 +65,10 @@ no_null_df = processor.delete_nan(raw_df)
 marking_df = processor.marking_norm_anom(no_null_df)
 splited_dataframes = processor.split_by_engine_train_test_val(dataframe=marking_df)
 
+logging.info(f"X_train_anom = {splited_dataframes["X_train_anom"]}")
+logging.info(f"X_val_anom = {splited_dataframes["X_val_anom"]}")
+logging.info(f"X_test_anom = {splited_dataframes["X_test_anom"]}")
+
 # 2.1 Обучение и применение Scaler
 cols = raw_df.columns.tolist()
 std_scaler = scaler_manager.fit_scaler(splited_dataframes["X_train"], cols) # Обучаем Scaller только на нормальных и TRAIN данных !!!
@@ -73,11 +77,22 @@ scaled_X_train = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_t
 scaled_X_val = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val'], cols)
 scaled_X_test = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test'], cols)
 
+scaled_X_train_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], cols)
+scaled_X_val_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], cols)
+scaled_X_test_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], cols)
+
 
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
-train_info = ae_standart.fit(
+train_info_ae_standart = ae_standart.fit(
+    X_train=scaled_X_train,
+    X_val=scaled_X_val,
+    X_test=scaled_X_test,
+    Y_val=splited_dataframes['y_val'],
+    epochs=3)
+
+train_info_ae_expansion = ae_expansion.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
@@ -89,5 +104,32 @@ train_info = ae_standart.fit(
 # III ВИЗУАЛИЗАЦИЯ РЕЗУЛЬТАТОВ [ОБУЧЕНИЕ / КЛАССИФИКАЦИЯ / ВОССТАНОВЛЕНИЕ ДАННЫХ]
 # ======================================================
 plot_training_curves(
-    history=train_info["history"],
+    history=train_info_ae_standart["history"],
     save_path=os.path.join(PATH_IMG, "standart_ae_history.png"))
+
+plot_training_curves(
+    history=train_info_ae_expansion["history"],
+    save_path=os.path.join(PATH_IMG, "expansion_ae_history.png"))
+
+# ======================================================
+# IV Сбор экспериментальных данных
+# ======================================================
+models = {
+    "ae_standart": ae_standart,
+    "ae_expansion": ae_expansion
+}
+
+logging.info(f"scaled_X_test = {scaled_X_test.shape}")
+logging.info(f"scaled_X_test_anom = {scaled_X_test_anom.shape}")
+
+logging.info(f"scaled_X_test = {scaled_X_test.columns}")
+logging.info(f"scaled_X_test_anom = {scaled_X_test_anom.columns}")
+
+table_metrics_reconstruction = run_reconstruction_comparison_table(
+    models=models,
+    norm_engines=scaled_X_test,
+    anom_engines=scaled_X_test_anom,
+    n_bootstrap=10
+)
+
+print(table_metrics_reconstruction)

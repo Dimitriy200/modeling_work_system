@@ -149,6 +149,16 @@ class AutoEncoder(BaseAnomalyDetector):
         logging.info(f"MCE calculation completed")
 
         return res
+
+# ======================================================
+    def reconstruct(self, X: np.ndarray) -> np.ndarray:
+        '''
+        Возвращает матрицу рконтрукций
+        '''
+        X_recon = self.model_core.predict(X, verbose=0)
+        logging.info(f"The reconstruction is complete")
+
+        return X_recon
     
 # ======================================================
     def choose_optimal_threshold(
