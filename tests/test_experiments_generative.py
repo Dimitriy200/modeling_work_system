@@ -22,10 +22,10 @@ from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
 from modeling_work_system.metrics.aemetrics import AEMetricResult
 
-from modeling_work_system.metrics.compose_table_metrics import (
-    run_reconstruction_comparison_table, 
-    run_classification_comparison_table,
-    log_summary_report)
+from modeling_work_system.metrics.generation_metrics import (
+    run_generation_comparison_table,
+    log_generation_report
+)
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
 from modeling_work_system.config import (
@@ -128,7 +128,7 @@ print("=" * 50)
 # 1. Параметры обучения
 # ==========================================
 BATCH_SIZE = 16
-EPOCHS = 10
+EPOCHS = 50
 LEARNING_RATE = 1e-3
 WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
@@ -186,3 +186,21 @@ evaluation_metrics = plot_training_curves(
 # ======================================================
 # IV Сбор экспериментальных данных
 # ======================================================
+models_dict = {
+    'LSTM_VAE': model_vae,
+    # 'Standard_AE': ae_standart,  # Раскомментируйте для сравнения
+    # 'Compact_AE': ae_expansion
+}
+
+generation_metrics_df, generation_raw_df = run_generation_comparison_table(
+    models=models_dict,
+    X_real_test=X_test_seq,  # Реальные тестовые данные
+    device=device,
+    n_generate=50,          # Сколько семплов генерировать
+    n_bootstrap=15,          # Бутстрап-итераций (уменьшите для быстрого теста)
+    confidence_level=0.95,
+    seed=42,
+    return_raw=True
+)
+
+log_generation_report(generation_metrics_df)
