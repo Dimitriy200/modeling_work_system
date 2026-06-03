@@ -28,6 +28,14 @@ class DataSplit(TypedDict):
     X_test: pd.DataFrame
     y_test: pd.Series
     
+    # Нормы выборки
+    X_train_norm: pd.DataFrame
+    y_train_norm: pd.Series
+    X_val_norm: pd.DataFrame
+    y_val_norm: pd.Series
+    X_test_norm: pd.DataFrame
+    y_test_norm: pd.Series
+    
     # Аномальные выборки
     X_train_anom: pd.DataFrame
     y_train_anom: pd.Series
@@ -275,36 +283,41 @@ class Preprocess:
         
         # Формирование результата
         result: DataSplit = {
-            # ===== НОРМА (основные выборки) =====
-            'X_train': df_train.drop(columns=[label_col]).reset_index(drop=True),
-            'y_train': df_train[label_col].reset_index(drop=True),
-            'X_val': df_val.drop(columns=[label_col]).reset_index(drop=True),
-            'y_val': df_val[label_col].reset_index(drop=True),
-            'X_test': df_test.drop(columns=[label_col]).reset_index(drop=True),
-            'y_test': df_test[label_col].reset_index(drop=True),
+        # ===== ОСНОВНЫЕ ВЫБОРКИ (с метками) =====
+        'X_train': df_train.drop(columns=[label_col]).reset_index(drop=True),
+        'y_train': df_train[label_col].reset_index(drop=True),
+        'X_val': df_val.drop(columns=[label_col]).reset_index(drop=True),
+        'y_val': df_val[label_col].reset_index(drop=True),
+        'X_test': df_test.drop(columns=[label_col]).reset_index(drop=True),
+        'y_test': df_test[label_col].reset_index(drop=True),
 
-            # ===== АНОМАЛИИ (отдельные выборки) =====
-            'X_train_anom': df_train_anom.drop(columns=[label_col]).reset_index(drop=True),
-            'y_train_anom': df_train_anom[label_col].reset_index(drop=True),
-            'X_val_anom': df_val_anom.drop(columns=[label_col]).reset_index(drop=True),
-            'y_val_anom': df_val_anom[label_col].reset_index(drop=True),
-            'X_test_anom': df_test_anom.drop(columns=[label_col]).reset_index(drop=True),
-            'y_test_anom': df_test_anom[label_col].reset_index(drop=True),
-            
-            # ===== ИНФОРМАЦИЯ =====
-            'info': {
-                'normal_label': normal_label,
-                'anomaly_label': anomaly_label,
-                'n_train_units': len(train_units),
-                'n_val_units': len(val_units),
-                'n_test_units': len(test_units),
-                'n_train_samples': len(df_train),
-                'n_val_samples': len(df_val),
-                'n_test_samples': len(df_test),
-                'train_units': list(train_units),
-                'val_units': list(val_units),
-                'test_units': list(test_units)
-            }
+        # ===== АНОМАЛИИ (отдельные выборки) =====
+        'X_train_anom': df_train_anom.drop(columns=[label_col]).reset_index(drop=True),
+        'y_train_anom': df_train_anom[label_col].reset_index(drop=True),
+        'X_val_anom': df_val_anom.drop(columns=[label_col]).reset_index(drop=True),
+        'y_val_anom': df_val_anom[label_col].reset_index(drop=True),
+        'X_test_anom': df_test_anom.drop(columns=[label_col]).reset_index(drop=True),
+        'y_test_anom': df_test_anom[label_col].reset_index(drop=True),
+        
+        # ===== НОРМА (чистые выборки для обучения VAE и скалера) =====
+        'X_train_norm': df_train_norm.drop(columns=[label_col]).reset_index(drop=True),
+        'X_val_norm': df_val_norm.drop(columns=[label_col]).reset_index(drop=True),
+        'X_test_norm': df_test_norm.drop(columns=[label_col]).reset_index(drop=True),
+        
+        # ===== ИНФОРМАЦИЯ =====
+        'info': {
+            'normal_label': normal_label,
+            'anomaly_label': anomaly_label,
+            'n_train_units': len(train_units),
+            'n_val_units': len(val_units),
+            'n_test_units': len(test_units),
+            'n_train_samples': len(df_train),
+            'n_val_samples': len(df_val),
+            'n_test_samples': len(df_test),
+            'train_units': list(train_units),
+            'val_units': list(val_units),
+            'test_units': list(test_units)
+        }
         }
         
         # Логирование 
@@ -336,6 +349,75 @@ class Preprocess:
             print("DataFrame is empty.")
 
             return None
+
+
+    # ======================================================
+    def marking_norm_anom_by_quantile(
+        self,
+        dataframe: pd.DataFrame,
+        quantile: float = 0.95,
+        time_col: str = 'time in cycles',
+        unit_col: str = 'unit number'
+    ) -> pd.DataFrame:
+        """
+        Размечает данные на основе процентиля времени работы двигателя.
+        Нормальные данные: <= quantile (например, 95%) от максимального времени работы двигателя.
+        Аномальные данные: > quantile (последние 5% жизненного цикла).
+        
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            Исходный датасет.
+        quantile : float, default=0.95
+            Процентиль, до которого данные считаются нормальными (0.95 = 95%).
+        time_col : str, default='time in cycles'
+            Название столбца со временем/циклами.
+        unit_col : str, default='unit number'
+            Название столбца с ID двигателя.
+            
+        Returns
+        -------
+        pd.DataFrame
+            Датафрейм с добавленным столбцом 'is_anom' (bool).
+        """
+        required_cols = [time_col, unit_col]
+        missing = [col for col in required_cols if col not in dataframe.columns]
+        if missing:
+            raise ValueError(f"Required columns are missing: {missing}")
+
+        # Работаем с копией
+        dataframe_out = dataframe.copy()
+        
+        # Сортируем по юниту и времени — критически важно для корректного расчета процентиля!
+        dataframe_out = dataframe_out.sort_values([unit_col, time_col]).reset_index(drop=True)
+
+        # Функция для применения к каждой группе (каждому двигателю)
+        def mark_anomaly(group):
+            # Находим пороговое значение времени (95-й процентиль) для данного двигателя
+            threshold = group[time_col].quantile(quantile)
+            
+            # Всё, что строго больше процентиля, считаем аномалией
+            group['is_anom'] = group[time_col] > threshold
+            return group
+
+        # Применяем разметку к каждому двигателю отдельно
+        # group_keys=False предотвращает проблемы с MultiIndex в новых версиях pandas
+        dataframe_out = dataframe_out.groupby(unit_col, group_keys=False).apply(mark_anomaly)
+        
+        # Гарантируем, что столбец is_anom является булевым и не содержит NaN
+        dataframe_out['is_anom'] = dataframe_out['is_anom'].fillna(False).astype(bool)
+
+        # Логируем статистику
+        total = len(dataframe_out)
+        anom_count = dataframe_out['is_anom'].sum()
+        units = dataframe_out[unit_col].nunique()
+        
+        logging.info(
+            f"marking_norm_anom_by_quantile: Processed {units} units, "
+            f"Total {total} entries, Anomalies (>{quantile*100:.0f}th percentile) = {anom_count} ({anom_count/total:.1%})"
+        )
+        
+        return dataframe_out
 
 
     # ======================================================
