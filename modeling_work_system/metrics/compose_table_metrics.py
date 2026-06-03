@@ -309,7 +309,9 @@ def log_summary_report(summary_df):
                'mean_err_norm', 'mean_err_anom']
     
     for metric in metrics:
-        logging.info(f"\n{'='*60} \nMetric: {metric.upper()} \n{'='*60}")
+        logging.info(f"{'='*60}")
+        logging.info(f"Metric: {metric.upper()}")
+        logging.info(f"{'='*60}")
         
         # Выбираем только колонки этой метрики
         sub_df = summary_df[[c for c in summary_df.columns if c[0] == metric]]

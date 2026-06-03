@@ -336,3 +336,48 @@ class Preprocess:
             print("DataFrame is empty.")
 
             return None
+
+
+    # ======================================================
+    def create_sequences(
+        self,
+        dataframe: pd.DataFrame,
+        seq_length: int,
+        stride: int,
+        feature_cols: List[str] ) -> np.ndarray:
+        """
+        Нарезает DataFrame на окна фиксированной длины (Sliding Window).
+        Возвращает numpy массив формы (num_samples, seq_length, num_features).
+        
+        ВАЖНО: DataFrame ДОЛЖЕН содержать столбцы 'unit number' и 'time in cycles' 
+        и быть отсортированным по ним.
+        """
+        # 1. Проверка и сортировка
+        required_meta = ['unit number', 'time in cycles']
+        if not all(col in dataframe.columns for col in required_meta):
+            raise ValueError("Для создания последовательностей в DataFrame должны быть столбцы 'unit number' и 'time in cycles'")
+            
+        df_sorted = dataframe.sort_values(['unit number', 'time in cycles']).reset_index(drop=True)
+        
+        sequences = []
+        
+        # 2. Нарезка по каждому двигателю отдельно
+        for unit, group in df_sorted.groupby('unit number'):
+            # Берем только числовые признаки для модели
+            values = group[feature_cols].values.astype(np.float32)
+            n_steps = len(values)
+            
+            # Если двигатель короче длины окна, пропускаем его 
+            # (для VAE лучше иметь полные окна, чем делать padding нулями)
+            if n_steps < seq_length:
+                continue
+                
+            # 3. Скользящее окно
+            for i in range(0, n_steps - seq_length + 1, stride):
+                window = values[i : i + seq_length]
+                sequences.append(window)
+                
+        if not sequences:
+            raise ValueError(f"Не удалось создать ни одной последовательности. Проверьте seq_length={seq_length} и данные.")
+            
+        return np.array(sequences, dtype=np.float32)

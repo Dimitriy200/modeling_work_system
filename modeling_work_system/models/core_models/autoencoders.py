@@ -16,9 +16,9 @@ STANDART_AE = keras.Sequential([
 
 COMPACT_AE = keras.Sequential([
     keras.layers.Dense(26, activation='relu', input_shape=(26,)),
-    keras.layers.Dense(10, activation='relu'),
-    keras.layers.Dense(4, activation='relu'),
-    keras.layers.Dense(10, activation='relu'),
+    keras.layers.Dense(11, activation='relu'),
+    keras.layers.Dense(3, activation='relu'),
+    keras.layers.Dense(11, activation='relu'),
     keras.layers.Dense(26, activation='linear')
 ])
 

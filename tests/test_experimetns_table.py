@@ -14,7 +14,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-from modeling_work_system.models.core_models.autoencoders import STANDART_AE, EXPANSION_AE
+from modeling_work_system.models.core_models.autoencoders import STANDART_AE, COMPACT_AE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -54,7 +54,7 @@ processor = Preprocess()
 metrics = ExperimentMetric()
 
 ae_standart = AutoEncoder(model_core=STANDART_AE)
-ae_expansion = AutoEncoder(model_core=EXPANSION_AE)
+ae_expansion = AutoEncoder(model_core=COMPACT_AE)
 
 
 # ======================================================
@@ -100,7 +100,7 @@ train_info_ae_standart = ae_standart.fit(
     Y_val=splited_dataframes['y_val'],
     epochs=ep)
 
-train_info_ae_expansion = ae_expansion.fit(
+train_info_ae_compact = ae_expansion.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
@@ -116,7 +116,7 @@ plot_training_curves(
     save_path=os.path.join(PATH_IMG, "standart_ae_history.png"))
 
 plot_training_curves(
-    history=train_info_ae_expansion["history"],
+    history=train_info_ae_compact["history"],
     save_path=os.path.join(PATH_IMG, "expansion_ae_history.png"))
 
 # ======================================================
@@ -124,7 +124,7 @@ plot_training_curves(
 # ======================================================
 models = {
     "ae_standart": ae_standart,
-    "ae_expansion": ae_expansion
+    "ae_compact": ae_expansion
 }
 
 logging.info(f"scaled_X_test = {scaled_X_test.shape}")
