@@ -7,27 +7,20 @@ from typing import Dict, Any, Optional
 
 
 STANDART_AE = keras.Sequential([
-    keras.layers.Dense(26, activation='elu', input_shape=(26,)),
-    keras.layers.Dense(16, activation='elu'),
-    keras.layers.Dense(10, activation='elu'),
-    keras.layers.Dense(16, activation='elu'),
-    keras.layers.Dense(26, activation='elu')
+    keras.layers.Dense(26, activation='relu', input_shape=(26,)),
+    keras.layers.Dense(15, activation='relu'),
+    keras.layers.Dense(5, activation='relu'),
+    keras.layers.Dense(15, activation='relu'),
+    keras.layers.Dense(26, activation='linear')
 ])
 
-EXPANSION_AE = keras.Sequential([
-    keras.layers.Dense(26, activation='elu', input_shape=(26,)),
-    keras.layers.Dense(28, activation='elu'),
-    keras.layers.Dense(30, activation='elu'),
-    keras.layers.Dense(28, activation='elu'),
-    keras.layers.Dense(26, activation='elu')
+COMPACT_AE = keras.Sequential([
+    keras.layers.Dense(26, activation='relu', input_shape=(26,)),
+    keras.layers.Dense(10, activation='relu'),
+    keras.layers.Dense(4, activation='relu'),
+    keras.layers.Dense(10, activation='relu'),
+    keras.layers.Dense(26, activation='linear')
 ])
 
-STANDART_AE.compile(
-            optimizer="adam", 
-            loss="mse", 
-            metrics=[MeanAbsoluteError(), RootMeanSquaredError(name="rmse")])
-
-EXPANSION_AE.compile(
-            optimizer="adam", 
-            loss="mse", 
-            metrics=[MeanAbsoluteError(), RootMeanSquaredError(name="rmse")])
+STANDART_AE.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mse')
+COMPACT_AE.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mse')
