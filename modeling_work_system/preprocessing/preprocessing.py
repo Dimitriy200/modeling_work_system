@@ -18,6 +18,25 @@ from sklearn.base import BaseEstimator
 from pathlib import Path
 
 
+# ===== Типизация для основного результата =====
+class DataSplit(TypedDict):
+    # Нормальные выборки
+    X_train: pd.DataFrame
+    y_train: pd.Series
+    X_val: pd.DataFrame
+    y_val: pd.Series
+    X_test: pd.DataFrame
+    y_test: pd.Series
+    
+    # Аномальные выборки
+    X_train_anom: pd.DataFrame
+    y_train_anom: pd.Series
+    X_val_anom: pd.DataFrame
+    y_val_anom: pd.Series
+    X_test_anom: pd.DataFrame
+    y_test_anom: pd.Series
+
+
 class Preprocess:
     
     def __init__(self):
@@ -227,12 +246,26 @@ class Preprocess:
         )
         
         # Фильтрация данных
-        mask_train = (dataframe[unit_col].isin(train_units)) & (dataframe[label_col] == normal_label)
-        df_train = dataframe.loc[mask_train].copy()
+        # mask_train = (dataframe[unit_col].isin(train_units)) & (dataframe[label_col] == normal_label)
+        # df_train = dataframe.loc[mask_train].copy()
         
+        df_train = dataframe.loc[dataframe[unit_col].isin(train_units)].copy()
         df_val = dataframe.loc[dataframe[unit_col].isin(val_units)].copy()
         df_test = dataframe.loc[dataframe[unit_col].isin(test_units)].copy()
-        
+
+        # Разделяем каждый сплит на норму и аномалии
+        df_train_norm = df_train[df_train[label_col] == normal_label]
+        df_train_anom = df_train[df_train[label_col] == anomaly_label]
+        logging.info(f"df_train_norm is {df_train_norm.shape}")
+        logging.info(f"df_train_anom is {df_train_anom.shape}")
+
+        df_val_norm = df_val[df_val[label_col] == normal_label]
+        df_val_anom = df_val[df_val[label_col] == anomaly_label]
+
+        df_test_norm = df_test[df_test[label_col] == normal_label]
+        df_test_anom = df_test[df_test[label_col] == anomaly_label]
+
+
         # Проверка на пустой Train
         if df_train.empty:
             raise ValueError(
@@ -241,14 +274,24 @@ class Preprocess:
             )
         
         # Формирование результата
-        result = {
+        result: DataSplit = {
+            # ===== НОРМА (основные выборки) =====
             'X_train': df_train.drop(columns=[label_col]).reset_index(drop=True),
             'y_train': df_train[label_col].reset_index(drop=True),
             'X_val': df_val.drop(columns=[label_col]).reset_index(drop=True),
             'y_val': df_val[label_col].reset_index(drop=True),
             'X_test': df_test.drop(columns=[label_col]).reset_index(drop=True),
             'y_test': df_test[label_col].reset_index(drop=True),
+
+            # ===== АНОМАЛИИ (отдельные выборки) =====
+            'X_train_anom': df_train_anom.drop(columns=[label_col]).reset_index(drop=True),
+            'y_train_anom': df_train_anom[label_col].reset_index(drop=True),
+            'X_val_anom': df_val_anom.drop(columns=[label_col]).reset_index(drop=True),
+            'y_val_anom': df_val_anom[label_col].reset_index(drop=True),
+            'X_test_anom': df_test_anom.drop(columns=[label_col]).reset_index(drop=True),
+            'y_test_anom': df_test_anom[label_col].reset_index(drop=True),
             
+            # ===== ИНФОРМАЦИЯ =====
             'info': {
                 'normal_label': normal_label,
                 'anomaly_label': anomaly_label,
