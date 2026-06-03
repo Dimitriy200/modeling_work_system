@@ -62,7 +62,7 @@ ae_expansion = AutoEncoder(model_core=EXPANSION_AE)
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
 no_null_df = processor.delete_nan(raw_df)
 
-marking_df = processor.marking_norm_anom(no_null_df)
+marking_df = processor.marking_norm_anom(no_null_df, n_anom=30)
 splited_dataframes = processor.split_by_engine_train_test_val(dataframe=marking_df)
 
 logging.info(f"X_train_anom = {splited_dataframes["X_train_anom"]}")

@@ -69,18 +69,32 @@ def run_reconstruction_comparison_table(
             # Ошибки реконструкции по объектам
             err_norm = np.mean((X_norm_bs - X_rec_norm) ** 2, axis=1)
             err_anom = np.mean((X_anom_bs - X_rec_anom) ** 2, axis=1)
+
+            rmse_norm = np.sqrt(np.mean(err_norm))
+            rmse_anom = np.sqrt(np.mean(err_anom))
+
+            rmse_gap = rmse_anom - rmse_norm
+            rmse_ratio = rmse_anom / rmse_norm if rmse_norm > 1e-8 else np.nan
             
+            # y_true = np.concatenate([np.zeros(len(err_norm)), np.ones(len(err_anom))])
+            # y_scores = np.concatenate([err_norm, err_anom])
             y_true = np.concatenate([np.zeros(len(err_norm)), np.ones(len(err_anom))])
             y_scores = np.concatenate([err_norm, err_anom])
+            roc_auc = roc_auc_score(y_true, y_scores)
             
             rec = {
                 'model': name,
                 'iteration': b,
-                'roc_auc': roc_auc_score(y_true, y_scores),
-                'rmse': np.sqrt(mean_squared_error(
-                    np.vstack([X_norm_bs, X_anom_bs]),
-                    np.vstack([X_rec_norm, X_rec_anom])
-                ))
+                # Раздельные метрики
+                'rmse_norm': rmse_norm,
+                'rmse_anom': rmse_anom,
+                'rmse_gap': rmse_gap,
+                'rmse_ratio': rmse_ratio,
+                # Общая метрика качества разделения
+                'roc_auc': roc_auc,
+                # Дополнительно: средние ошибки (не квадратичные)
+                'mean_err_norm': np.mean(err_norm),
+                'mean_err_anom': np.mean(err_anom),
             }
                 
             raw_records.append(rec)
@@ -88,7 +102,10 @@ def run_reconstruction_comparison_table(
     raw_df = pd.DataFrame(raw_records)
     
     # 📊 Агрегация статистик
-    metrics_cols = ['roc_auc', 'rmse']
+    metrics_cols = [
+        'rmse_norm', 'rmse_anom', 'rmse_gap', 'rmse_ratio',
+        'roc_auc', 'mean_err_norm', 'mean_err_anom'
+        ]
     alpha = 1 - confidence_level
     ci_low_pct = (alpha / 2) * 100
     ci_high_pct = (1 - alpha / 2) * 100
