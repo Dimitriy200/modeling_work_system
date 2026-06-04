@@ -463,3 +463,56 @@ class Preprocess:
             raise ValueError(f"Не удалось создать ни одной последовательности. Проверьте seq_length={seq_length} и данные.")
             
         return np.array(sequences, dtype=np.float32)
+    
+    # ======================================================
+    def create_anomaly_sequences(
+            self,
+            dataframe: pd.DataFrame,
+            seq_length: int,
+            stride: int,
+            feature_cols: List[str]
+        ) -> np.ndarray:
+        """
+        Создаёт окна для аномальных данных: каждое окно ЗАКАНЧИВАЕТСЯ 
+        на аномальном цикле, захватывая seq_length предыдущих шагов.
+        
+        Это позволяет модели видеть контекст перед аномалией.
+        """
+        required_meta = ['unit number', 'time in cycles']
+        missing = [col for col in required_meta if col not in dataframe.columns]
+        if missing:
+            raise ValueError(f"Missing columns: {missing}")
+        
+        # Сортировка критически важна
+        df_sorted = dataframe.sort_values(['unit number', 'time in cycles']).reset_index(drop=True)
+        
+        sequences = []
+        
+        for unit, group in df_sorted.groupby('unit number'):
+            # Получаем индексы аномальных циклов
+            anom_indices = group.index.tolist()
+            values = group[feature_cols].values.astype(np.float32)
+            n_steps = len(values)
+            
+            # Для каждого аномального цикла создаём окно, заканчивающееся на нём
+            for anom_idx in anom_indices:
+                # Позиция аномального цикла в группе
+                pos_in_group = group.index.get_loc(anom_idx)
+                
+                # Начало окна: за seq_length шагов до аномалии
+                start = max(0, pos_in_group - seq_length + 1)
+                
+                # Если данных недостаточно — берём всё что есть и padding'им
+                window_data = values[start:pos_in_group + 1]
+                
+                if len(window_data) < seq_length:
+                    # Padding нулями в начало (или повторяем первый шаг)
+                    padding = np.tile(window_data[0:1], (seq_length - len(window_data), 1))
+                    window_data = np.vstack([padding, window_data])
+                
+                sequences.append(window_data[:seq_length])
+        
+        if not sequences:
+            raise ValueError(f"Не удалось создать ни одной аномальной последовательности.")
+        
+        return np.array(sequences, dtype=np.float32)

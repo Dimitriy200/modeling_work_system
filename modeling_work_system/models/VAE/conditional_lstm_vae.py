@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import TensorDataset, DataLoader
 import logging
-from typing import Optional
+from typing import Optional, Dict, Tuple, Any
 
 
 class ConditionalEncoder(nn.Module):
@@ -293,3 +293,6 @@ class Conditional_LSTM_VAE(nn.Module):
         
         logging.info("=== TRAINING FINISHED ===")
         return history
+    
+
+    

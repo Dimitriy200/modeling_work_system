@@ -29,6 +29,12 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
+
+from modeling_work_system.metrics.vae_inference import (
+    classify_anomalies_by_percentile,
+    plot_classification_results
+)
+
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
 from modeling_work_system.config import (
@@ -99,6 +105,8 @@ X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEA
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 X_test_seq  = processor.create_sequences(scaled_X_test, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 
+X_test_anom_seq  = processor.create_anomaly_sequences(scaled_X_test_anom, SEQ_LENGTH, STRIDE, FEATURE_COLS)
+
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples, 40, 16)
 logging.info(f"X_val_seq:   {X_val_seq.shape}")
@@ -122,7 +130,7 @@ if torch.cuda.is_available():
     print(f"Compute Capability: {torch.cuda.get_device_capability(0)}")
     device = torch.device("cuda")
 else:
-    print("⚠️ CUDA not available! Training will run on CPU (very slow).")
+    print("CUDA not available! Training will run on CPU (very slow).")
     print("Check: NVIDIA drivers installed + CUDA Toolkit + PyTorch with CUDA support")
     device = torch.device("cpu")
 
@@ -320,3 +328,36 @@ plt.savefig(os.path.join(PATH_IMG, 'inference_unconditional_generation.png'), dp
 plt.show()
 
 logging.info("Инференс завершен!")
+
+
+# ==========================================
+# 3.3 КЛАССИФИКАЦИЯ АНОМАЛИЙ
+# ==========================================
+logging.info("\n" + "=" * 60)
+logging.info("ЗАПУСК ИНФЕРЕНСА И КЛАССИФИКАЦИИ")
+logging.info("=" * 60)
+
+# Запуск классификации
+inference_results = classify_anomalies_by_percentile(
+    model=model_vae,
+    X_test_norm=X_test_seq,
+    X_test_anom=X_test_anom_seq,
+    device=device,
+    percentile_threshold=95.0,
+    batch_size=64
+)
+
+# Визуализация результатов
+CLASSIFICATION_PLOT_PATH = os.path.join(PATH_IMG, "classification_results.png")
+plot_classification_results(
+    inference_results=inference_results,
+    save_path=CLASSIFICATION_PLOT_PATH,
+    figsize=(18, 5)
+)
+
+# Сохранение метрик в CSV
+import json
+metrics_save_path = os.path.join(PATH_SKALERS, "classification_metrics.json")
+with open(metrics_save_path, 'w') as f:
+    json.dump(inference_results['metrics'], f, indent=2)
+logging.info(f"Метрики сохранены: {metrics_save_path}")
