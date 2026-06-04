@@ -14,7 +14,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-from modeling_work_system.models.core_models.autoencoders import STANDART_AE, EXPANSION_AE
+from modeling_work_system.models.core_models.autoencoders import STANDART_AE, COMPACT_AE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -22,7 +22,8 @@ from modeling_work_system.metrics.aemetrics import AEMetricResult
 
 from modeling_work_system.metrics.compose_table_metrics import (
     run_reconstruction_comparison_table, 
-    run_classification_comparison_table)
+    run_classification_comparison_table,
+    log_summary_report)
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
 from modeling_work_system.config import (
@@ -53,7 +54,7 @@ processor = Preprocess()
 metrics = ExperimentMetric()
 
 ae_standart = AutoEncoder(model_core=STANDART_AE)
-ae_expansion = AutoEncoder(model_core=EXPANSION_AE)
+ae_expansion = AutoEncoder(model_core=COMPACT_AE)
 
 
 # ======================================================
@@ -81,25 +82,31 @@ scaled_X_train_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes
 scaled_X_val_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], cols)
 scaled_X_test_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], cols)
 
+logging.info(f"Mean of features: {scaled_X_train.mean().mean():.4f}")
+logging.info(f"Std of features: {scaled_X_val.std().mean():.4f}")
+logging.info(f"Std of features: {scaled_X_test.std().mean():.4f}")
+logging.info(f"Std of features: {scaled_X_train_anom.std().mean():.4f}")
+logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
+logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
-ep = 10
 
+EPH = 100
 train_info_ae_standart = ae_standart.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
     Y_val=splited_dataframes['y_val'],
-    epochs=ep)
+    epochs=EPH)
 
-train_info_ae_expansion = ae_expansion.fit(
+train_info_ae_compact = ae_expansion.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
     Y_val=splited_dataframes['y_val'],
-    epochs=ep)
+    epochs=EPH)
 
 
 # ======================================================
@@ -110,7 +117,7 @@ plot_training_curves(
     save_path=os.path.join(PATH_IMG, "standart_ae_history.png"))
 
 plot_training_curves(
-    history=train_info_ae_expansion["history"],
+    history=train_info_ae_compact["history"],
     save_path=os.path.join(PATH_IMG, "expansion_ae_history.png"))
 
 # ======================================================
@@ -118,7 +125,7 @@ plot_training_curves(
 # ======================================================
 models = {
     "ae_standart": ae_standart,
-    "ae_expansion": ae_expansion
+    "ae_compact": ae_expansion
 }
 
 logging.info(f"scaled_X_test = {scaled_X_test.shape}")
@@ -127,11 +134,12 @@ logging.info(f"scaled_X_test_anom = {scaled_X_test_anom.shape}")
 logging.info(f"scaled_X_test = {scaled_X_test.columns}")
 logging.info(f"scaled_X_test_anom = {scaled_X_test_anom.columns}")
 
+
 table_metrics_reconstruction = run_reconstruction_comparison_table(
     models=models,
     norm_engines=scaled_X_test,
     anom_engines=scaled_X_test_anom,
-    n_bootstrap=10
+    n_bootstrap=15
 )
 
-print(table_metrics_reconstruction)
+log_summary_report(table_metrics_reconstruction)

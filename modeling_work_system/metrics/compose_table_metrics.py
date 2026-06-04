@@ -298,3 +298,27 @@ def _specificity(y_true, y_pred, pos_label: int = 1) -> float:
     fp = np.sum((y_true == neg_label) & (y_pred == pos_label))
     denom = tn + fp
     return tn / denom if denom > 0 else 0.0
+
+
+
+
+
+def log_summary_report(summary_df):
+    """Красиво выводит таблицу сравнения по каждой метрике."""
+    metrics = ['roc_auc', 'rmse_norm', 'rmse_anom', 'rmse_gap', 'rmse_ratio', 
+               'mean_err_norm', 'mean_err_anom']
+    
+    for metric in metrics:
+        logging.info(f"{'='*60}")
+        logging.info(f"Metric: {metric.upper()}")
+        logging.info(f"{'='*60}")
+        
+        # Выбираем только колонки этой метрики
+        sub_df = summary_df[[c for c in summary_df.columns if c[0] == metric]]
+        sub_df.columns = [c[1] for c in sub_df.columns]  # убираем верхний уровень индекса
+        
+        table_str = sub_df.to_string(float_format=lambda x: f'{x:.4f}')
+        for line in table_str.split('\n'):
+            logging.info(f"  {line}")
+        
+        logging.info("")
