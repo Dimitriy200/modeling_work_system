@@ -62,7 +62,7 @@ ae_expansion = AutoEncoder(model_core=EXPANSION_AE)
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
 no_null_df = processor.delete_nan(raw_df)
 
-marking_df = processor.marking_norm_anom(no_null_df, n_anom=30)
+marking_df = processor.marking_norm_anom(no_null_df, n_anom=20)
 splited_dataframes = processor.split_by_engine_train_test_val(dataframe=marking_df)
 
 logging.info(f"X_train_anom = {splited_dataframes["X_train_anom"]}")
@@ -85,19 +85,21 @@ scaled_X_test_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes[
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
+ep = 10
+
 train_info_ae_standart = ae_standart.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
     Y_val=splited_dataframes['y_val'],
-    epochs=3)
+    epochs=ep)
 
 train_info_ae_expansion = ae_expansion.fit(
     X_train=scaled_X_train,
     X_val=scaled_X_val,
     X_test=scaled_X_test,
     Y_val=splited_dataframes['y_val'],
-    epochs=3)
+    epochs=ep)
 
 
 # ======================================================
