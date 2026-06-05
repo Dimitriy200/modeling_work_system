@@ -135,9 +135,9 @@ def plot_training_curves(
         last_5_val = history['val_loss'][-5:]
         if last_5_val[-1] > last_5_val[0]:
             logging.warning(
-                f"⚠️ Val Loss вырос за последние 5 эпох "
+                f"Val Loss вырос за последние 5 эпох "
                 f"({last_5_val[0]:.4f} → {last_5_val[-1]:.4f}). "
-                f"Возможно переобучение — рассмотрите EarlyStopping."
+                f"Overfitting is possible - consider EarlyStopping."
             )
         else:
             logging.info("✅ Val Loss steadily decreasing - the model converges.")
@@ -146,9 +146,12 @@ def plot_training_curves(
     if len(history['train_kld']) >= 2:
         if history['train_kld'][-1] < 1e-3:
             logging.warning(
-                "⚠️ KL Divergence близка к нулю. Возможна проблема posterior collapse. "
-                "Увеличьте WARMUP_EPOCHS или проверьте архитектуру."
+                "KL Divergence is close to zero. Possible posterior collapse issue. "
+                "Increase WARMUP_EPOCHS or check the architecture."
             )
         else:
             logging.info(f"✅ KL Divergence is active ({history['train_kld'][-1]:.4f}) — "
                          f"latent space is used.")
+
+
+
