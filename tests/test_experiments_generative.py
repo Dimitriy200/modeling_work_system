@@ -17,6 +17,7 @@ from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
+from modeling_work_system.models.VAE.forecast_vae import Forecasting_VAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -143,7 +144,7 @@ N_LAYERS = 2
 device = "cuda" if torch.cuda.is_available() else "cpu"
 N_FEATURES = X_train_seq.shape[2]
 
-model_vae = LSTM_VAE(
+model_vae = Forecasting_VAE(
     input_dim=N_FEATURES,
     hidden_dim=HIDDEN_DIM,
     latent_dim=LATENT_DIM,
