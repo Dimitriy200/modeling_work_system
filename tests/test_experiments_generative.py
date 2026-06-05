@@ -3,6 +3,8 @@ import numpy as np
 import logging
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+import matplotlib.pyplot as plt
+
 
 import sys
 import os
@@ -17,6 +19,7 @@ from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
+from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -143,7 +146,7 @@ N_LAYERS = 2
 device = "cuda" if torch.cuda.is_available() else "cpu"
 N_FEATURES = X_train_seq.shape[2]
 
-model_vae = LSTM_VAE(
+model_vae = Conditional_LSTM_VAE(
     input_dim=N_FEATURES,
     hidden_dim=HIDDEN_DIM,
     latent_dim=LATENT_DIM,
@@ -184,7 +187,7 @@ evaluation_metrics = plot_training_curves(
 
 
 # ======================================================
-# IV Сбор экспериментальных данных
+# IV СБОР ЭКСПЕРИМЕНТАЛЬНЫХ ДАННЫХ
 # ======================================================
 models_dict = {
     'LSTM_VAE': model_vae,
@@ -204,3 +207,116 @@ generation_metrics_df, generation_raw_df = run_generation_comparison_table(
 )
 
 log_generation_report(generation_metrics_df)
+
+# ======================================================
+# V ИНФЕРЕНС
+# ======================================================
+CONTEXT_LEN = 20
+
+# 3.1 Условная генерация (по контексту)
+# Берем 3 реальных контекста из тестовых данных
+n_contexts = 3
+real_contexts = torch.tensor(
+    X_test_seq[:n_contexts, :CONTEXT_LEN, :], 
+    dtype=torch.float32
+).to(device)
+
+# Генерируем 5 вариантов продолжения для каждого контекста
+with torch.no_grad():
+    generated = model_vae.generate(real_contexts, n_samples=5, temperature=1.0)
+# generated shape: (5, 3, 40, N_FEATURES)
+
+logging.info(f"Сгенерировано условных траекторий: {generated.shape}")
+
+# 3.2 Безусловная генерация (из чистого шума)
+generated_uncond = model_vae.generate_from_noise(n_samples=20, temperature=1.0)
+# generated_uncond shape: (20, 40, N_FEATURES)
+
+logging.info(f"Сгенерировано безусловных траекторий: {generated_uncond.shape}")
+
+# 3.3 Визуализация
+# Выбираем один сенсор для отображения (например, sensor_21 - это индекс 23 в FEATURE_COLS)
+# Проверьте актуальный индекс в вашем FEATURE_COLS
+feature_idx = 20  # sensor_20, например
+
+fig, axes = plt.subplots(n_contexts, 3, figsize=(18, 4 * n_contexts))
+fig.suptitle('Conditional Generation: Context → Future', fontsize=16, fontweight='bold')
+
+for i in range(n_contexts):
+    # Левая колонка: реальная траектория
+    ax1 = axes[i, 0]
+    real_full = X_test_seq[i, :, feature_idx]
+    ax1.plot(range(CONTEXT_LEN), real_full[:CONTEXT_LEN], 'bo-', 
+             markersize=6, label='Context (seen)', linewidth=2)
+    ax1.plot(range(CONTEXT_LEN, SEQ_LENGTH), real_full[CONTEXT_LEN:], 'g^-', 
+             markersize=4, label='Future (actual)', linewidth=1.5, alpha=0.8)
+    ax1.axvline(x=CONTEXT_LEN-0.5, color='red', linestyle='--', alpha=0.7, 
+                label='Context boundary')
+    ax1.set_title(f'Engine #{i+1}: Real Data')
+    ax1.set_xlabel('Time Step')
+    ax1.set_ylabel('Sensor Value (scaled)')
+    ax1.legend(fontsize=8)
+    ax1.grid(True, alpha=0.3)
+    
+    # Правая колонка: сгенерированные варианты
+    ax2 = axes[i, 1]
+    ax2.plot(range(CONTEXT_LEN), real_full[:CONTEXT_LEN], 'bo-', 
+             markersize=6, label='Context (seen)', linewidth=2)
+    
+    # Рисуем все 5 сгенерированных вариантов
+    for j in range(generated.shape[0]):
+        gen_seq = generated[j, i, :, feature_idx]
+        ax2.plot(range(CONTEXT_LEN, SEQ_LENGTH), gen_seq[CONTEXT_LEN:], 
+                 'r-', alpha=0.4, linewidth=1, label='Generated' if j==0 else None)
+    
+    # Среднее значение
+    gen_mean = generated[:, i, :, feature_idx].mean(axis=0)
+    ax2.plot(range(CONTEXT_LEN, SEQ_LENGTH), gen_mean[CONTEXT_LEN:], 
+             'm-', linewidth=3, label='Generated Mean', zorder=10)
+    
+    ax2.axvline(x=CONTEXT_LEN-0.5, color='red', linestyle='--', alpha=0.7)
+    ax2.set_title(f'Engine #{i+1}: 5 Generated Variants')
+    ax2.set_xlabel('Time Step')
+    ax2.set_ylabel('Sensor Value (scaled)')
+    ax2.legend(fontsize=8)
+    ax2.grid(True, alpha=0.3)
+    
+    # Третья колонка: ошибка (реальность vs среднее генерации)
+    ax3 = axes[i, 2]
+    ax3.plot(range(SEQ_LENGTH), real_full, 'b-', linewidth=2, label='Real')
+    ax3.plot(range(SEQ_LENGTH), gen_mean, 'm--', linewidth=2, label='Generated Mean')
+    ax3.fill_between(range(SEQ_LENGTH), 
+                     gen_mean - generated[:, i, :, feature_idx].std(axis=0),
+                     gen_mean + generated[:, i, :, feature_idx].std(axis=0),
+                     alpha=0.2, color='magenta', label='Std')
+    ax3.set_title(f'Engine #{i+1}: Real vs Generated')
+    ax3.set_xlabel('Time Step')
+    ax3.set_ylabel('Sensor Value (scaled)')
+    ax3.legend(fontsize=8)
+    ax3.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(PATH_IMG, 'inference_conditional_generation.png'), dpi=300)
+plt.show()
+
+# 3.4 Визуализация безусловной генерации
+fig, axes = plt.subplots(4, 5, figsize=(20, 12))
+fig.suptitle('Unconditional Generation: 20 Synthetic Trajectories', 
+             fontsize=16, fontweight='bold')
+
+for i in range(4):
+    for j in range(5):
+        idx = i * 5 + j
+        ax = axes[i, j]
+        ax.plot(generated_uncond[idx, :, feature_idx], 'b-', linewidth=1.5)
+        ax.set_title(f'Trajectory #{idx+1}')
+        ax.set_xlabel('Time')
+        if j == 0:
+            ax.set_ylabel('Sensor Value')
+        ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(PATH_IMG, 'inference_unconditional_generation.png'), dpi=300)
+plt.show()
+
+logging.info("Инференс завершен!")
