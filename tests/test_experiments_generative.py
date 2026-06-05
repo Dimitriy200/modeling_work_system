@@ -19,7 +19,7 @@ from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
-from modeling_work_system.models.VAE.forecast_vae import Forecasting_VAE
+from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
 from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
 
 
@@ -148,12 +148,14 @@ N_LAYERS = 2
 device = "cuda" if torch.cuda.is_available() else "cpu"
 N_FEATURES = X_train_seq.shape[2]
 
-model_vae = Forecasting_VAE(
+model_vae = AdaptiveForecasting_VAE(
     input_dim=N_FEATURES,
     hidden_dim=HIDDEN_DIM,
     latent_dim=LATENT_DIM,
     seq_len=SEQ_LENGTH,
-    n_layers=N_LAYERS
+    n_layers=N_LAYERS,
+    context_len=20,      # Половина окна
+    forecast_len=20,     # Половина окна
 )
 
 logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in model_vae.parameters()):,}")
