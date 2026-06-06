@@ -21,6 +21,7 @@ from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
 from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
 from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
+from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE
 
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
@@ -99,8 +100,8 @@ logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
 logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 
 # 2.2 Создание последовательностей
-SEQ_LENGTH = 70  # Длина окна (например, 40 циклов)
-STRIDE = 5      # Шаг сдвига. Меньше шаг = больше данных, но выше корреляция между окнами.
+SEQ_LENGTH = 10  # Длина окна (например, 40 циклов)
+STRIDE = 1      # Шаг сдвига. Меньше шаг = больше данных, выше корреляция между окнами.
 
 X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
@@ -113,6 +114,15 @@ logging.info(f"X_test_seq:  {X_test_seq.shape}")
 
 logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быть ~0
 logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
+
+
+
+
+
+
+
+
+
 
 
 # ======================================================
@@ -141,15 +151,16 @@ print("=" * 50)
 # 1. Параметры обучения
 # ==========================================
 BATCH_SIZE = 32
-EPOCHS = 100
+EPOCHS = 10
 LEARNING_RATE = 5e-5
-WARMUP_EPOCHS = 80  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
-CONTEXT_LEN = 40 
+CONTEXT_LEN = 5 
+FORECAST_LEN = CONTEXT_LEN
 
 # Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 32
-LATENT_DIM = 8
+HIDDEN_DIM = 26
+LATENT_DIM = 6
 N_LAYERS = 2
 
 # ==========================================
@@ -158,14 +169,19 @@ N_LAYERS = 2
 device = "cuda" if torch.cuda.is_available() else "cpu"
 N_FEATURES = X_train_seq.shape[2]
 
-model_vae = AdaptiveForecasting_VAE(
-    input_dim=N_FEATURES,
-    hidden_dim=HIDDEN_DIM,
-    latent_dim=LATENT_DIM,
-    seq_len=SEQ_LENGTH,
-    n_layers=N_LAYERS,
-    context_len=CONTEXT_LEN,
-    forecast_len=30,
+# model_vae = AdaptiveForecasting_VAE(
+#     input_dim=N_FEATURES,
+#     hidden_dim=HIDDEN_DIM,
+#     latent_dim=LATENT_DIM,
+#     seq_len=SEQ_LENGTH,
+#     n_layers=N_LAYERS,
+#     context_len=CONTEXT_LEN,
+#     forecast_len=FORECAST_LEN,
+# )
+
+model_vae = TimeSeriesForecastingVAE(
+    feature_dim = 26,
+    latent_dim = LATENT_DIM,
 )
 
 logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in model_vae.parameters()):,}")
@@ -209,24 +225,24 @@ models_dict = {
     # 'Compact_AE': ae_expansion
 }
 
-generation_metrics_df, generation_raw_df = run_generation_comparison_table(
-    models=models_dict,
-    X_real_test=X_test_seq,  # Реальные тестовые данные
-    device=device,
-    n_generate=50,          # Сколько семплов генерировать
-    n_bootstrap=15,          # Бутстрап-итераций (уменьшите для быстрого теста)
-    confidence_level=0.95,
-    seed=42,
-    return_raw=True
-)
+# generation_metrics_df, generation_raw_df = run_generation_comparison_table(
+#     models=models_dict,
+#     X_real_test=X_test_seq,  # Реальные тестовые данные
+#     device=device,
+#     n_generate=50,          # Сколько семплов генерировать
+#     n_bootstrap=15,          # Бутстрап-итераций (уменьшите для быстрого теста)
+#     confidence_level=0.95,
+#     seed=42,
+#     return_raw=True
+# )
 
-log_generation_report(generation_metrics_df)
+# log_generation_report(generation_metrics_df)
 
 # ======================================================
 # V ИНФЕРЕНС
 # ======================================================
 
-N_CONTEXTS = 3
+N_CONTEXTS = 5
 N_SAMPLES_COND = 5
 SENSOR = "sensor measurement 2"
 
@@ -240,6 +256,13 @@ with torch.no_grad():
     generated = model_vae.generate(real_contexts, n_samples=N_SAMPLES_COND, temperature=1.0)
 
 logging.info(f"Сгенерировано условных траекторий: {generated.shape}")
+logging.info(f"Expected: (n_samples={N_SAMPLES_COND}, n_contexts={N_CONTEXTS}, seq_len={SEQ_LENGTH}, features={len(FEATURE_COLS)})")
+
+# Проверка на NaN/inf
+if np.isnan(generated).any():
+    logging.warning(f"⚠️  Found NaN values in generated data!")
+if np.isinf(generated).any():
+    logging.warning(f"⚠️  Found Inf values in generated data!")
 
 # Визуализация условной генерации
 plot_conditional_generation_inference(

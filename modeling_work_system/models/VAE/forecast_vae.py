@@ -36,10 +36,17 @@ class ForecastingEncoder(nn.Module):
         x_context: (batch, context_len, input_dim)
         """
         _, (h_n, _) = self.lstm(x_context)
+        # logging.info(f"_, (h_n, _) = {_, (h_n, _)}")
+
         h_last = h_n[-1]
+        # logging.info(f"h_last = {h_last}")
         
         mu = self.fc_mu(h_last)
+        # logging.info(f"mu = {mu}")
+
         logvar = self.fc_logvar(h_last)
+        # logging.info(f"logvar = {logvar}")
+
         return mu, logvar
 
 # ======================================================
@@ -52,14 +59,18 @@ class AutoregressiveDecoder(nn.Module):
         self.seq_len = seq_len
         self.hidden_dim = hidden_dim
         self.n_layers = n_layers
+        self.latent_dim = latent_dim
+        self.output_dim = output_dim
         
         # Проецируем z в начальное скрытое состояние
         self.fc_h0 = nn.Linear(latent_dim, hidden_dim * n_layers)
         self.fc_c0 = nn.Linear(latent_dim, hidden_dim * n_layers)
         
-        # LSTM принимает входные данные на каждом шаге
+        # ✅ LSTM принимает конкатенацию [x, z]
+        lstm_input_dim = output_dim + latent_dim
+        
         self.lstm = nn.LSTM(
-            output_dim, hidden_dim, n_layers, 
+            lstm_input_dim, hidden_dim, n_layers, 
             batch_first=True, 
             dropout=0.2 if n_layers > 1 else 0
         )
@@ -79,12 +90,17 @@ class AutoregressiveDecoder(nn.Module):
         c0 = self.fc_c0(z).view(self.n_layers, batch_size, self.hidden_dim)
         
         # Создаем входную последовательность: контекст + нули для будущего
-        # Во время обучения используем teacher forcing
-        x_input = torch.zeros(batch_size, self.seq_len, x_context.size(2)).to(z.device)
+        x_input = torch.zeros(batch_size, self.seq_len, self.output_dim).to(z.device)
         x_input[:, :x_context.size(1), :] = x_context  # Первые шаги = контекст
         
+        # Дублируем z на всю длину seq_len
+        z_expanded = z.unsqueeze(1).repeat(1, self.seq_len, 1)
+        
+        # ✅ Конкатенируем x и z
+        lstm_input = torch.cat([x_input, z_expanded], dim=-1)
+        
         # LSTM генерирует последовательность
-        out, _ = self.lstm(x_input, (h0, c0))
+        out, _ = self.lstm(lstm_input, (h0, c0))
         
         # Финальная проекция
         return self.fc_out(out)
@@ -121,6 +137,9 @@ class AdaptiveForecasting_VAE(nn.Module):
 
     def get_weights(self) -> Tuple[torch.Tensor, torch.Tensor]:
         weights = F.softmax(self.log_weights, dim=0)
+        MIN_WEIGHT = 0.1  # Не даем весам упасть ниже 10%
+        weights = torch.clamp(weights, min=MIN_WEIGHT)
+        weights = weights / weights.sum()  # Нормализуем обратно
         return weights[0], weights[1]
 
     def reparameterize(self, mu: torch.Tensor, logvar: torch.Tensor) -> torch.Tensor:
@@ -136,9 +155,14 @@ class AdaptiveForecasting_VAE(nn.Module):
         
         return x_recon_full, mu, logvar
 
-    def loss_function(self, x_recon_full: torch.Tensor, x_full: torch.Tensor, 
-                     mu: torch.Tensor, logvar: torch.Tensor, beta_kl: float = 1.0):
-        # ✅ РАСКОММЕНТИРОВАНО: используем обучаемые веса
+    def loss_function(
+            self, 
+            x_recon_full: torch.Tensor, 
+            x_full: torch.Tensor, 
+            mu: torch.Tensor, 
+            logvar: torch.Tensor, 
+            beta_kl: float = 1.0):
+        
         alpha, beta = self.get_weights()
         
         x_recon_context = x_recon_full[:, :self.context_len, :]
@@ -147,53 +171,63 @@ class AdaptiveForecasting_VAE(nn.Module):
         x_context = x_full[:, :self.context_len, :]
         x_future = x_full[:, self.context_len:, :]
         
-        # ✅ Используем mean
         loss_context = F.mse_loss(x_recon_context, x_context, reduction='mean')
         loss_forecast = F.mse_loss(x_recon_forecast, x_future, reduction='mean')
         
         # KL Divergence
         kld_loss = -0.5 * torch.mean(1 + logvar - mu.pow(2) - logvar.exp())
         
-        # ✅ Увеличили KL coefficient до 1.0
-        total_loss = alpha * loss_context + beta * loss_forecast + 1.0 * beta_kl * kld_loss
+        FREE_BITS = 1.0  # Минимальный KL, который модель обязана использовать
+        # total_loss = alpha * loss_context + beta * loss_forecast + FREE_BITS * beta_kl * kld_loss
+        total_loss = alpha * loss_context + beta * loss_forecast + beta_kl * kld_loss
+        # kld_loss = torch.max(kld_loss, torch.tensor(FREE_BITS).to(kld_loss.device))
         
         return total_loss, loss_context, loss_forecast, kld_loss, alpha, beta
 
-    def generate(self, x_context: torch.Tensor, n_samples: int = 1, 
-                temperature: float = 1.0) -> np.ndarray:
+    def generate(
+            self, 
+            x_context: torch.Tensor, 
+            n_samples: int = 1, 
+            temperature: float = 1.0) -> np.ndarray:
         self.eval()
         device = next(self.parameters()).device
         x_context = x_context.to(device)
+        batch_size = x_context.size(0)
         
         generated_sequences = []
         with torch.no_grad():
             mu, logvar = self.encoder(x_context)
             for _ in range(n_samples):
                 std = torch.exp(0.5 * logvar) * temperature
-                eps = torch.randn_like(std)
-                z = mu + eps * std
+                z = mu + torch.randn_like(std)
                 
-                # Autoregressive generation
-                batch_size = x_context.size(0)
+                # Инициализация скрытых состояний
+                h0 = self.decoder.fc_h0(z).view(self.decoder.n_layers, batch_size, self.decoder.hidden_dim)
+                c0 = self.decoder.fc_c0(z).view(self.decoder.n_layers, batch_size, self.decoder.hidden_dim)
+                hidden = (h0, c0)
+                
                 x_gen = torch.zeros(batch_size, self.seq_len, x_context.size(2)).to(device)
                 x_gen[:, :self.context_len, :] = x_context
                 
-                h0 = self.decoder.fc_h0(z).view(self.decoder.n_layers, batch_size, self.decoder.hidden_dim)
-                c0 = self.decoder.fc_c0(z).view(self.decoder.n_layers, batch_size, self.decoder.hidden_dim)
-                
-                hidden = (h0, c0)
                 for t in range(self.seq_len):
                     if t < self.context_len:
-                        lstm_input = x_gen[:, t:t+1, :]
+                        current_input = x_gen[:, t:t+1, :]
                     else:
-                        lstm_input = x_gen[:, t-1:t, :]
+                        current_input = x_gen[:, t-1:t, :]
                     
-                    out, hidden = self.decoder.lstm(lstm_input, hidden)
+                    # Добавляем z к входу на каждом шаге
+                    z_step = z.unsqueeze(1)
+                    lstm_in = torch.cat([current_input, z_step], dim=-1)
+                    
+                    out, hidden = self.decoder.lstm(lstm_in, hidden)
                     x_gen[:, t:t+1, :] = self.decoder.fc_out(out)
-                
+                    
                 generated_sequences.append(x_gen.cpu().numpy())
         
-        return np.array(generated_sequences)
+        result = np.stack(generated_sequences, axis=0)
+        
+        logging.info(f"Generated shape: {result.shape}")  # Для отладки
+        return result
 
     def generate_from_noise(self, n_samples: int = 100, 
                            temperature: float = 1.0) -> np.ndarray:
