@@ -148,7 +148,10 @@ class AdaptiveForecasting_VAE(nn.Module):
         Взвешенная функция потерь с динамическими весами.
         """
         # Получаем текущие веса (они же градиентно обновляются!)
-        alpha, beta = self.get_weights()
+        # alpha, beta = self.get_weights()
+        alpha = 0.3  # Контекст
+        beta = 0.7   # Будущее
+
         
         # Разделяем на контекст и будущее
         x_recon_context = x_recon_full[:, :self.context_len, :]
@@ -165,7 +168,8 @@ class AdaptiveForecasting_VAE(nn.Module):
         kld_loss = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
         
         # Итоговый loss
-        total_loss = alpha * loss_context + beta * loss_forecast + beta_kl * kld_loss
+        # total_loss = alpha * loss_context + beta * loss_forecast + beta_kl * kld_loss
+        total_loss = alpha * loss_context + beta * loss_forecast + 0.01 * beta_kl * kld_loss
         
         return total_loss, loss_context, loss_forecast, kld_loss, alpha, beta
 
