@@ -111,6 +111,9 @@ logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples,
 logging.info(f"X_val_seq:   {X_val_seq.shape}")
 logging.info(f"X_test_seq:  {X_test_seq.shape}")
 
+logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быть ~0
+logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
+
 
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
@@ -138,16 +141,16 @@ print("=" * 50)
 # 1. Параметры обучения
 # ==========================================
 BATCH_SIZE = 32
-EPOCHS = 50
-LEARNING_RATE = 1e-3
-WARMUP_EPOCHS = 30  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+EPOCHS = 100
+LEARNING_RATE = 5e-5
+WARMUP_EPOCHS = 80  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
 CONTEXT_LEN = 40 
 
 # Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 256
-LATENT_DIM = 128
-N_LAYERS = 6
+HIDDEN_DIM = 32
+LATENT_DIM = 8
+N_LAYERS = 2
 
 # ==========================================
 # 2. Этап обучения
