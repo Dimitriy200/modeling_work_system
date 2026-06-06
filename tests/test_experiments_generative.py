@@ -99,8 +99,8 @@ logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
 logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 
 # 2.2 Создание последовательностей
-SEQ_LENGTH = 40  # Длина окна (например, 40 циклов)
-STRIDE = 10      # Шаг сдвига. Меньше шаг = больше данных, но выше корреляция между окнами.
+SEQ_LENGTH = 70  # Длина окна (например, 40 циклов)
+STRIDE = 5      # Шаг сдвига. Меньше шаг = больше данных, но выше корреляция между окнами.
 
 X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
@@ -138,14 +138,16 @@ print("=" * 50)
 # 1. Параметры обучения
 # ==========================================
 BATCH_SIZE = 32
-EPOCHS = 30
+EPOCHS = 50
 LEARNING_RATE = 1e-3
-WARMUP_EPOCHS = 50  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+WARMUP_EPOCHS = 30  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+
+CONTEXT_LEN = 40 
 
 # Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 128
-LATENT_DIM = 32
-N_LAYERS = 2
+HIDDEN_DIM = 256
+LATENT_DIM = 128
+N_LAYERS = 6
 
 # ==========================================
 # 2. Этап обучения
@@ -159,8 +161,8 @@ model_vae = AdaptiveForecasting_VAE(
     latent_dim=LATENT_DIM,
     seq_len=SEQ_LENGTH,
     n_layers=N_LAYERS,
-    context_len=20,      # Половина окна
-    forecast_len=20,     # Половина окна
+    context_len=CONTEXT_LEN,
+    forecast_len=30,
 )
 
 logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in model_vae.parameters()):,}")
@@ -220,11 +222,10 @@ log_generation_report(generation_metrics_df)
 # ======================================================
 # V ИНФЕРЕНС
 # ======================================================
-CONTEXT_LEN = 20  # Должно совпадать с тем, что было при обучении модели
+
 N_CONTEXTS = 3
 N_SAMPLES_COND = 5
-SENSOR_ID = 10
-FEATURE_COLS
+SENSOR = "sensor measurement 2"
 
 # Генерация (если ещё не выполнена)
 real_contexts = torch.tensor(
@@ -244,7 +245,7 @@ plot_conditional_generation_inference(
     save_path=os.path.join(PATH_IMG, 'inference_conditional_generation.png'),
     context_len=CONTEXT_LEN,
     seq_len=SEQ_LENGTH,
-    sensor_name="sensor measurement 9",
+    sensor_name=SENSOR,
     feature_names=FEATURE_COLS,
     n_samples=5,
     show_combined=True
@@ -265,7 +266,7 @@ plot_unconditional_generation_inference(
     generated_uncond=generated_uncond,
     save_path=os.path.join(PATH_IMG, 'inference_conditional_generation.png'),
     seq_len=SEQ_LENGTH,
-    feature_idx=SENSOR_ID,
+    feature_idx=9,
     feature_names=FEATURE_COLS,
 )
 

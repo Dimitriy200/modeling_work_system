@@ -169,7 +169,7 @@ class AdaptiveForecasting_VAE(nn.Module):
         
         # Итоговый loss
         # total_loss = alpha * loss_context + beta * loss_forecast + beta_kl * kld_loss
-        total_loss = alpha * loss_context + beta * loss_forecast + 0.01 * beta_kl * kld_loss
+        total_loss = alpha * loss_context + beta * loss_forecast + 0.0001 * beta_kl * kld_loss
         
         return total_loss, loss_context, loss_forecast, kld_loss, alpha, beta
 
