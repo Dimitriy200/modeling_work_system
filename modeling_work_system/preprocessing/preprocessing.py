@@ -460,6 +460,6 @@ class Preprocess:
                 sequences.append(window)
                 
         if not sequences:
-            raise ValueError(f"Не удалось создать ни одной последовательности. Проверьте seq_length={seq_length} и данные.")
+            raise ValueError(f"Failed to create any sequences. Check seq_length={seq_length} and data.")
             
         return np.array(sequences, dtype=np.float32)
