@@ -74,10 +74,12 @@ class TimeSeriesMambaSSM(nn.Module):
         # Дискретизация матрицы B: B_t = dt * B
         # Вычисляем новое скрытое состояние: h_t = A_t * h_{t-1} + B_t * z_t
         # Проекция входа B_t * z_t выражается как внешнее произведение векторов
-        B_t_z_t = (dt.unsqueeze(-1) * B_mat.unsqueeze(1)) * z_t.unsqueeze(-1) # (B, state_dim, state_dim)
+        # B_t_z_t = (dt.unsqueeze(-1) * B_mat.unsqueeze(1)) * z_t.unsqueeze(-1) # (B, state_dim, state_dim)
+        # logging.info(f"FORMS OF TENSORS dt: {dt.shape}, B_mat: {B_mat.shape}, z_t: {z_t.shape}")
+        B_t_z_t = torch.einsum('bs, bs, bz -> bs', dt, B_mat, z_t)
         
         # Эволюция состояния
-        h_next = torch.bmm(A_t, h_prev.unsqueeze(-1)).squeeze(-1) + B_t_z_t.sum(dim=-1)
+        h_next = torch.bmm(A_t, h_prev.unsqueeze(-1)).squeeze(-1) + B_t_z_t
         
         # Фиксация выхода через матрицу C
         y_mamba = h_next * C_mat

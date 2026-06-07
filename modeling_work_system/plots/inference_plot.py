@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
+
+
 
 
 def plot_inference_results(
@@ -141,4 +144,77 @@ def plot_inference_multi_features(
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Мульти-график успешно сохранен: {save_path}")
         
+    plt.show()
+
+
+
+
+def plot_continuous_forecasting(model, X_val_past, X_val_ls, y_val_true, num_scenarios=5, feature_idx=6, feature_name="Sensor 2", save_path=None):
+    """
+    Собирает предсказания из всех последовательных окон в одну длинную непрерывную линию.
+    
+    y_val_true: массив ВСЕХ полных окон валидации формы (N, 10, feature_dim)
+    """
+    model.eval()
+    num_windows = len(X_val_past)
+    
+    # 1. Собираем ИСТИННЫЙ непрерывный тренд
+    # Берем 1-5 шаги из самого первого окна, а затем строго 6-й шаг из каждого последующего окна
+    true_continuous = list(y_val_true[0, :5, feature_idx])
+    for i in range(num_windows):
+        true_continuous.append(y_val_true[i, 5, feature_idx]) # 6-й шаг (индекс 5)
+        
+    true_continuous = np.array(true_continuous)
+    total_length = len(true_continuous)
+    cycles = np.arange(1, total_length + 1)
+    
+    # 2. Инициализируем массивы для сценариев генерации VAE
+    # Форма: (num_scenarios, total_length)
+    scenarios_continuous = np.zeros((num_scenarios, total_length))
+    
+    # Заполняем первые 5 шагов каждого сценария истинной предысторией (так как это зона восстановления)
+    for s in range(num_scenarios):
+        scenarios_continuous[s, :5] = y_val_true[0, :5, feature_idx]
+        
+    # 3. Запускаем инференс по всем окнам последовательно
+    with torch.no_grad():
+        # Чтобы не перегружать память, делаем инференс батчем для всех окон сразу
+        # Получаем список из num_scenarios, каждый формы (N, 10, feature_dim)
+        gen_scenarios = model.inference(
+            x_past=torch.FloatTensor(X_val_past),
+            horizon=10,
+            num_scenarios=num_scenarios
+        )
+        
+        # Вытаскиваем строго 6-й шаг (индекс 5) из каждого окна для каждого сценария
+        for s in range(num_scenarios):
+            for i in range(num_windows):
+                # Записываем предсказание в общую временную шкалу (со сдвигом на 5 шагов предыстории)
+                scenarios_continuous[s, 5 + i] = gen_scenarios[s][i, 5, feature_idx]
+
+    # 4. СТРОИМ ГРАФИК
+    plt.figure(figsize=(15, 6))
+    
+    # Рисуем реальный длинный тренд датчика
+    plt.plot(cycles, true_continuous, color='black', linewidth=2.5, label='Реальный непрерывный тренд (NASA)')
+    
+    # Рисуем длинные непрерывные сценарии VAE
+    for s in range(num_scenarios):
+        if s == 0:
+            plt.plot(cycles, scenarios_continuous[s], color='crimson', alpha=0.4, label='Непрерывный прогноз VAE')
+        else:
+            plt.plot(cycles, scenarios_continuous[s], color='crimson', alpha=0.4)
+            
+    # Вертикальная линия, отделяющая самую первую известную историю от зоны глобального прогноза
+    plt.axvline(x=5, color='darkgray', linestyle='--', linewidth=2)
+    
+    plt.title(f"Глобальный непрерывный прогноз по всей цепочке окон: {feature_name}", fontsize=14, fontweight='bold')
+    plt.xlabel("Абсолютный номер цикла работы двигателя", fontsize=12)
+    plt.ylabel("Значение датчика (Норм.)", fontsize=12)
+    plt.grid(True, linestyle=':', alpha=0.6)
+    plt.legend(loc='upper right')
+    
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.show()

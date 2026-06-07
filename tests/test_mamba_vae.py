@@ -204,10 +204,10 @@ history = model.fit(
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vrnn_vae_v1.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_mamba_vae_v1.png'))
 
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_vrnn_vae_v2_2.pth"))
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_mamba_vae_v2_2.pth"))
 
 
 # ======================================================

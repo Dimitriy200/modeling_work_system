@@ -28,7 +28,7 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_continuous_forecasting
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -74,7 +74,7 @@ LEARNING_RATE = 0.001 #5e-5
 
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.3 #0.15
+KL_MINIMUM = 0.1 #0.3
 
 # ПАРАМЕТРЫ АРХИТКТУРЫ LSTM_VAE
 FEATURE_DIM = 26
@@ -219,6 +219,7 @@ gen_scenarios = model.inference(
 
 num_engines_to_plot = 3 
 
+#  Инференс на норме
 for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
@@ -244,6 +245,13 @@ for engine_idx in range(num_engines_to_plot):
     )
 
 
+
+plot_continuous_forecasting(
+    model=model,
+    X_val_past=torch.FloatTensor(X_val_seq_past),
+    X_val_ls=torch.FloatTensor(X_val_seq_ls),
+    y_val_true=torch.FloatTensor(y_val_sec_future)
+)
 
 # ======================================================
 # IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
