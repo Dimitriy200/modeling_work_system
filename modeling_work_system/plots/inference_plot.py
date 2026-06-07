@@ -41,7 +41,7 @@ def plot_inference_results(
         if i == 0:
             plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o', label='Сценарии VAE')
         else:
-            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-' marker='o',)
+            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o')
             
     # 4. Проводим вертикальную разделяющую линию после 5-го цикла
     plt.axvline(x=5, color='darkgray', linestyle='--', linewidth=2)
