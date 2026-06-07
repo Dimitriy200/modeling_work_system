@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import logging
+
 
 class TimeSeriesForecastingVAE(nn.Module):
     def __init__(self, feature_dim, latent_dim, hidden_dim=64):
@@ -90,7 +92,14 @@ class TimeSeriesForecastingVAE(nn.Module):
         self.train() # Переводим модель в режим обучения
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         
-        print(f"--- ЗАПУСК ОБУЧЕНИЯ МОДЕЛИ ({epochs} эпох) ---")
+        logging.info(f"=== START MODEL TRAINING ({epochs} epochs) ===")
+
+        history = {
+            'total_loss': [],
+            'mse_loss': [],
+            'kl_loss': [],
+            'kl_weight': []
+        }
         
         for epoch in range(epochs):
             optimizer.zero_grad()
@@ -124,9 +133,15 @@ class TimeSeriesForecastingVAE(nn.Module):
             nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
             
             optimizer.step()
+
+            history['total_loss'].append(total_loss.item())
+            history['mse_loss'].append(mse_loss.item())
+            history['kl_loss'].append(kl_loss_constrained.item())
+            history['kl_weight'].append(kl_weight)
             
             # Логирование процесса
             if epoch % verbose_step == 0 or epoch == epochs - 1:
-                print(f"Эпоха {epoch:03d} | Total Loss: {total_loss.item():.4f} | MSE: {mse_loss.item():.4f} | KLD: {kl_loss_constrained.item():.4f} | KL Weight: {kl_weight:.2f}")
+                logging.info(f"EPOCH {epoch:03d} | Total Loss: {total_loss.item():.4f} | MSE: {mse_loss.item():.4f} | KLD: {kl_loss_constrained.item():.4f} | KL Weight: {kl_weight:.2f}")
         
-        print("--- ОБУЧЕНИЕ ЗАВЕРШЕНО ---\n")
+        logging.info("=== TRAINING COMPLETED ===\n")
+        return history

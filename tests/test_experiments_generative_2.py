@@ -55,7 +55,7 @@ from modeling_work_system.config import (
     MLFLOW_REPO_PASSWORD
 )
 
-from modeling_work_system.plots.history_vae import plot_training_curves
+from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
 
 # ======================================================
@@ -65,6 +65,30 @@ loader = LoadDataTrain()
 scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
+
+SEQ_LENGTH = 10                 # Длина окна 
+STRIDE = 1                      # Шаг сдвига.
+PAST_STEPS = 5                  # Первая часть окна - прошлое
+
+# ПАРАМЕТРЫ ОБУЧЕНИЯ
+BATCH_SIZE = 32
+EPOCHS = 150
+LEARNING_RATE = 0.001 #5e-5
+# WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+
+CONTEXT_LEN = 5
+FORECAST_LEN = CONTEXT_LEN
+KL_MINIMUM = 0.15
+
+# ПАРАМЕТРЫ АРХИТКТУРЫ LSTM_VAE
+FEATURE_DIM = 26
+LATENT_DIM = 4
+N_LAYERS = 2
+
+model = TimeSeriesForecastingVAE(
+    feature_dim = FEATURE_DIM,
+    latent_dim = LATENT_DIM
+)
 
 # ======================================================
 # ПОИСК CUDA
@@ -126,10 +150,6 @@ logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 # 2.2 Создание последовательностей
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
-SEQ_LENGTH = 10                 # Длина окна 
-STRIDE = 1                      # Шаг сдвига.
-PAST_STEPS = 5                  # Первая часть окна - прошлое
-
 # Нарезаем окна.
 X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS) 
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
@@ -142,6 +162,7 @@ logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быт
 logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
 logging.info(f"X_train_seq  is: {type(X_train_seq)}")    # Должно быть ~1
 
+
 # Выделяем первую часть окна - прошлое.
 X_train_seq_past = X_train_seq[:, :PAST_STEPS]
 X_val_seq_past = X_val_seq[:, :PAST_STEPS]
@@ -151,6 +172,7 @@ logging.info(f"X_train_seq_past:  {X_train_seq_past.shape}")
 logging.info(f"X_val_seq_past:  {X_val_seq_past.shape}")
 logging.info(f"X_test_seq_past:  {X_test_seq_past.shape}")
 
+# Возможно нужно нарезать и будущее
 
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
 X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
@@ -161,36 +183,21 @@ logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
 logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
 logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
 
-
+N_FEATURES = X_train_seq.shape[2]
 
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
-# ==========================================
-# 1. Параметры обучения
-# ==========================================
-BATCH_SIZE = 32
-EPOCHS = 10
-LEARNING_RATE = 5e-5
-WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
-
-CONTEXT_LEN = 5
-FORECAST_LEN = CONTEXT_LEN
-
-# Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 26
-LATENT_DIM = 6
-N_LAYERS = 2
-
-N_FEATURES = X_train_seq.shape[2]
-
-# ==========================================
-# 2. Этап обучения
-# ==========================================
-
-
-
-
+history = model.fit(
+    X_train=torch.FloatTensor(X_train_seq_past),
+    last_steps_train=torch.FloatTensor(X_train_seq_ls),
+    y_train=torch.FloatTensor(X_train_seq),
+    epochs=EPOCHS,
+    lr=LEARNING_RATE,
+    tau=KL_MINIMUM,
+    verbose_step = 5
+)
+plot_vae_training_history(history)
 
 # ======================================================
 # III ВИЗУАЛИЗАЦИЯ РЕЗУЛЬТАТОВ [ОБУЧЕНИЕ / КЛАССИФИКАЦИЯ / ВОССТАНОВЛЕНИЕ ДАННЫХ]
