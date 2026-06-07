@@ -117,7 +117,7 @@ class TimeSeriesForecastingVAE(nn.Module):
             kl_loss_constrained = torch.clamp(kl_loss_per_dim, min=tau).sum()
             
             # 3. Расчет KL Annealing веса (включение после 25% эпох)
-            start_annealing = int(epochs * 0.25)
+            start_annealing = int(epochs * 0.50)
             if epoch < start_annealing:
                 kl_weight = 0.0
             else:
