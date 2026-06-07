@@ -240,7 +240,7 @@ for engine_idx in range(num_engines_to_plot):
     plot_inference_multi_features(
         y_true=y_true_single,
         scenarios=single_engine_scenarios,
-        feature_indices=[6, 13],
+        feature_indices=[7, 14],
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
