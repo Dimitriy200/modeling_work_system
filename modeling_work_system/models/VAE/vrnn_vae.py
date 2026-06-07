@@ -192,5 +192,5 @@ class TimeSeriesVRNN(nn.Module):
             history['kl_weight'].append(kl_weight)
             
             if epoch % verbose_step == 0 or epoch == epochs - 1:
-                logging.info(f"EPOCH {epoch:03d} | Loss: {total_loss.item():.4f} | MSE (По всему окну): {mse_loss.item():.4f} | KLD: {kl_loss_constrained.item():.4f}")
+                logging.info(f"EPOCH {epoch:03d} | Loss: {total_loss.item():.4f} | MSE : {mse_loss.item():.4f} | KLD: {kl_loss_constrained.item():.4f}")
         return history
