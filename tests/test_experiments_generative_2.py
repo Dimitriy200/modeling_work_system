@@ -17,11 +17,8 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
-from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
-from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
 from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE
+from modeling_work_system.models.VAE.ts_1_vae import TimeSeriesIterativeVAE
 
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
@@ -70,20 +67,20 @@ PAST_STEPS = 5                  # Первая часть окна - прошл�
 
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 BATCH_SIZE = 32
-EPOCHS = 2
+EPOCHS = 150
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.15
+KL_MINIMUM = 1 #0.15
 
 # ПАРАМЕТРЫ АРХИТКТУРЫ LSTM_VAE
 FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesForecastingVAE(
+model = TimeSeriesIterativeVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -170,7 +167,15 @@ logging.info(f"X_train_seq_past:  {X_train_seq_past.shape}")
 logging.info(f"X_val_seq_past:  {X_val_seq_past.shape}")
 logging.info(f"X_test_seq_past:  {X_test_seq_past.shape}")
 
-# Возможно нужно нарезать и будущее
+
+#  Будущее - для итеративного инференса
+y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
+y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
+y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
+
+logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
+logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
+logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
 
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
 X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
@@ -189,9 +194,9 @@ N_FEATURES = X_train_seq.shape[2]
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    X_train=torch.FloatTensor(X_train_seq_past),
+    x_train=torch.FloatTensor(X_train_seq_past),
     last_steps_train=torch.FloatTensor(X_train_seq_ls),
-    y_train=torch.FloatTensor(X_train_seq),
+    y_train=torch.FloatTensor(y_train_sec_future), # X_train_seq
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
@@ -209,8 +214,8 @@ torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pt
 # ======================================================
 gen_scenarios = model.inference(
     x_past=torch.FloatTensor(X_val_seq_past), 
-    last_known_step=torch.FloatTensor(X_val_seq_ls),
-    horizon=10
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
 )
 
 num_engines_to_plot = 3 

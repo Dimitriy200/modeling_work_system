@@ -84,7 +84,7 @@ class TimeSeriesForecastingVAE(nn.Module):
         
         return y_pred, mu, log_var
 
-    def fit(self, X_train, last_steps_train, y_train, epochs=500, lr=0.005, tau=0.15, verbose_step=100):
+    def fit(self, x_train, last_steps_train, y_train, epochs=500, lr=0.005, tau=0.15, verbose_step=100):
         """
         Метод для обучения модели на переданных тензорах.
         Автоматически рассчитывает KL Annealing, Free Bits и делает шаг оптимизации.
@@ -106,7 +106,7 @@ class TimeSeriesForecastingVAE(nn.Module):
             
             # Прямой проход (подразумеваем горизонт прогнозирования равным длине y_train)
             horizon = y_train.size(1)
-            y_pred, mu, log_var = self.forward(X_train, last_steps_train, horizon=horizon)
+            y_pred, mu, log_var = self.forward(x_train, last_steps_train, horizon=horizon)
             
             # 1. Расчет ошибки прогноза (MSE)
             mse_loss = F.mse_loss(y_pred, y_train, reduction='mean')
@@ -121,7 +121,7 @@ class TimeSeriesForecastingVAE(nn.Module):
             if epoch < start_annealing:
                 kl_weight = 0.0
             else:
-                kl_weight = min(1.0, (epoch - start_annealing) / (epochs - start_annealing))
+                kl_weight = min(0.3, (epoch - start_annealing) / (epochs - start_annealing))
                 
             # Итоговая функция потерь
             total_loss = mse_loss + (kl_weight * kl_loss_constrained)

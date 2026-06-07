@@ -189,7 +189,7 @@ logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in mode
 # 3. Запуск обучения через метод fit
 # Модель сама создаст DataLoader, запустит цикл и вернет историю
 training_history = model_vae.fit(
-    X_train=X_train_seq,
+    x_train=X_train_seq,
     X_val=X_val_seq,
     epochs=EPOCHS,
     batch_size=BATCH_SIZE,
