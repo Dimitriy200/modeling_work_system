@@ -145,3 +145,53 @@ class TimeSeriesForecastingVAE(nn.Module):
         
         logging.info("=== TRAINING COMPLETED ===\n")
         return history
+    
+    def inference(
+            self, 
+            x_past, 
+            last_known_step, 
+            horizon=11, 
+            num_scenarios=5
+        ):
+        """
+        Метод для генерации сценариев будущего на основе предыстории.
+        
+        Параметры:
+        ----------
+        x_past : torch.Tensor
+            Тензор истории формы (batch_size, 5, feature_dim)
+        last_known_step : torch.Tensor
+            Тензор точки опоры формы (batch_size, feature_dim)
+        horizon : int
+            Сколько всего шагов генерировать суммарно (по умолчанию 11)
+        num_scenarios : int
+            Количество случайных альтернативных траекторий, которые нужно сгенерировать
+            
+        Возвращает:
+        -----------
+        scenarios : list of np.ndarray
+            Список длины num_scenarios, где каждый элемент — массив формы (batch_size, horizon, feature_dim)
+        """
+        self.eval() # Обязательно переводим модель в режим оценки
+        scenarios = []
+        
+        with torch.no_grad():
+            # 1. Пропускаем через энкодер ОДИН раз, чтобы получить параметры распределения этой ситуации
+            mu, log_var = self.encode(x_past)
+            
+            # 2. Генерируем несколько вариантов будущего за счет случайного сэмплирования
+            for _ in range(num_scenarios):
+                # Сэмплируем случайный латентный вектор Z
+                z = self.reparameterize(mu, log_var)
+                
+                # Декодер разворачивает Z в дельты изменений
+                delta = self.decode(z, horizon=horizon)
+                
+                # Прибавляем к базовой линии
+                base_line = last_known_step.unsqueeze(1).repeat(1, horizon, 1)
+                y_pred = base_line + delta
+                
+                # Сохраняем сценарий как NumPy массив для удобства визуализации
+                scenarios.append(y_pred.cpu().numpy())
+                
+        return scenarios

@@ -32,10 +32,7 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.generation_plots import (
-    plot_conditional_generation_inference,
-    plot_unconditional_generation_inference
-)
+from modeling_work_system.plots.inference_plot import plot_inference_results
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -185,6 +182,8 @@ logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
 
 N_FEATURES = X_train_seq.shape[2]
 
+
+
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
@@ -197,20 +196,28 @@ history = model.fit(
     tau=KL_MINIMUM,
     verbose_step = 5
 )
+
 plot_vae_training_history(history)
 
+
+
 # ======================================================
-# III ВИЗУАЛИЗАЦИЯ РЕЗУЛЬТАТОВ [ОБУЧЕНИЕ / КЛАССИФИКАЦИЯ / ВОССТАНОВЛЕНИЕ ДАННЫХ]
+# III ИНФЕРЕНС
 # ======================================================
+gen_scenarios = model.inference(
+    x_past=torch.FloatTensor(X_val_seq_past), 
+    last_known_step=torch.FloatTensor(X_val_seq_ls), 
+)
+
+plot_inference_results(
+    y_true=X_val_seq_past, 
+    scenarios=gen_scenarios,
+    feature_idx=6,
+    feature_name="sensor measurement 2"
+)
 
 
 
 # ======================================================
-# IV СБОР ЭКСПЕРИМЕНТАЛЬНЫХ ДАННЫХ
+# IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
 # ======================================================
-
-
-# ======================================================
-# V ИНФЕРЕНС
-# ======================================================
-
