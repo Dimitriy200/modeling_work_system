@@ -54,6 +54,8 @@ from modeling_work_system.config import (
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
 
+
+
 # ======================================================
 # ПОДГОТОВКА ПЕРЕМЕННЫХ
 # ======================================================
@@ -81,7 +83,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesIterativeVAE(
+model = TimeSeriesTransformerVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
