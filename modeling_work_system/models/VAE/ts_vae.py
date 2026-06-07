@@ -195,3 +195,5 @@ class TimeSeriesForecastingVAE(nn.Module):
                 scenarios.append(y_pred.cpu().numpy())
                 
         return scenarios
+
+    

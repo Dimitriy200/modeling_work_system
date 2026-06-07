@@ -4,7 +4,8 @@ import numpy as np
 
 def plot_inference_results(
         y_true, 
-        scenarios, 
+        scenarios,
+        save_path: str,
         feature_idx=3,
         window_idx=0,
         feature_name="sensor measurement 2"):
@@ -25,21 +26,22 @@ def plot_inference_results(
     plt.figure(figsize=(12, 6))
     
     # 1. Находим временные оси
-    cycles = np.arange(1, 12) # 11 циклов суммарно (от 1 до 11)
+    total_cycles = y_true.shape[0] 
+    cycles = np.arange(1, total_cycles+1) # 10 циклов суммарно (от 1 до 11)
     
     # 2. Рисуем истинные данные указанного sensor measurement (черная сплошная линия)
-    plt.plot(cycles, y_true[:, feature_idx], color='black', linewidth=2.5, label='Реальные данные (NASA)')
+    plt.plot(cycles, y_true[:, feature_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные (NASA)')
     
     # 3. Рисуем сгенерированные сценарии (цветные полупрозрачные линии)
     # На отрезке 1-5 они будут показывать качество восстановления, на 6-11 - варианты будущего
     for i, scenario in enumerate(scenarios):
         # scenario имеет форму (1, 11, feature_dim), убираем размерность батча [0]
-        gen_data = scenario[0, :, feature_idx]
+        gen_data = scenario[:, feature_idx]
         
         if i == 0:
-            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', label='Сценарии VAE')
+            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o', label='Сценарии VAE')
         else:
-            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-')
+            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-' marker='o',)
             
     # 4. Проводим вертикальную разделяющую линию после 5-го цикла
     plt.axvline(x=5, color='darkgray', linestyle='--', linewidth=2)
@@ -48,10 +50,10 @@ def plot_inference_results(
     plt.title(f"Валидация модели VAE | Окно данных №{window_idx} | {feature_name}", fontsize=14)
 
     # Подписи разделения на прошлое и будущее
-    plt.text(3.0, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'История\n(Вход 1-5)', 
+    plt.text(3.0, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'История\n', 
              horizontalalignment='center', color='gray', fontweight='bold')
     
-    plt.text(8.5, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'Прогноз будущего\n(Генерация 6-11)', 
+    plt.text(8.5, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'Прогноз будущего\n', 
              horizontalalignment='center', color='gray', fontweight='bold')
     
     # Оформление графика
@@ -62,4 +64,7 @@ def plot_inference_results(
     plt.grid(True, linestyle=':', alpha=0.6)
     plt.legend(loc='lower left')
     
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
     plt.show()

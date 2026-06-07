@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def plot_vae_training_history(history):
+def plot_vae_training_history(history, save_path: str):
     # Создаем окно с двумя графиками рядом
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5))
 
@@ -33,5 +33,8 @@ def plot_vae_training_history(history):
     ax2.legend(handles2 + handles3, labels2 + labels3, loc='upper left')
 
     plt.tight_layout()
-    plt.show()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
 
+    plt.show()

@@ -37,6 +37,7 @@ from modeling_work_system.plots.inference_plot import plot_inference_results
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
 from modeling_work_system.config import (
+    PATH_MODELS,
     PATH_LOG,
     PATH_SKALERS,
     PATH_IMG,
@@ -69,7 +70,7 @@ PAST_STEPS = 5                  # Первая часть окна - прошл�
 
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 BATCH_SIZE = 32
-EPOCHS = 150
+EPOCHS = 10
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
@@ -197,8 +198,10 @@ history = model.fit(
     verbose_step = 5
 )
 
-plot_vae_training_history(history)
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vae_v2_2.png'))
 
+# Сохраняем модель
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pth"))
 
 
 # ======================================================
@@ -206,14 +209,21 @@ plot_vae_training_history(history)
 # ======================================================
 gen_scenarios = model.inference(
     x_past=torch.FloatTensor(X_val_seq_past), 
-    last_known_step=torch.FloatTensor(X_val_seq_ls), 
+    last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10
 )
+logging.info(f"gen_scenarios[0] is {gen_scenarios[0].shape}")
+logging.info(f"X_val_seq[0] is {X_val_seq[0].shape}")
+
+single_engine_scenarios = [scenario[0] for scenario in gen_scenarios]
+logging.info(f"single_engine_scenarios = {single_engine_scenarios}")
 
 plot_inference_results(
-    y_true=X_val_seq_past, 
-    scenarios=gen_scenarios,
+    y_true=X_val_seq[0],
+    scenarios=single_engine_scenarios,
     feature_idx=6,
-    feature_name="sensor measurement 2"
+    feature_name="sensor measurement 2",
+    save_path=os.path.join(PATH_IMG, 'plot_inference_vae_v2_2.png')
 )
 
 

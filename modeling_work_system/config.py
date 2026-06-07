@@ -38,6 +38,7 @@ PATH_TRAIN_ADD_FINAL = os.getenv('PATH_TRAIN_ADD_FINAL')
 PATH_SKALERS = Path("skalers")
 
 # РАСПОЛОЖЕНИЕ ВСПОМОГАТЕЛЬНЫХ ДИРРЕКТОРИЙ
+PATH_MODELS = os.getenv("PATH_MODELS")
 PATH_LOG = os.getenv("PATH_LOG")
 PATH_IMG = os.getenv("PATH_IMG")
 
@@ -58,6 +59,7 @@ paths = [
     PATH_TRAIN_ADD_RAW,
     PATH_TRAIN_ADD_FINAL,
 
+    PATH_MODELS,
     PATH_LOG,
     PATH_IMG,
     PATH_SKALERS,
