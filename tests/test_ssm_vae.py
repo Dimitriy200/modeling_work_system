@@ -17,9 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE
-from modeling_work_system.models.VAE.ts_1_vae import TimeSeriesIterativeVAE
-from modeling_work_system.models.VAE.transformer_vae import TimeSeriesTransformerVAE
+from modeling_work_system.models.VAE.ssm_vae import TimeSeriesDeepSSM
 
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
@@ -76,14 +74,14 @@ LEARNING_RATE = 0.001 #5e-5
 
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.3 #0.15
+TAU = 0.05
 
 # ПАРАМЕТРЫ АРХИТКТУРЫ LSTM_VAE
 FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesTransformerVAE(
+model = TimeSeriesDeepSSM(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -202,7 +200,7 @@ history = model.fit(
     y_train=torch.FloatTensor(y_train_sec_future), # X_train_seq
     epochs=EPOCHS,
     lr=LEARNING_RATE,
-    tau=KL_MINIMUM,
+    tau=TAU,
     verbose_step = 5,
 )
 
