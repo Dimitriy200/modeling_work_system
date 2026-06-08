@@ -19,7 +19,10 @@ from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
 from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
+from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
 from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
+from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE
+
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -30,9 +33,15 @@ from modeling_work_system.metrics.generation_metrics import (
     log_generation_report
 )
 
+
 from modeling_work_system.metrics.vae_inference import (
     classify_anomalies_by_percentile,
-    plot_classification_results
+    plot_classification_results)
+
+from modeling_work_system.plots.generation_plots import (
+    plot_conditional_generation_inference,
+    plot_unconditional_generation_inference
+
 )
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
@@ -98,8 +107,8 @@ logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
 logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 
 # 2.2 Создание последовательностей
-SEQ_LENGTH = 40  # Длина окна (например, 40 циклов)
-STRIDE = 10      # Шаг сдвига. Меньше шаг = больше данных, но выше корреляция между окнами.
+SEQ_LENGTH = 10  # Длина окна (например, 40 циклов)
+STRIDE = 1      # Шаг сдвига. Меньше шаг = больше данных, выше корреляция между окнами.
 
 X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
@@ -111,6 +120,18 @@ logging.info("=== FINAL DATA FORMS FOR VAE ===")
 logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples, 40, 16)
 logging.info(f"X_val_seq:   {X_val_seq.shape}")
 logging.info(f"X_test_seq:  {X_test_seq.shape}")
+
+logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быть ~0
+logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
+
+
+
+
+
+
+
+
+
 
 
 # ======================================================
@@ -138,15 +159,21 @@ print("=" * 50)
 # ==========================================
 # 1. Параметры обучения
 # ==========================================
+
 BATCH_SIZE = 16
 EPOCHS = 200
 LEARNING_RATE = 1e-3
 WARMUP_EPOCHS = 30  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
+
+CONTEXT_LEN = 5 
+FORECAST_LEN = CONTEXT_LEN
+
 # Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 128
-LATENT_DIM = 32
-N_LAYERS = 4
+
+HIDDEN_DIM = 26
+LATENT_DIM = 6
+N_LAYERS = 2
 
 # ==========================================
 # 2. Этап обучения
@@ -154,12 +181,19 @@ N_LAYERS = 4
 device = "cuda" if torch.cuda.is_available() else "cpu"
 N_FEATURES = X_train_seq.shape[2]
 
-model_vae = Conditional_LSTM_VAE(
-    input_dim=N_FEATURES,
-    hidden_dim=HIDDEN_DIM,
-    latent_dim=LATENT_DIM,
-    seq_len=SEQ_LENGTH,
-    n_layers=N_LAYERS
+# model_vae = AdaptiveForecasting_VAE(
+#     input_dim=N_FEATURES,
+#     hidden_dim=HIDDEN_DIM,
+#     latent_dim=LATENT_DIM,
+#     seq_len=SEQ_LENGTH,
+#     n_layers=N_LAYERS,
+#     context_len=CONTEXT_LEN,
+#     forecast_len=FORECAST_LEN,
+# )
+
+model_vae = TimeSeriesForecastingVAE(
+    feature_dim = 26,
+    latent_dim = LATENT_DIM,
 )
 
 logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in model_vae.parameters()):,}")
@@ -167,7 +201,7 @@ logging.info(f"Model initialized. Total parameters: {sum(p.numel() for p in mode
 # 3. Запуск обучения через метод fit
 # Модель сама создаст DataLoader, запустит цикл и вернет историю
 training_history = model_vae.fit(
-    X_train=X_train_seq,
+    x_train=X_train_seq,
     X_val=X_val_seq,
     epochs=EPOCHS,
     batch_size=BATCH_SIZE,
@@ -203,109 +237,76 @@ models_dict = {
     # 'Compact_AE': ae_expansion
 }
 
-generation_metrics_df, generation_raw_df = run_generation_comparison_table(
-    models=models_dict,
-    X_real_test=X_test_seq,  # Реальные тестовые данные
-    device=device,
-    n_generate=50,          # Сколько семплов генерировать
-    n_bootstrap=15,          # Бутстрап-итераций (уменьшите для быстрого теста)
-    confidence_level=0.95,
-    seed=42,
-    return_raw=True
-)
+# generation_metrics_df, generation_raw_df = run_generation_comparison_table(
+#     models=models_dict,
+#     X_real_test=X_test_seq,  # Реальные тестовые данные
+#     device=device,
+#     n_generate=50,          # Сколько семплов генерировать
+#     n_bootstrap=15,          # Бутстрап-итераций (уменьшите для быстрого теста)
+#     confidence_level=0.95,
+#     seed=42,
+#     return_raw=True
+# )
 
-log_generation_report(generation_metrics_df)
+# log_generation_report(generation_metrics_df)
 
 # ======================================================
 # V ИНФЕРЕНС
 # ======================================================
-CONTEXT_LEN = 20
 
-# 3.1 Условная генерация (по контексту)
-# Берем 3 реальных контекста из тестовых данных
-n_contexts = 3
+N_CONTEXTS = 5
+N_SAMPLES_COND = 5
+SENSOR = "sensor measurement 2"
+
+# Генерация (если ещё не выполнена)
 real_contexts = torch.tensor(
-    X_test_seq[:n_contexts, :CONTEXT_LEN, :], 
+    X_test_seq[:N_CONTEXTS, :CONTEXT_LEN, :], 
     dtype=torch.float32
 ).to(device)
 
-# Генерируем 5 вариантов продолжения для каждого контекста
 with torch.no_grad():
-    generated = model_vae.generate(real_contexts, n_samples=5, temperature=1.0)
-# generated shape: (5, 3, 40, N_FEATURES)
+    generated = model_vae.generate(real_contexts, n_samples=N_SAMPLES_COND, temperature=1.0)
 
 logging.info(f"Сгенерировано условных траекторий: {generated.shape}")
+logging.info(f"Expected: (n_samples={N_SAMPLES_COND}, n_contexts={N_CONTEXTS}, seq_len={SEQ_LENGTH}, features={len(FEATURE_COLS)})")
 
-# 3.2 Безусловная генерация (из чистого шума)
-generated_uncond = model_vae.generate_from_noise(n_samples=20, temperature=1.0)
-# generated_uncond shape: (20, 40, N_FEATURES)
+# Проверка на NaN/inf
+if np.isnan(generated).any():
+    logging.warning(f"⚠️  Found NaN values in generated data!")
+if np.isinf(generated).any():
+    logging.warning(f"⚠️  Found Inf values in generated data!")
 
-logging.info(f"Сгенерировано безусловных траекторий: {generated_uncond.shape}")
+# Визуализация условной генерации
+plot_conditional_generation_inference(
+    generated=generated,
+    X_test_seq=X_test_seq,
+    save_path=os.path.join(PATH_IMG, 'inference_conditional_generation.png'),
+    context_len=CONTEXT_LEN,
+    seq_len=SEQ_LENGTH,
+    sensor_name=SENSOR,
+    feature_names=FEATURE_COLS,
+    n_samples=5,
+    show_combined=True
+)
 
-# 3.3 Визуализация
-# Выбираем один сенсор для отображения (например, sensor_21 - это индекс 23 в FEATURE_COLS)
-# Проверьте актуальный индекс в вашем FEATURE_COLS
-feature_idx = 20  # sensor_20, например
+# ==========================================
+# 3.4 ИНФЕРЕНС: БЕЗУСЛОВНАЯ ГЕНЕРАЦИЯ
+# ==========================================
+N_SAMPLES_UNCOND = 20
 
-fig, axes = plt.subplots(n_contexts, 3, figsize=(18, 4 * n_contexts))
-fig.suptitle('Conditional Generation: Context → Future', fontsize=16, fontweight='bold')
+with torch.no_grad():
+    generated_uncond = model_vae.generate_from_noise(n_samples=N_SAMPLES_UNCOND, temperature=1.0)
 
-for i in range(n_contexts):
-    # Левая колонка: реальная траектория
-    ax1 = axes[i, 0]
-    real_full = X_test_seq[i, :, feature_idx]
-    ax1.plot(range(CONTEXT_LEN), real_full[:CONTEXT_LEN], 'bo-', 
-             markersize=6, label='Context (seen)', linewidth=2)
-    ax1.plot(range(CONTEXT_LEN, SEQ_LENGTH), real_full[CONTEXT_LEN:], 'g^-', 
-             markersize=4, label='Future (actual)', linewidth=1.5, alpha=0.8)
-    ax1.axvline(x=CONTEXT_LEN-0.5, color='red', linestyle='--', alpha=0.7, 
-                label='Context boundary')
-    ax1.set_title(f'Engine #{i+1}: Real Data')
-    ax1.set_xlabel('Time Step')
-    ax1.set_ylabel('Sensor Value (scaled)')
-    ax1.legend(fontsize=8)
-    ax1.grid(True, alpha=0.3)
-    
-    # Правая колонка: сгенерированные варианты
-    ax2 = axes[i, 1]
-    ax2.plot(range(CONTEXT_LEN), real_full[:CONTEXT_LEN], 'bo-', 
-             markersize=6, label='Context (seen)', linewidth=2)
-    
-    # Рисуем все 5 сгенерированных вариантов
-    for j in range(generated.shape[0]):
-        gen_seq = generated[j, i, :, feature_idx]
-        ax2.plot(range(CONTEXT_LEN, SEQ_LENGTH), gen_seq[CONTEXT_LEN:], 
-                 'r-', alpha=0.4, linewidth=1, label='Generated' if j==0 else None)
-    
-    # Среднее значение
-    gen_mean = generated[:, i, :, feature_idx].mean(axis=0)
-    ax2.plot(range(CONTEXT_LEN, SEQ_LENGTH), gen_mean[CONTEXT_LEN:], 
-             'm-', linewidth=3, label='Generated Mean', zorder=10)
-    
-    ax2.axvline(x=CONTEXT_LEN-0.5, color='red', linestyle='--', alpha=0.7)
-    ax2.set_title(f'Engine #{i+1}: 5 Generated Variants')
-    ax2.set_xlabel('Time Step')
-    ax2.set_ylabel('Sensor Value (scaled)')
-    ax2.legend(fontsize=8)
-    ax2.grid(True, alpha=0.3)
-    
-    # Третья колонка: ошибка (реальность vs среднее генерации)
-    ax3 = axes[i, 2]
-    ax3.plot(range(SEQ_LENGTH), real_full, 'b-', linewidth=2, label='Real')
-    ax3.plot(range(SEQ_LENGTH), gen_mean, 'm--', linewidth=2, label='Generated Mean')
-    ax3.fill_between(range(SEQ_LENGTH), 
-                     gen_mean - generated[:, i, :, feature_idx].std(axis=0),
-                     gen_mean + generated[:, i, :, feature_idx].std(axis=0),
-                     alpha=0.2, color='magenta', label='Std')
-    ax3.set_title(f'Engine #{i+1}: Real vs Generated')
-    ax3.set_xlabel('Time Step')
-    ax3.set_ylabel('Sensor Value (scaled)')
-    ax3.legend(fontsize=8)
-    ax3.grid(True, alpha=0.3)
+logging.info(f"Generated unconditional trajectories: {generated_uncond.shape}")
 
-plt.tight_layout()
-plt.savefig(os.path.join(PATH_IMG, 'inference_conditional_generation.png'), dpi=300)
-plt.show()
+# Визуализация безусловной генерации
+plot_unconditional_generation_inference(
+    generated_uncond=generated_uncond,
+    save_path=os.path.join(PATH_IMG, 'inference_conditional_generation.png'),
+    seq_len=SEQ_LENGTH,
+    feature_idx=9,
+    feature_names=FEATURE_COLS,
+)
 
 # 3.4 Визуализация безусловной генерации
 fig, axes = plt.subplots(4, 5, figsize=(20, 12))
@@ -360,4 +361,6 @@ import json
 metrics_save_path = os.path.join(PATH_SKALERS, "classification_metrics.json")
 with open(metrics_save_path, 'w') as f:
     json.dump(inference_results['metrics'], f, indent=2)
-logging.info(f"Метрики сохранены: {metrics_save_path}")
+logging.info(f"Metrics saved: {metrics_save_path}")
+
+logging.info("=== Inference completed ===")
