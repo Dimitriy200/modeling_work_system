@@ -134,10 +134,16 @@ std_scaler = scaler_manager.fit_scaler(splited_dataframes["X_train_norm"], FEATU
 # ------------------------------
 # Проводим сглаживание 
 # ------------------------------
-X_smoothing = {
-    "X_train_smoothing": processor.smoothing_by_engine(df=splited_dataframes['X_train_norm'], sensor_columns=FEATURE_COLS),
-    "X_val_smoothing": processor.smoothing_by_engine(df=splited_dataframes['X_val_norm'], sensor_columns=FEATURE_COLS),
-    "X_test_smoothing": processor.smoothing_by_engine(df=splited_dataframes['X_test_norm'], sensor_columns=FEATURE_COLS)
+df_norm_smoothing = {
+    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_norm'], sensor_columns=FEATURE_COLS),
+    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_norm'], sensor_columns=FEATURE_COLS),
+    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_norm'], sensor_columns=FEATURE_COLS)
+}
+
+df_anom_smoothing = {
+    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_anom'], sensor_columns=FEATURE_COLS),
+    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_anom'], sensor_columns=FEATURE_COLS),
+    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_anom'], sensor_columns=FEATURE_COLS)
 }
 
 # Смотрим результат сглаживания
@@ -145,7 +151,15 @@ CHECK_SENSORS = ["sensor measurement 2", "sensor measurement 7", "sensor measure
 for sensor in CHECK_SENSORS:
     plot_sensor_smoothing(
         df_raw=splited_dataframes['X_train_norm'],
-        df_smoothed=X_smoothing["X_train_smoothing"],
+        df_smoothed=df_norm_smoothing["X_train_norm_smoothing"],
+        engine_id = 1,
+        feature_name = sensor
+    )
+
+for sensor in CHECK_SENSORS:
+    plot_sensor_smoothing(
+        df_raw=splited_dataframes['X_train_anom'],
+        df_smoothed=df_anom_smoothing["X_train_anom_smoothing"],
         engine_id = 1,
         feature_name = sensor
     )
@@ -154,20 +168,46 @@ for sensor in CHECK_SENSORS:
 # ------------------------------
 # Применение Scaler
 # ------------------------------
-scaled_X_train = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS)
-scaled_X_val = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS)
-scaled_X_test = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS)
+# Без сглаживания
+X_scaled_norm = {
+    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS) 
+}
 
-scaled_X_train_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS)
-scaled_X_val_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS)
-scaled_X_test_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+X_scaled_anom = {
+    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+}
+logging.info(f"Mean of features: {X_scaled_norm['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm['Val'].std().mean():.4f}")
 
-logging.info(f"Mean of features: {scaled_X_train.mean().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_val.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_test.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_train_anom.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
+logging.info(f"Mean of features: {X_scaled_anom['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom['Val'].std().mean():.4f}")
+
+# Со сглаживанием
+X_scaled_norm_smoothing = {
+    "Train": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Train'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Val'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Test'], FEATURE_COLS) 
+}
+
+X_scaled_anom_smoothing = {
+    "Train": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Train'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Val'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Test'], FEATURE_COLS)
+}
+
+logging.info(f"Mean of features: {X_scaled_norm_smoothing['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm_smoothing['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm_smoothing['Val'].std().mean():.4f}")
+
+logging.info(f"Mean of features: {X_scaled_anom_smoothing['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom_smoothing['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom_smoothing['Val'].std().mean():.4f}")
 
 
 # ------------------------------
@@ -175,51 +215,158 @@ logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
 # ------------------------------
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
-X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS) 
-X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
-X_test_seq  = processor.create_sequences(scaled_X_test, SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# Без сглаживания
+df_norm_scaled_sec = {
+    "Train": processor.create_sequences(X_scaled_norm["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_norm["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
 
-logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples, 40, 16)
-logging.info(f"X_val_seq:   {X_val_seq.shape}")
-logging.info(f"X_test_seq:  {X_test_seq.shape}")
-logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быть ~0
-logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
-logging.info(f"X_train_seq  is: {type(X_train_seq)}")    # Должно быть ~1
+df_anom_scaled_sec = {
+    "Train": processor.create_sequences(X_scaled_anom["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_anom["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_anom["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
+logging.info(f"df_anom_scaled_sec: {df_anom_scaled_sec['Train'].shape}")
+
+# Со сглаживанием
+df_norm_scaled_sec_smoothing = {
+    "Train": processor.create_sequences(X_scaled_norm_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_norm_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+
+df_anom_scaled_sec_smoothing = {
+    "Train": processor.create_sequences(X_scaled_anom_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_anom_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_anom_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
+logging.info(f"df_anom_scaled_sec_smoothing: {df_anom_scaled_sec_smoothing['Train'].shape}")
+
+logging.info(f"X_train_seq  is: {type(df_norm_scaled_sec['Train'])}")
+
 
 # ------------------------------
 # Выделяем первую часть окна - прошлое.
 # ------------------------------
-X_train_seq_past = X_train_seq[:, :PAST_STEPS]
-X_val_seq_past = X_val_seq[:, :PAST_STEPS]
-X_test_seq_past = X_test_seq[:, :PAST_STEPS]
+df_norm_scaled_seq_past = {
+    "Train": df_norm_scaled_sec["Train"][:, :PAST_STEPS],
+    "Val": df_norm_scaled_sec["Val"][:, :PAST_STEPS],
+    "Test": df_norm_scaled_sec["Test"][:, :PAST_STEPS]
+}
 
-logging.info(f"X_train_seq_past:  {X_train_seq_past.shape}")
-logging.info(f"X_val_seq_past:  {X_val_seq_past.shape}")
-logging.info(f"X_test_seq_past:  {X_test_seq_past.shape}")
+df_anom_scaled_seq_past = {
+    "Train": df_anom_scaled_sec["Train"][:, :PAST_STEPS],
+    "Val": df_anom_scaled_sec["Val"][:, :PAST_STEPS],
+    "Test": df_anom_scaled_sec["Test"][:, :PAST_STEPS]
+}
+
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_past['Train'].shape}")
+
+df_norm_scaled_seq_past_smoothong_past = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
+}
+
+df_anom_scaled_seq_smoothong_past = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
+}
+
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_past['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
+
 
 # ------------------------------
 #  Будущее - для итеративного инференса
 # ------------------------------
-y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
-y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
-y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
+df_norm_scaled_seq_future = {
+    "Train": df_norm_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_norm_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_norm_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
 
-logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
-logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
-logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
+df_anom_scaled_seq_future = {
+    "Train": df_anom_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_anom_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_anom_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
+
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_future['Train'].shape}")
+
+df_norm_scaled_seq_past_smoothong_future = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
+
+df_anom_scaled_seq_smoothong_future = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
+
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+
+# y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
+# y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
+# y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
+
+# logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
+# logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
+# logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
 
 # ------------------------------
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
 # ------------------------------
-X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
-X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
-X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
+df_norm_scaled_seq_ls = {
+    "Train": df_norm_scaled_sec["Train"][:, PAST_STEPS - 1],
+    "Val": df_norm_scaled_sec["Val"][:, PAST_STEPS - 1],
+    "Test": df_norm_scaled_sec["Test"][:, PAST_STEPS - 1]
+}
 
-logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
-logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
-logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
+df_anom_scaled_seq_ls = {
+    "Train": df_anom_scaled_sec["Train"][:, PAST_STEPS - 1],
+    "Val": df_anom_scaled_sec["Val"][:, PAST_STEPS - 1],
+    "Test": df_anom_scaled_sec["Test"][:, PAST_STEPS - 1]
+}
 
-N_FEATURES = X_train_seq.shape[2]
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_future['Train'].shape}")
+
+df_norm_scaled_seq_past_smoothong_ls = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
+}
+
+df_anom_scaled_seq_smoothong_ls = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
+}
+
+logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+
+
+
+# X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
+# X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
+# X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
+
+# logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
+# logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
+# logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
+
+# N_FEATURES = X_train_seq.shape[2]
 
 
 
@@ -227,9 +374,9 @@ N_FEATURES = X_train_seq.shape[2]
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_train=torch.FloatTensor(X_train_seq_past),
-    last_steps_train=torch.FloatTensor(X_train_seq_ls),
-    y_train=torch.FloatTensor(y_train_sec_future), # X_train_seq
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]), #Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
