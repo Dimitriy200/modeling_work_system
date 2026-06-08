@@ -56,7 +56,7 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-SAVE_MODEL = False              # Сохранение модели в файл
+SAVE_MODEL = True              # Сохранение модели в файл
 MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
@@ -79,7 +79,7 @@ PAST_STEPS = 5                  # Первая часть окна - прошл�
 BATCH_SIZE = 32
 EPOCHS = 150
 LEARNING_RATE = 0.001 #5e-5
-WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+# WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
 KL_MINIMUM = 0.5 #0.15
