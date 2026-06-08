@@ -75,9 +75,11 @@ def plot_inference_results(
 
 def plot_inference_multi_features(
         y_true, 
-        scenarios, 
+        scenarios,
+        plot_name: str,
         feature_indices=[2, 9], 
-        feature_names=["Sensor 2", "Sensor 9"], save_path=None):
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=None):
     """
     Строит графики для нескольких датчиков одного двигателя на одном холсте (друг под другом).
     
@@ -128,7 +130,7 @@ def plot_inference_multi_features(
                     horizontalalignment='center', color='gray', fontweight='bold')
             
         # Настройка оформления для каждой панели
-        ax.set_title(f"Генерация для: {f_name}", fontsize=12, fontweight='bold')
+        ax.set_title(f"{plot_name}, генерация для: {f_name}", fontsize=12, fontweight='bold')
         ax.set_ylabel("Нормализ. значение", fontsize=10)
         ax.grid(True, linestyle=':', alpha=0.6)
         ax.legend(loc='lower left')
