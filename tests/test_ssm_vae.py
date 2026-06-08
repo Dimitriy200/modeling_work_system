@@ -29,6 +29,7 @@ from modeling_work_system.metrics.generation_metrics import (
     log_generation_report
 )
 from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
+from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -38,15 +39,7 @@ from modeling_work_system.config import (
     PATH_SKALERS,
     PATH_IMG,
 
-    PATH_TRAIN_RAW,
-    PATH_TRAIN_ADD_RAW,
-
-    MLFLOW_TRACKING_URI,
-    MLFLOW_USERNAME,
-    MLFLOW_REPO_OWNER,
-    MLFLOW_REPO_NAME,
-    MLFLOW_REPO_TOKEN,
-    MLFLOW_REPO_PASSWORD
+    PATH_TRAIN_RAW
 )
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
@@ -62,21 +55,39 @@ scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
 
+# ------------------------------
+# ОБЩИЕ ПАРАМЕТРЫ
+# ------------------------------
+SAVE_MODEL = False              # Сохранение модели в файл
+MODEL_NAME = "ssm_vae"         # Имя модели при сохранении
+MODEL_VERSION = "v2"
+
+# ------------------------------
+# ПАРАМЕТРЫ ОБРАБОТКИ ДАННЫХ
+# ------------------------------
+N_LAST_ANOM = 50
+QUANTILE = 0.90
+
+# ------------------------------
+# ПАРАМЕТРЫ ОКОН
+# ------------------------------
 SEQ_LENGTH = 10                 # Длина окна 
 STRIDE = 1                      # Шаг сдвига.
 PAST_STEPS = 5                  # Первая часть окна - прошлое
 
+# ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
+# ------------------------------
 BATCH_SIZE = 32
 EPOCHS = 300
 LEARNING_RATE = 0.001 #5e-5
-# WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
-
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-TAU = 0.05
+KL_MINIMUM = 0.05
 
-# ПАРАМЕТРЫ АРХИТКТУРЫ LSTM_VAE
+# ------------------------------
+# ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
+# ------------------------------
 FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
@@ -116,78 +127,256 @@ print("=" * 50)
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
 no_null_df = processor.delete_nan(raw_df)
 
-marking_df = processor.marking_norm_anom_by_quantile(no_null_df)
+marking_df = processor.marking_norm_anom_by_quantile(no_null_df, quantile=QUANTILE)
+# marking_df = processor.marking_norm_anom(no_null_df, n_anom = N_LAST_ANOM)
 splited_dataframes = processor.split_by_engine_train_test_val(dataframe=marking_df)
 
 logging.info(f"X_train_anom = {splited_dataframes["X_train_anom"]}")
 logging.info(f"X_val_anom = {splited_dataframes["X_val_anom"]}")
 logging.info(f"X_test_anom = {splited_dataframes["X_test_anom"]}")
 
-# 2.1 Обучение и применение Scaler
+# ------------------------------
+# Обучение Scaler
+# ------------------------------
 FEATURE_COLS = raw_df.columns.tolist()
 std_scaler = scaler_manager.fit_scaler(splited_dataframes["X_train_norm"], FEATURE_COLS) # Обучаем Scaller только на нормальных и TRAIN данных !!!
 
-scaled_X_train = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS)
-scaled_X_val = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS)
-scaled_X_test = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS)
+# ------------------------------
+# Проводим сглаживание 
+# ------------------------------
+df_norm_smoothing = {
+    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_norm'], sensor_columns=FEATURE_COLS),
+    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_norm'], sensor_columns=FEATURE_COLS),
+    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_norm'], sensor_columns=FEATURE_COLS)
+}
 
-scaled_X_train_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS)
-scaled_X_val_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS)
-scaled_X_test_anom = scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+df_anom_smoothing = {
+    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_anom'], sensor_columns=FEATURE_COLS),
+    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_anom'], sensor_columns=FEATURE_COLS),
+    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_anom'], sensor_columns=FEATURE_COLS)
+}
 
-logging.info(f"Mean of features: {scaled_X_train.mean().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_val.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_test.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_train_anom.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_val_anom.std().mean():.4f}")
-logging.info(f"Std of features: {scaled_X_test_anom.std().mean():.4f}")
+# Смотрим результат сглаживания
+CHECK_SENSORS = ["sensor measurement 2", "sensor measurement 7", "sensor measurement 8", "sensor measurement 9",]
+for sensor in CHECK_SENSORS:
+    plot_sensor_smoothing(
+        df_raw=splited_dataframes['X_train_norm'],
+        df_smoothed=df_norm_smoothing["Train"],
+        engine_id = 1,
+        feature_name = sensor
+    )
+
+for sensor in CHECK_SENSORS:
+    plot_sensor_smoothing(
+        df_raw=splited_dataframes['X_train_anom'],
+        df_smoothed=df_anom_smoothing["Train"],
+        engine_id = 1,
+        feature_name = sensor
+    )
 
 
-# 2.2 Создание последовательностей
+# ------------------------------
+# Применение Scaler
+# ------------------------------
+# Без сглаживания
+X_scaled_norm = {
+    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS) 
+}
+
+X_scaled_anom = {
+    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+}
+logging.info(f"Mean of features: {X_scaled_norm['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm['Val'].std().mean():.4f}")
+
+logging.info(f"Mean of features: {X_scaled_anom['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom['Val'].std().mean():.4f}")
+
+# Со сглаживанием
+X_scaled_norm_smoothing = {
+    "Train": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Train'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Val'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Test'], FEATURE_COLS) 
+}
+
+X_scaled_anom_smoothing = {
+    "Train": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Train'], FEATURE_COLS),
+    "Test": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Val'], FEATURE_COLS),
+    "Val": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Test'], FEATURE_COLS)
+}
+
+logging.info(f"Mean of features: {X_scaled_norm_smoothing['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm_smoothing['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_norm_smoothing['Val'].std().mean():.4f}")
+
+logging.info(f"Mean of features: {X_scaled_anom_smoothing['Train'].mean().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom_smoothing['Test'].std().mean():.4f}")
+logging.info(f"Std of features: {X_scaled_anom_smoothing['Val'].std().mean():.4f}")
+
+
+# ------------------------------
+# Создание последовательностей - Нарезка окон
+# ------------------------------
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
-# Нарезаем окна.
-X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEATURE_COLS) 
-X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
-X_test_seq  = processor.create_sequences(scaled_X_test, SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# Без сглаживания
+df_norm_scaled_sec = {
+    "Train": processor.create_sequences(X_scaled_norm["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_norm["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
 
-logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples, 40, 16)
-logging.info(f"X_val_seq:   {X_val_seq.shape}")
-logging.info(f"X_test_seq:  {X_test_seq.shape}")
-logging.info(f"Mean: {scaled_X_train.values.mean():.4f}")  # Должно быть ~0
-logging.info(f"Std: {scaled_X_train.values.std():.4f}")    # Должно быть ~1
-logging.info(f"X_train_seq  is: {type(X_train_seq)}")    # Должно быть ~1
+df_anom_scaled_sec = {
+    "Train": processor.create_sequences(X_scaled_anom["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_anom["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_anom["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
+logging.info(f"df_anom_scaled_sec: {df_anom_scaled_sec['Train'].shape}")
+
+# Со сглаживанием
+df_norm_scaled_sec_smoothing = {
+    "Train": processor.create_sequences(X_scaled_norm_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_norm_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+
+df_anom_scaled_sec_smoothing = {
+    "Train": processor.create_sequences(X_scaled_anom_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val": processor.create_sequences(X_scaled_anom_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test": processor.create_sequences(X_scaled_anom_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+}
+logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
+logging.info(f"df_anom_scaled_sec_smoothing: {df_anom_scaled_sec_smoothing['Train'].shape}")
+
+logging.info(f"df_norm_scaled_sec['Train']  is: {type(df_norm_scaled_sec['Train'])}")
 
 
+# ------------------------------
 # Выделяем первую часть окна - прошлое.
-X_train_seq_past = X_train_seq[:, :PAST_STEPS]
-X_val_seq_past = X_val_seq[:, :PAST_STEPS]
-X_test_seq_past = X_test_seq[:, :PAST_STEPS]
+# ------------------------------
+df_norm_scaled_seq_past = {
+    "Train": df_norm_scaled_sec["Train"][:, :PAST_STEPS],
+    "Val": df_norm_scaled_sec["Val"][:, :PAST_STEPS],
+    "Test": df_norm_scaled_sec["Test"][:, :PAST_STEPS]
+}
 
-logging.info(f"X_train_seq_past:  {X_train_seq_past.shape}")
-logging.info(f"X_val_seq_past:  {X_val_seq_past.shape}")
-logging.info(f"X_test_seq_past:  {X_test_seq_past.shape}")
+df_anom_scaled_seq_past = {
+    "Train": df_anom_scaled_sec["Train"][:, :PAST_STEPS],
+    "Val": df_anom_scaled_sec["Val"][:, :PAST_STEPS],
+    "Test": df_anom_scaled_sec["Test"][:, :PAST_STEPS]
+}
+
+logging.info(f"df_norm_scaled_seq_past['Train']:  {df_norm_scaled_seq_past['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_past['Train']:  {df_anom_scaled_seq_past['Train'].shape}")
+
+df_norm_scaled_seq_smoothong_past = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
+}
+
+df_anom_scaled_seq_smoothong_past = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
+}
+
+logging.info(f"df_norm_scaled_seq_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
 
 
+# ------------------------------
 #  Будущее - для итеративного инференса
-y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
-y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
-y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
+# ------------------------------
+df_norm_scaled_seq_future = {
+    "Train": df_norm_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_norm_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_norm_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
 
-logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
-logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
-logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
+df_anom_scaled_seq_future = {
+    "Train": df_anom_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_anom_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_anom_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
 
+logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
+
+df_norm_scaled_seq_past_smoothong_future = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
+
+df_anom_scaled_seq_smoothong_future = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+}
+
+logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+
+# y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
+# y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
+# y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
+
+# logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
+# logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
+# logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
+
+# ------------------------------
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
-X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
-X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
-X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
+# ------------------------------
+df_norm_scaled_seq_ls = {
+    "Train": df_norm_scaled_sec["Train"][:, PAST_STEPS - 1],
+    "Val": df_norm_scaled_sec["Val"][:, PAST_STEPS - 1],
+    "Test": df_norm_scaled_sec["Test"][:, PAST_STEPS - 1]
+}
 
-logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
-logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
-logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
+df_anom_scaled_seq_ls = {
+    "Train": df_anom_scaled_sec["Train"][:, PAST_STEPS - 1],
+    "Val": df_anom_scaled_sec["Val"][:, PAST_STEPS - 1],
+    "Test": df_anom_scaled_sec["Test"][:, PAST_STEPS - 1]
+}
 
-N_FEATURES = X_train_seq.shape[2]
+logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
+
+df_norm_scaled_seq_past_smoothong_ls = {
+    "Train": df_norm_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
+    "Val": df_norm_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
+    "Test": df_norm_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
+}
+
+df_anom_scaled_seq_smoothong_ls = {
+    "Train": df_anom_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
+    "Val": df_anom_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
+    "Test": df_anom_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
+}
+
+logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+
+
+
+# X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
+# X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
+# X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
+
+# logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
+# logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
+# logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
+
+# N_FEATURES = X_train_seq.shape[2]
 
 
 
@@ -195,56 +384,167 @@ N_FEATURES = X_train_seq.shape[2]
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_train=torch.FloatTensor(X_train_seq_past),
-    last_steps_train=torch.FloatTensor(X_train_seq_ls),
-    y_train=torch.FloatTensor(y_train_sec_future), # X_train_seq
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),                    # Сырое прошлое
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),   # Сглаженная граница
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]),        # Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
-    tau=TAU,
+    tau=KL_MINIMUM,
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vae_v2_2.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pth"))
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
-gen_scenarios = model.inference(
-    x_past=torch.FloatTensor(X_val_seq_past), 
+# ------------------------------
+# НА НОРМЕ БЕЗ СГЛАЖИВАНИЯ
+# ------------------------------
+gen_scenarios_norm = model.inference(
+    x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"]), 
     # last_known_step=torch.FloatTensor(X_val_seq_ls),
     horizon=10,
 )
 
+# Рисуем графиги инференса
 num_engines_to_plot = 3 
-
 for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = X_val_seq[engine_idx]
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
-    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_vae_engine_{engine_idx}.png'
-    current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_norm.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
     plot_inference_multi_features(
         y_true=y_true_single,
         scenarios=single_engine_scenarios,
+        plot_name="НОРМА БЕЗ СГЛАЖИВАНИЯ",
         feature_indices=[6, 13],
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
 
+
+# ------------------------------
+# НА НОРМЕ СО СГЛАЖИВАНИЕМ
+# ------------------------------
+gen_scenarios_norm_smoorth = model.inference(
+    x_past=torch.FloatTensor(df_norm_scaled_seq_smoothong_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_smoorth]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
+    # current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_norm_smoorth.png")
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="НОРМА СО СГЛАЖИВАНИЕМ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
+
+# ------------------------------
+# НА АНОМАЛИИ БЕЗ СГЛАЖИВАНИЯ
+# ------------------------------
+gen_scenarios_anom = model.inference(
+    x_past=torch.FloatTensor(df_anom_scaled_seq_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_anom.png")
+
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="АНОМАЛИЯ БЕЗ СГЛАЖИВАНИЯ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
+
+# ------------------------------
+# НА АНОМАЛИИ СО СГЛАЖИВАНИЕМ
+# ------------------------------
+gen_scenarios_anom_smooth = model.inference(
+    x_past=torch.FloatTensor(df_anom_scaled_seq_smoothong_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom_smooth]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_anom_smoorth.png")
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="АНОМАЛИЯ СО СГЛАЖИВАНИЕМ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
 
 
 # ======================================================

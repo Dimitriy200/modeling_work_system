@@ -55,8 +55,12 @@ scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
 
-SAVE_MODEL = False
-MODEL_NAME = "model_lstm_vae_v2_2.pth"
+# ------------------------------
+# ОБЩИЕ ПАРАМЕТРЫ
+# ------------------------------
+SAVE_MODEL = False              # Сохранение модели в файл
+MODEL_NAME = "transformer_vae"         # Имя модели при сохранении
+MODEL_VERSION = "v2"
 
 # ------------------------------
 # ПАРАМЕТРЫ ОБРАБОТКИ ДАННЫХ
@@ -390,10 +394,10 @@ history = model.fit(
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vae_v2_2.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pth"))
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
 # ======================================================
@@ -421,8 +425,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
-    current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_norm.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -459,7 +462,8 @@ for engine_idx in range(num_engines_to_plot):
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
     filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
-    current_save_path = os.path.join(PATH_IMG, filename)
+    # current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_norm_smoorth.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -494,8 +498,8 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
-    current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_anom.png")
+
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -530,8 +534,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom_smooth]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
-    current_save_path = os.path.join(PATH_IMG, filename)
+    current_save_path = os.path.join(PATH_IMG, f"plot_inference_{MODEL_NAME}_{MODEL_VERSION}_engine_{engine_idx}_anom_smoorth.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
