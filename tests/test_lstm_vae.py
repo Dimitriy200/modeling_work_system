@@ -151,7 +151,7 @@ CHECK_SENSORS = ["sensor measurement 2", "sensor measurement 7", "sensor measure
 for sensor in CHECK_SENSORS:
     plot_sensor_smoothing(
         df_raw=splited_dataframes['X_train_norm'],
-        df_smoothed=df_norm_smoothing["X_train_norm_smoothing"],
+        df_smoothed=df_norm_smoothing["Train"],
         engine_id = 1,
         feature_name = sensor
     )
@@ -159,7 +159,7 @@ for sensor in CHECK_SENSORS:
 for sensor in CHECK_SENSORS:
     plot_sensor_smoothing(
         df_raw=splited_dataframes['X_train_anom'],
-        df_smoothed=df_anom_smoothing["X_train_anom_smoothing"],
+        df_smoothed=df_anom_smoothing["Train"],
         engine_id = 1,
         feature_name = sensor
     )
@@ -245,7 +245,7 @@ df_anom_scaled_sec_smoothing = {
 logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
 logging.info(f"df_anom_scaled_sec_smoothing: {df_anom_scaled_sec_smoothing['Train'].shape}")
 
-logging.info(f"X_train_seq  is: {type(df_norm_scaled_sec['Train'])}")
+logging.info(f"df_norm_scaled_sec['Train']  is: {type(df_norm_scaled_sec['Train'])}")
 
 
 # ------------------------------
@@ -263,8 +263,8 @@ df_anom_scaled_seq_past = {
     "Test": df_anom_scaled_sec["Test"][:, :PAST_STEPS]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_past['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past['Train']:  {df_norm_scaled_seq_past['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_past['Train']:  {df_anom_scaled_seq_past['Train'].shape}")
 
 df_norm_scaled_seq_past_smoothong_past = {
     "Train": df_norm_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
@@ -278,8 +278,8 @@ df_anom_scaled_seq_smoothong_past = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_past['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past_smoothong_past['Train']:  {df_norm_scaled_seq_past_smoothong_past['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
 
 
 # ------------------------------
@@ -297,8 +297,8 @@ df_anom_scaled_seq_future = {
     "Test": df_anom_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_future['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_future['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
 
 df_norm_scaled_seq_past_smoothong_future = {
     "Train": df_norm_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
@@ -312,8 +312,8 @@ df_anom_scaled_seq_smoothong_future = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
 # y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
 # y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
@@ -338,8 +338,8 @@ df_anom_scaled_seq_ls = {
     "Test": df_anom_scaled_sec["Test"][:, PAST_STEPS - 1]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_future['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_future['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
 
 df_norm_scaled_seq_past_smoothong_ls = {
     "Train": df_norm_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
@@ -353,8 +353,8 @@ df_anom_scaled_seq_smoothong_ls = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
 }
 
-logging.info(f"X_train_seq_past:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
-logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
+logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
 
 
@@ -374,9 +374,9 @@ logging.info(f"X_val_seq_past:  {df_anom_scaled_seq_smoothong_future['Train'].sh
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),
-    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),
-    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]), #Сглаженное будущее
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),                    # Сырое прошлое
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),   # Сглаженная граница
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]),        #Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
@@ -395,11 +395,17 @@ if SAVE_MODEL:
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
-gen_scenarios = model.inference(
-    x_past=torch.FloatTensor(X_val_seq_past), 
+# ------------------------------
+# НА НОРМЕ БЕЗ СГЛАЖИВАНИЯ
+# ------------------------------
+gen_scenarios_norm = model.inference(
+    x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"]), 
     # last_known_step=torch.FloatTensor(X_val_seq_ls),
     horizon=10,
 )
+# ------------------------------
+# НА АНОМАЛИИ
+# ------------------------------
 
 # ------------------------------
 # Рисуем графиги инференса
@@ -409,11 +415,11 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = X_val_seq[engine_idx]
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
-    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
     filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
