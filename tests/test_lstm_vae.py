@@ -17,8 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.vrnn_vae import TimeSeriesVRNN
-
+from modeling_work_system.models.VAE.lstm_vae import TimeSeriesIterativeVAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -28,9 +27,9 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_consecutive_windows
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
 from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing
-
+from modeling_work_system.plots.generation_plots import plot_recursive_lifetime_forecast
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -40,13 +39,11 @@ from modeling_work_system.config import (
     PATH_SKALERS,
     PATH_IMG,
 
-    PATH_TRAIN_RAW
+    PATH_TRAIN_RAW,
 )
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
-
-
 
 # ======================================================
 # ПОДГОТОВКА ПЕРЕМЕННЫХ
@@ -56,12 +53,13 @@ scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
 
+
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG = os.path.join(PATH_IMG, "vrnn_vae")
-SAVE_MODEL = False              # Сохранение модели в файл
-MODEL_NAME = "vrnn_vae"         # Имя модели при сохранении
+PATH_IMG = os.path.join(PATH_IMG, "lstm_vae")
+SAVE_MODEL = True              # Сохранение модели в файл
+MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------
@@ -77,15 +75,16 @@ SEQ_LENGTH = 10                 # Длина окна
 STRIDE = 1                      # Шаг сдвига.
 PAST_STEPS = 5                  # Первая часть окна - прошлое
 
+# ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
+# ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 150
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
-
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.1 #0.3
+KL_MINIMUM = 0.1 #0.15
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -94,7 +93,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesVRNN(
+model = TimeSeriesIterativeVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -123,9 +122,6 @@ else:
 print("=" * 50)
 
 
-# ======================================================
-# I ПОДГОТОВКА ДАННЫХ
-# ======================================================
 # ======================================================
 # I ПОДГОТОВКА ДАННЫХ
 # ======================================================
@@ -293,7 +289,7 @@ df_anom_scaled_seq_smoothong_past = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
 }
 
-logging.info(f"df_norm_scaled_seq_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
 logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
 
 
@@ -372,38 +368,28 @@ logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scal
 logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
 
-
-# X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
-# X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
-# X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
-
-# logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
-# logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
-# logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
-
-# N_FEATURES = X_train_seq.shape[2]
-
-
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_full_window=torch.FloatTensor(df_norm_scaled_sec["Train"]),
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),                    # Сырое прошлое
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),   # Сглаженная граница
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]),        # Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vrnn_vae_v1.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
+# ------------------------------
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_vrnn_vae_v2_2.pth"))
+# ------------------------------
+if SAVE_MODEL:
+    torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
-# ======================================================
-# III ИНФЕРЕНС
-# ======================================================
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
@@ -441,6 +427,17 @@ for engine_idx in range(num_engines_to_plot):
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
+
+ENGINE_N = 0
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"][ENGINE_N]),
+    full_engine_df=X_scaled_norm["Val"],
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG, f"plot_inference_full_time_engine({ENGINE_N})_{MODEL_NAME}_{MODEL_VERSION}_norm.png")
+)
 
 
 # ------------------------------

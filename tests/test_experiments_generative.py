@@ -18,7 +18,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
+from modeling_work_system.models.VAE.lstm_vae_outdated import LSTM_VAE
 from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
 from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
 from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE
@@ -32,9 +32,16 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
+
+
+from modeling_work_system.metrics.vae_inference import (
+    classify_anomalies_by_percentile,
+    plot_classification_results)
+
 from modeling_work_system.plots.generation_plots import (
     plot_conditional_generation_inference,
     plot_unconditional_generation_inference
+
 )
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
@@ -107,6 +114,8 @@ X_train_seq = processor.create_sequences(scaled_X_train, SEQ_LENGTH, STRIDE, FEA
 X_val_seq   = processor.create_sequences(scaled_X_val, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 X_test_seq  = processor.create_sequences(scaled_X_test, SEQ_LENGTH, STRIDE, FEATURE_COLS)
 
+X_test_anom_seq  = processor.create_anomaly_sequences(scaled_X_test_anom, SEQ_LENGTH, STRIDE, FEATURE_COLS)
+
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 logging.info(f"X_train_seq: {X_train_seq.shape}")  # Ожидаем: (N_samples, 40, 16)
 logging.info(f"X_val_seq:   {X_val_seq.shape}")
@@ -150,15 +159,18 @@ print("=" * 50)
 # ==========================================
 # 1. Параметры обучения
 # ==========================================
-BATCH_SIZE = 32
-EPOCHS = 10
-LEARNING_RATE = 5e-5
-WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+
+BATCH_SIZE = 16
+EPOCHS = 200
+LEARNING_RATE = 1e-3
+WARMUP_EPOCHS = 30  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+
 
 CONTEXT_LEN = 5 
 FORECAST_LEN = CONTEXT_LEN
 
 # Параметры архитектуры LSTM_VAE
+
 HIDDEN_DIM = 26
 LATENT_DIM = 6
 N_LAYERS = 2
@@ -295,5 +307,60 @@ plot_unconditional_generation_inference(
     feature_idx=9,
     feature_names=FEATURE_COLS,
 )
+
+# 3.4 Визуализация безусловной генерации
+fig, axes = plt.subplots(4, 5, figsize=(20, 12))
+fig.suptitle('Unconditional Generation: 20 Synthetic Trajectories', 
+             fontsize=16, fontweight='bold')
+
+for i in range(4):
+    for j in range(5):
+        idx = i * 5 + j
+        ax = axes[i, j]
+        ax.plot(generated_uncond[idx, :, feature_idx], 'b-', linewidth=1.5)
+        ax.set_title(f'Trajectory #{idx+1}')
+        ax.set_xlabel('Time')
+        if j == 0:
+            ax.set_ylabel('Sensor Value')
+        ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig(os.path.join(PATH_IMG, 'inference_unconditional_generation.png'), dpi=300)
+plt.show()
+
+logging.info("Инференс завершен!")
+
+
+# ==========================================
+# 3.3 КЛАССИФИКАЦИЯ АНОМАЛИЙ
+# ==========================================
+logging.info("\n" + "=" * 60)
+logging.info("ЗАПУСК ИНФЕРЕНСА И КЛАССИФИКАЦИИ")
+logging.info("=" * 60)
+
+# Запуск классификации
+inference_results = classify_anomalies_by_percentile(
+    model=model_vae,
+    X_test_norm=X_test_seq,
+    X_test_anom=X_test_anom_seq,
+    device=device,
+    percentile_threshold=95.0,
+    batch_size=64
+)
+
+# Визуализация результатов
+CLASSIFICATION_PLOT_PATH = os.path.join(PATH_IMG, "classification_results.png")
+plot_classification_results(
+    inference_results=inference_results,
+    save_path=CLASSIFICATION_PLOT_PATH,
+    figsize=(18, 5)
+)
+
+# Сохранение метрик в CSV
+import json
+metrics_save_path = os.path.join(PATH_SKALERS, "classification_metrics.json")
+with open(metrics_save_path, 'w') as f:
+    json.dump(inference_results['metrics'], f, indent=2)
+logging.info(f"Metrics saved: {metrics_save_path}")
 
 logging.info("=== Inference completed ===")

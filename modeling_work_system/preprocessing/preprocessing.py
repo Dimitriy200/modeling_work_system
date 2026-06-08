@@ -463,3 +463,134 @@ class Preprocess:
             raise ValueError(f"Failed to create any sequences. Check seq_length={seq_length} and data.")
             
         return np.array(sequences, dtype=np.float32)
+    
+    # ======================================================
+    def create_anomaly_sequences(
+            self,
+            dataframe: pd.DataFrame,
+            seq_length: int,
+            stride: int,
+            feature_cols: List[str]
+        ) -> np.ndarray:
+        """
+        Создаёт окна для аномальных данных: каждое окно ЗАКАНЧИВАЕТСЯ 
+        на аномальном цикле, захватывая seq_length предыдущих шагов.
+        
+        Это позволяет модели видеть контекст перед аномалией.
+        """
+        required_meta = ['unit number', 'time in cycles']
+        missing = [col for col in required_meta if col not in dataframe.columns]
+        if missing:
+            raise ValueError(f"Missing columns: {missing}")
+        
+        # Сортировка критически важна
+        df_sorted = dataframe.sort_values(['unit number', 'time in cycles']).reset_index(drop=True)
+        
+        sequences = []
+        
+        for unit, group in df_sorted.groupby('unit number'):
+            # Получаем индексы аномальных циклов
+            anom_indices = group.index.tolist()
+            values = group[feature_cols].values.astype(np.float32)
+            n_steps = len(values)
+            
+            # Для каждого аномального цикла создаём окно, заканчивающееся на нём
+            for anom_idx in anom_indices:
+                # Позиция аномального цикла в группе
+                pos_in_group = group.index.get_loc(anom_idx)
+                
+                # Начало окна: за seq_length шагов до аномалии
+                start = max(0, pos_in_group - seq_length + 1)
+                
+                # Если данных недостаточно — берём всё что есть и padding'им
+                window_data = values[start:pos_in_group + 1]
+                
+                if len(window_data) < seq_length:
+                    # Padding нулями в начало (или повторяем первый шаг)
+                    padding = np.tile(window_data[0:1], (seq_length - len(window_data), 1))
+                    window_data = np.vstack([padding, window_data])
+                
+                sequences.append(window_data[:seq_length])
+        
+        if not sequences:
+            raise ValueError(f"Не удалось создать ни одной аномальной последовательности.")
+        
+        return np.array(sequences, dtype=np.float32)
+
+    # ======================================================
+    def apply_stress_to_data(
+            self,
+            df,
+            sensor_columns,
+            noise_level=0.1,
+            drop_rate=0.2,
+            fill_value=0.0):
+        """
+        Искусственно добавляет Гауссов шум и симулирует пропуски данных 
+        в сыром pd.DataFrame до этапа нарезки окон.
+        
+        Параметры:
+        ----------
+        df : pd.DataFrame
+            Ваша исходная плоская таблица (например, валидационный сет NASA Turbofans)
+        sensor_columns : list of str
+            Список названий колонок, которые являются датчиками и о операционными настройками
+        noise_level : float
+            Интенсивность Гауссова шума (стандартное отклонение)
+        drop_rate : float
+            Процент пропущенных данных в каналах (от 0.0 до 1.0)
+        fill_value : float
+            Чем заполнять пропуски (NaN) перед отправкой в сеть (обычно 0.0)
+            
+        Возвращает:
+        -----------
+        df_stressed : pd.DataFrame
+            Испорченная копия DataFrame, готовая к нарезке окон.
+        """
+        # Делаем глубокую копию, чтобы не сломать оригинальный датасет
+        df_stressed = df.copy()
+        
+        # Портим только целевые колонки датчиков
+        for col in sensor_columns:
+            if col not in df_stressed.columns:
+                continue
+                
+            # 1. ДОБАВЛЯЕМ ГАУССОВ ШУМ (Вибрация / Помехи)
+            if noise_level > 0:
+                # Генерируем нормальный шум под размер текущей колонки
+                noise = np.random.normal(loc=0.0, scale=noise_level, size=len(df_stressed))
+                df_stressed[col] = df_stressed[col] + noise
+                
+            # 2. СИМУЛИРУЕМ ПРОПУСКИ (Потеря пакетов / Отказ датчика)
+            if drop_rate > 0:
+                # Выбираем случайные индексы строк для текущего датчика
+                sampled_indices = df_stressed.sample(frac=drop_rate).index
+                
+                # Ставим туда честные NaN (пропуски в стиле Pandas)
+                df_stressed.loc[sampled_indices, col] = np.nan
+                
+            # 3. ОБРАБОТКА ПРОПУСКОВ (Имитируем предобработку на борту)
+            # Нейросети не умеют работать с NaN, поэтому заполняем их константой (0.0)
+            df_stressed = df_stressed.fillna(fill_value)
+        
+        return df_stressed
+    
+
+    # ======================================================
+    def smoothing_by_engine(
+            self, 
+            df: pd.DataFrame, 
+            sensor_columns: list, 
+            span: int = 10, 
+            group_col: str = 'unit number'):
+        """
+        Применяет экспоненциально взвешенное скользящее среднее (EWM) к колонкам датчиков
+        внутри каждой группы (например, по номеру двигателя/устройства).
+        """
+        df_smoothed = df.copy()
+
+        df_smoothed[sensor_columns] = df_smoothed.groupby(group_col)[sensor_columns].transform(
+            lambda x: x.ewm(span=10, adjust=False).mean()
+        )
+
+        return df_smoothed

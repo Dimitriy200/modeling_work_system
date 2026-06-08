@@ -17,7 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.vrnn_vae import TimeSeriesVRNN
+from modeling_work_system.models.VAE.transformer_vae import TimeSeriesTransformerVAE
 
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
@@ -28,9 +28,8 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_consecutive_windows
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
 from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing
-
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -59,9 +58,9 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG = os.path.join(PATH_IMG, "vrnn_vae")
+PATH_IMG = os.path.join(PATH_IMG, "transformer_vae")
 SAVE_MODEL = False              # Сохранение модели в файл
-MODEL_NAME = "vrnn_vae"         # Имя модели при сохранении
+MODEL_NAME = "transformer_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------
@@ -77,15 +76,16 @@ SEQ_LENGTH = 10                 # Длина окна
 STRIDE = 1                      # Шаг сдвига.
 PAST_STEPS = 5                  # Первая часть окна - прошлое
 
+# ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
+# ------------------------------
 BATCH_SIZE = 32
 EPOCHS = 300
 LEARNING_RATE = 0.001 #5e-5
-# WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
-
+WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.1 #0.3
+KL_MINIMUM = 0.5 #0.15
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -94,7 +94,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesVRNN(
+model = TimeSeriesTransformerVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -123,9 +123,6 @@ else:
 print("=" * 50)
 
 
-# ======================================================
-# I ПОДГОТОВКА ДАННЫХ
-# ======================================================
 # ======================================================
 # I ПОДГОТОВКА ДАННЫХ
 # ======================================================
@@ -384,21 +381,24 @@ logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_se
 # N_FEATURES = X_train_seq.shape[2]
 
 
+
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_full_window=torch.FloatTensor(df_norm_scaled_sec["Train"]),
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),                    # Сырое прошлое
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),   # Сглаженная граница
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]),        # Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vrnn_vae_v1.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_vrnn_vae_v2_2.pth"))
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
 # ======================================================
