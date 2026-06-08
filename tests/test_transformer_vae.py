@@ -273,7 +273,7 @@ df_anom_scaled_seq_past = {
 logging.info(f"df_norm_scaled_seq_past['Train']:  {df_norm_scaled_seq_past['Train'].shape}")
 logging.info(f"df_anom_scaled_seq_past['Train']:  {df_anom_scaled_seq_past['Train'].shape}")
 
-df_norm_scaled_seq_past_smoothong_past = {
+df_norm_scaled_seq_smoothong_past = {
     "Train": df_norm_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
     "Val": df_norm_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
     "Test": df_norm_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
@@ -285,7 +285,7 @@ df_anom_scaled_seq_smoothong_past = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
 }
 
-logging.info(f"df_norm_scaled_seq_past_smoothong_past['Train']:  {df_norm_scaled_seq_past_smoothong_past['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
 logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
 
 
@@ -402,14 +402,14 @@ torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pt
 # ------------------------------
 # НА НОРМЕ БЕЗ СГЛАЖИВАНИЯ
 # ------------------------------
-gen_scenarios = model.inference(
+gen_scenarios_norm = model.inference(
     x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"]), 
     # last_known_step=torch.FloatTensor(X_val_seq_ls),
     horizon=10,
 )
 
+# Рисуем графиги инференса
 num_engines_to_plot = 3 
-
 for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
@@ -418,10 +418,10 @@ for engine_idx in range(num_engines_to_plot):
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
-    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_vae_engine_{engine_idx}.png'
+    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
     current_save_path = os.path.join(PATH_IMG, filename)
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
@@ -429,19 +429,122 @@ for engine_idx in range(num_engines_to_plot):
     plot_inference_multi_features(
         y_true=y_true_single,
         scenarios=single_engine_scenarios,
+        plot_name="НОРМА БЕЗ СГЛАЖИВАНИЯ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
+
+
+# ------------------------------
+# НА НОРМЕ СО СГЛАЖИВАНИЕМ
+# ------------------------------
+gen_scenarios_norm_smoorth = model.inference(
+    x_past=torch.FloatTensor(df_norm_scaled_seq_smoothong_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_smoorth]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
+    current_save_path = os.path.join(PATH_IMG, filename)
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="НОРМА СО СГЛАЖИВАНИЕМ",
         feature_indices=[6, 13],
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
 
 # ------------------------------
-# НА НОРМЕ СО СГЛАЖИВАНИЕМ
+# НА АНОМАЛИИ БЕЗ СГЛАЖИВАНИЯ
 # ------------------------------
+gen_scenarios_anom = model.inference(
+    x_past=torch.FloatTensor(df_anom_scaled_seq_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
+    current_save_path = os.path.join(PATH_IMG, filename)
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="АНОМАЛИЯ БЕЗ СГЛАЖИВАНИЯ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
+
+# ------------------------------
+# НА АНОМАЛИИ СО СГЛАЖИВАНИЕМ
+# ------------------------------
+gen_scenarios_anom_smooth = model.inference(
+    x_past=torch.FloatTensor(df_anom_scaled_seq_smoothong_past["Val"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=10,
+)
+
+# Рисуем графиги инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_anom_smooth]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
+    current_save_path = os.path.join(PATH_IMG, filename)
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        scenarios=single_engine_scenarios,
+        plot_name="АНОМАЛИЯ СО СГЛАЖИВАНИЕМ",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path
+    )
 
 
-# ------------------------------
-# НА НОРМЕ СО СГЛАЖИВАНИЕМ
-# ------------------------------
 # ======================================================
 # IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
 # ======================================================
