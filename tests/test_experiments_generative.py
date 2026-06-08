@@ -139,14 +139,14 @@ print("=" * 50)
 # 1. Параметры обучения
 # ==========================================
 BATCH_SIZE = 16
-EPOCHS = 50
+EPOCHS = 200
 LEARNING_RATE = 1e-3
-WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
+WARMUP_EPOCHS = 30  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 
 # Параметры архитектуры LSTM_VAE
-HIDDEN_DIM = 64
-LATENT_DIM = 16
-N_LAYERS = 2
+HIDDEN_DIM = 128
+LATENT_DIM = 32
+N_LAYERS = 4
 
 # ==========================================
 # 2. Этап обучения
