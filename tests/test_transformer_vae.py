@@ -17,7 +17,8 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.ts_1_vae import TimeSeriesIterativeVAE
+from modeling_work_system.models.VAE.transformer_vae import TimeSeriesTransformerVAE
+
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -38,11 +39,13 @@ from modeling_work_system.config import (
     PATH_SKALERS,
     PATH_IMG,
 
-    PATH_TRAIN_RAW,
+    PATH_TRAIN_RAW
 )
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
+
+
 
 # ======================================================
 # ПОДГОТОВКА ПЕРЕМЕННЫХ
@@ -72,7 +75,7 @@ PAST_STEPS = 5                  # Первая часть окна - прошл�
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 150
+EPOCHS = 300
 LEARNING_RATE = 0.001 #5e-5
 WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
@@ -86,7 +89,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesIterativeVAE(
+model = TimeSeriesTransformerVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -389,32 +392,21 @@ history = model.fit(
 
 plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vae_v2_2.png'))
 
-# ------------------------------
 # Сохраняем модель
-# ------------------------------
-if SAVE_MODEL:
-    torch.save(model.state_dict(), os.path.join(PATH_MODELS, MODEL_NAME))
+torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_lstm_vae_v2_2.pth"))
 
 
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
-# ------------------------------
-# НА НОРМЕ БЕЗ СГЛАЖИВАНИЯ
-# ------------------------------
-gen_scenarios_norm = model.inference(
+gen_scenarios = model.inference(
     x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"]), 
     # last_known_step=torch.FloatTensor(X_val_seq_ls),
     horizon=10,
 )
-# ------------------------------
-# НА АНОМАЛИИ
-# ------------------------------
 
-# ------------------------------
-# Рисуем графиги инференса
-# ------------------------------
 num_engines_to_plot = 3 
+
 for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
@@ -423,10 +415,10 @@ for engine_idx in range(num_engines_to_plot):
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
-    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    filename = f'plot_inference_lstm_vae_engine_{engine_idx}.png'
+    filename = f'plot_inference_vae_engine_{engine_idx}.png'
     current_save_path = os.path.join(PATH_IMG, filename)
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
