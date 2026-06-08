@@ -65,7 +65,10 @@ class TimeSeriesMambaSSM(nn.Module):
         dt, B_mat, C_mat = torch.split(selective_params, [self.state_dim, self.state_dim, self.state_dim], dim=-1)
         
         # Считаем шаг изменения непрерывного времени dt
-        dt = F.softplus(self.dt_proj(ctx))
+        # dt = F.softplus(self.dt_proj(ctx))
+        # Ограничиваем сверху значение шага, чтобы экспонента не улетала в бесконечность
+        dt = torch.clamp(dt, min=1e-4, max=0.1) 
+
         
         # Дискретизация матрицы А: A_t = exp(dt * A)
         A = -torch.exp(self.A_log) # (state_dim, state_dim)

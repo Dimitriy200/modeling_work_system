@@ -28,7 +28,7 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_consecutive_windows
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -246,7 +246,13 @@ for engine_idx in range(num_engines_to_plot):
     )
 
 
-
+plot_consecutive_windows(
+    model=model,
+    X_val_past=torch.FloatTensor(X_val_seq_past),
+    X_val_ls=torch.FloatTensor(X_val_seq_ls),
+    # y_val_true=torch.FloatTensor(X_val_seq)
+    num_windows=5
+)
 # ======================================================
 # IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
 # ======================================================

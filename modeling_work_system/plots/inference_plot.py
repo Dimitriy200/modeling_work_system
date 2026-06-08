@@ -218,3 +218,76 @@ def plot_continuous_forecasting(model, X_val_past, X_val_ls, y_val_true, num_sce
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.show()
+
+
+
+def plot_consecutive_windows(model, X_val_past, X_val_seq_full, start_window_idx=0, num_windows=5, feature_idx=6, feature_name="Sensor 2", save_path=None):
+    """
+    Берет num_windows (например, 5) окон подряд для одного двигателя,
+    склеивает их в короткий читаемый непрерывный тренд и выводит прогноз.
+    """
+    model.eval()
+    
+    # 1. Вырезаем блок из 5 последовательных окон
+    end_window_idx = start_window_idx + num_windows
+    X_past_block = X_val_past[start_window_idx:end_window_idx]
+    X_full_block = X_val_seq_full[start_window_idx:end_window_idx]
+    
+    # 2. Собираем ИСТИННЫЙ непрерывный тренд для этого короткого участка
+    # Берем первые 5 шагов из самого первого окна блока
+    true_trend = list(X_full_block[0, :5, feature_idx])
+    # А затем строго 6-й шаг (индекс 5) из каждого из 5 окон
+    for i in range(num_windows):
+        true_trend.append(X_full_block[i, 5, feature_idx])
+        
+    true_trend = np.array(true_trend)
+    total_len = len(true_trend) # Для 5 окон длина будет ровно 5 + 5 = 10 шагов глобального тренда
+    cycles = np.arange(1, total_len + 1)
+    
+    # 3. Запускаем инференс VRNN для выбранного блока окон
+    with torch.no_grad():
+        # Получаем список из сценариев, каждый формы (num_windows, 10, feature_dim)
+        gen_scenarios = model.inference(
+            x_past=torch.FloatTensor(X_past_block),
+            horizon=10,
+            num_scenarios=5
+        )
+    
+    # 4. СТРОИМ ГРАФИК
+    plt.figure(figsize=(12, 6))
+    
+    # Рисуем истинный тренд датчика (черная линия)
+    plt.plot(cycles, true_trend, color='black', linewidth=3, label='Реальный тренд (NASA)', zorder=3)
+    
+    # Рисуем предсказания. Для каждого окна мы нарисуем его индивидуальный "веер" будущего (шаги 6-10)
+    # Чтобы график оставался читаемым, мы будем плавно смещать каждый веер вправо
+    for s in range(len(gen_scenarios)): # По всем сценариям (5 штук)
+        scenario_data = gen_scenarios[s] # Массив формы (num_windows, 10, feature_dim)
+        
+        for w in range(num_windows):
+            # Будущее для окна w начинается после 5 шагов его собственной истории
+            # На глобальной шкале X это соответствует точкам от (w + 1) до (w + 6)
+            x_scen_cycles = np.arange(w + 1, w + 11)
+            gen_data_window = scenario_data[w, :, feature_idx]
+            
+            if s == 0 and w == 0:
+                plt.plot(x_scen_cycles, gen_data_window, color='crimson', alpha=0.25, linestyle='-', label='Прогнозы VRNN (5 окон)')
+            else:
+                plt.plot(x_scen_cycles, gen_data_window, color='crimson', alpha=0.15, linestyle='-')
+                
+    # Визуальные разделители: проведем вертикальные пунктиры для каждого окна, чтобы видеть их старты
+    for w in range(num_windows):
+        plt.axvline(x=w+5, color='gray', linestyle=':', alpha=0.4)
+        plt.text(w+5, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.02, f"Окно {w+1}", 
+                 horizontalalignment='center', color='gray', fontsize=8)
+
+    plt.title(f"Микро-анализ последовательных окон (сдвиг STRIDE=1) | {feature_name}", fontsize=13, fontweight='bold')
+    plt.xlabel("Относительные циклы времени на выбранном участке", fontsize=11)
+    plt.ylabel("Значение датчика (Норм.)", fontsize=11)
+    plt.grid(True, linestyle=':', alpha=0.5)
+    plt.legend(loc='upper right')
+    
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
