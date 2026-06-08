@@ -18,7 +18,7 @@ from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
 from modeling_work_system.models.autoencoders.autoencoder import AutoEncoder
-from modeling_work_system.models.VAE.lstm_vae import LSTM_VAE
+from modeling_work_system.models.VAE.lstm_vae_outdated import LSTM_VAE
 from modeling_work_system.models.VAE.forecast_vae import AdaptiveForecasting_VAE
 from modeling_work_system.models.VAE.conditional_lstm_vae import Conditional_LSTM_VAE
 from modeling_work_system.models.VAE.ts_vae import TimeSeriesForecastingVAE

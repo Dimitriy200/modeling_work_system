@@ -58,6 +58,7 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
+PATH_IMG = os.path.join(PATH_IMG, "transformer_vae")
 SAVE_MODEL = False              # Сохранение модели в файл
 MODEL_NAME = "transformer_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"

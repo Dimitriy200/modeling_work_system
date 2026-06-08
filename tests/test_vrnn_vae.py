@@ -59,8 +59,9 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
+PATH_IMG = os.path.join(PATH_IMG, "vrnn_vae")
 SAVE_MODEL = False              # Сохранение модели в файл
-MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
+MODEL_NAME = "vrnn_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------

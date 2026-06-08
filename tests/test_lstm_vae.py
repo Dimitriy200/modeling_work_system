@@ -17,7 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.ts_1_vae import TimeSeriesIterativeVAE
+from modeling_work_system.models.VAE.lstm_vae import TimeSeriesIterativeVAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -29,6 +29,7 @@ from modeling_work_system.metrics.generation_metrics import (
 )
 from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
 from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing
+from modeling_work_system.plots.generation_plots import plot_recursive_lifetime_forecast
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -56,6 +57,7 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
+PATH_IMG = os.path.join(PATH_IMG, "lstm_vae")
 SAVE_MODEL = True              # Сохранение модели в файл
 MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
@@ -425,6 +427,17 @@ for engine_idx in range(num_engines_to_plot):
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
+
+ENGINE_N = 0
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"][ENGINE_N]),
+    full_engine_df=X_scaled_norm["Val"],
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG, f"plot_inference_full_time_engine({ENGINE_N})_{MODEL_NAME}_{MODEL_VERSION}_norm.png")
+)
 
 
 # ------------------------------
