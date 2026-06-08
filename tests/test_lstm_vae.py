@@ -82,7 +82,7 @@ LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.5 #0.15
+KL_MINIMUM = 0.1 #0.15
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -442,7 +442,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_norm_scaled_sec_smoothing["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
@@ -479,7 +479,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_anom_scaled_sec["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
@@ -515,7 +515,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_anom_scaled_sec_smoothing["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]

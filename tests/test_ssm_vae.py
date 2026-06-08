@@ -402,6 +402,9 @@ torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{M
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
+# ======================================================
+# III ИНФЕРЕНС
+# ======================================================
 # ------------------------------
 # НА НОРМЕ БЕЗ СГЛАЖИВАНИЯ
 # ------------------------------
@@ -453,7 +456,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_norm_scaled_sec_smoothing["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
@@ -490,7 +493,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_anom_scaled_sec["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
@@ -526,7 +529,7 @@ for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
     # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
-    y_true_single = df_norm_scaled_sec["Val"][engine_idx]
+    y_true_single = df_anom_scaled_sec_smoothing["Val"][engine_idx]
     
     # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
     # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
