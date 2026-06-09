@@ -92,12 +92,12 @@ def plot_sensor_stress_testing(
         y_clean = engine_clean_data[:, feature_idx]
         y_stressed = engine_stressed_data[:, feature_idx]
         
-        logging.info(f"[STRESS_PLOT] Синхронное извлечение 2D. Длина тренда: {len(y_clean)}")
+        logging.info(f"[STRESS_PLOT] 2D Synchronous Extraction. Trend Length: {len(y_clean)}")
 
     # Автоматическое выравнивание на случай непредвиденных сдвигов
     min_len = min(len(y_clean), len(y_stressed))
     if min_len == 0:
-        logging.error("[STRESS_PLOT] Ошибка: Извлеченные массивы пусты!")
+        logging.error("[STRESS_PLOT] Error: Extracted arrays are empty!")
         return
         
     y_clean = y_clean[:min_len]

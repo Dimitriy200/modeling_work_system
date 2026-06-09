@@ -5,8 +5,8 @@ def plot_vae_training_history(history, save_path: str):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 5))
 
     # --- ПАНЕЛЬ 1: МЕТРИКИ ТОЧНОСТИ ПРОГНОЗА ---
-    ax1.plot(history['total_loss'], label='Общий Loss (Total Loss)', color='crimson', alpha=0.6, linestyle='--')
-    ax1.plot(history['mse_loss'], label='Ошибка прогноза (MSE Loss)', color='royalblue', linewidth=2)
+    ax1.plot(history['total_loss'], label='Общий Loss (Total Loss)', color='forestgreen', linestyle='--', zorder=3)
+    ax1.plot(history['mse_loss'], label='Ошибка прогноза (MSE Loss)', color='royalblue', linewidth=2, zorder=2)
     ax1.set_title('Точность восстановления и прогноза датчиков', fontsize=12)
     ax1.set_xlabel('Эпохи обучения', fontsize=10)
     ax1.set_ylabel('Значение ошибки', fontsize=10)
