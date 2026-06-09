@@ -68,6 +68,8 @@ class TimeSeriesIterativeVAE(nn.Module):
         # Список, где мы будем копить сценарии. 
         # Каждый сценарий будет массивом формы (batch_size, 10, feature_dim)
         scenarios = []
+
+        past_len = int(x_past.size(1) / 2) 
         
         with torch.no_grad():
             for s in range(num_scenarios):
@@ -78,11 +80,11 @@ class TimeSeriesIterativeVAE(nn.Module):
                 generated_window = []
                 
                 # Шаг 1-5: Сначала просто копируем реальную предысторию в наш выходной буфер
-                for t in range(5):
+                for t in range(past_len):
                     generated_window.append(x_past[:, t].unsqueeze(1))
                 
                 # Шаг 6-10: Начинаем итеративную генерацию будущего
-                for t in range(5, horizon):
+                for t in range(past_len, horizon):
                     # Точка опоры — это всегда самый последний шаг в текущей истории (индекс -1)
                     last_step = current_history[:, -1]
                     
@@ -96,7 +98,7 @@ class TimeSeriesIterativeVAE(nn.Module):
                     # и добавляем только что предсказанный шаг в конец последовательности
                     current_history = torch.cat([current_history[:, 1:], y_next_pred], dim=1)
                 
-                # Объединяем все 10 шагов в единый тензор сценария
+                # Объединяем все past_len шагов в единый тензор сценария
                 scenario_tensor = torch.cat(generated_window, dim=1) # (batch, 10, feature_dim)
                 scenarios.append(scenario_tensor.cpu().numpy())
                 

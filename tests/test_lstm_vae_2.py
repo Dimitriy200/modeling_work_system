@@ -41,7 +41,6 @@ from modeling_work_system.config import (
     PATH_TRAIN_PROCESSED,
 
     PATH_TRAIN_RAW,
-    PATH_
 )
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
@@ -56,13 +55,15 @@ scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
 
-
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
 PATH_IMG_LSTM = os.path.join(PATH_IMG, "lstm_vae")
 PATH_TRAIN_PROCESSED_LSTM = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
-SAVE_MODEL = True              # Сохранение модели в файл
+
+SAVE_MODEL = False              # Сохранение модели в файл
+LOAD_MODEL = False
+
 MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
@@ -79,15 +80,15 @@ QUANTILE = 0.90
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН
 # ------------------------------
-SEQ_LENGTH = 10                 # Длина окна 
+SEQ_LENGTH = 20                 # Длина окна 
 STRIDE = 1                      # Шаг сдвига.
-PAST_STEPS = 5                  # Первая часть окна - прошлое
+PAST_STEPS = 10                  # Первая часть окна - прошлое
 
 # ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 150
+EPOCHS = 5
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
@@ -416,19 +417,24 @@ logging.info(f"df_anom_scaled_seq_past['Train']:  {df_sequences_ls['Train_norm_b
 
 
 # ======================================================
-# II ОБУЧЕНИЕ МОДЕЛЕЙ
+# II ОБУЧЕНИЕ МОДЕЛЕЙ ИЛИ ЗАГРУЗКА ИЗ ФАЙЛА
 # ======================================================
-history = model.fit(
-    x_train=torch.FloatTensor(df_sequences_past["Scaled_Train_norm"]),          # Чистое (незашумленное) прошлое
-    last_steps_train=torch.FloatTensor(df_sequences_ls["Scaled_Train_norm"]),   # Чистая (незашумленная) граница
-    y_train=torch.FloatTensor(df_sequences_future["Scaled_Train_norm"]),        # Чистое (незашумленное) будущее
-    epochs=EPOCHS,
-    lr=LEARNING_RATE,
-    tau=KL_MINIMUM,
-    verbose_step = 5,
-)
+if LOAD_MODEL:
+    model.load_state_dict(torch.load(os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"), map_location=device))
+    model.to(device) # Переносим модель на видеокарту или процессор
+    model.eval()
+else:
+    history = model.fit(
+        x_train=torch.FloatTensor(df_sequences_past["Scaled_Train_norm"]),          # Чистое (незашумленное) прошлое
+        last_steps_train=torch.FloatTensor(df_sequences_ls["Scaled_Train_norm"]),   # Чистая (незашумленная) граница
+        y_train=torch.FloatTensor(df_sequences_future["Scaled_Train_norm"]),        # Чистое (незашумленное) будущее
+        epochs=EPOCHS,
+        lr=LEARNING_RATE,
+        tau=KL_MINIMUM,
+        verbose_step = 5,
+    )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
+    plot_vae_training_history(history, save_path=os.path.join(PATH_IMG_LSTM, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # ------------------------------
 # Сохраняем модель
@@ -446,11 +452,11 @@ if SAVE_MODEL:
 gen_scenarios_norm = model.inference(
     x_past=torch.FloatTensor(df_sequences["Scaled_Val_norm"]), 
     # last_known_step=torch.FloatTensor(X_val_seq_ls),
-    horizon=10,
+    horizon=SEQ_LENGTH,
 )
 
 # Рисуем графиги инференса
-num_engines_to_plot = 3 
+num_engines_to_plot = 3
 for engine_idx in range(num_engines_to_plot):
     logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
     
@@ -469,17 +475,24 @@ for engine_idx in range(num_engines_to_plot):
     plot_inference_multi_features(
         y_true=y_true_single,
         scenarios=single_engine_scenarios,
-        plot_name="Инференс на норме без зашумления",
+        plot_name=f"Инференс на норме без зашумления | двигатель {engine_idx}",
         feature_indices=[6, 13],
         feature_names=["Sensor 2", "Sensor 9"],
-        save_path=current_save_path
+        save_path=current_save_path,
+        past_steps=PAST_STEPS
     )
 
 ENGINE_N = 0
+unit_col = "unit number"
+
+unique_engine_ids = df_scaled["Val_norm"][unit_col].unique()
+target_scaled_id = unique_engine_ids[ENGINE_N - 1] 
+single_engine_full_df = df_scaled["Val_norm"][df_scaled["Val_norm"][unit_col] == target_scaled_id]
+
 plot_recursive_lifetime_forecast(
     model=model,
     start_x_past=torch.FloatTensor(df_sequences_past["Scaled_Val_norm"][ENGINE_N]),
-    full_engine_df=df_scaled["Val_norm"],
+    full_engine_df=single_engine_full_df,
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
@@ -490,16 +503,146 @@ plot_recursive_lifetime_forecast(
 # ------------------------------
 # НА НОРМЕ С ЗАШУМЛЕНИЕМ (ПРОПУСКИ)
 # ------------------------------
+gen_scenarios_norm_drop = model.inference(
+    x_past=torch.FloatTensor(df_sequences["Val_norm_drop"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=SEQ_LENGTH,
+)
 
+# Рисуем графики инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_sequences["Val_norm_drop"][engine_idx]
+    y_clean=df_sequences["Scaled_Val_norm"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_drop]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_drop_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        y_clean=y_clean,
+        scenarios=single_engine_scenarios,
+        plot_name="Инференс на норме С зашумлением (пропуски)",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path,
+        past_steps=PAST_STEPS
+    )
+
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_drop"][ENGINE_N]),
+    full_engine_df=single_engine_full_df,
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_drop_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+)
 
 # ------------------------------
 # НА НОРМЕ С ЗАШУМЛЕНИЕМ (БЕЛЫЙ ШУМ)
 # ------------------------------
+gen_scenarios_norm_noise = model.inference(
+    x_past=torch.FloatTensor(df_sequences["Val_norm_noise"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=SEQ_LENGTH,
+)
 
+# Рисуем графики инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_sequences["Val_norm_noise"][engine_idx]
+    y_clean=df_sequences["Scaled_Val_norm"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_noise]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_noise_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        y_clean=y_clean,
+        scenarios=single_engine_scenarios,
+        plot_name="Инференс на норме С зашумлением (белый шум)",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path,
+        past_steps=PAST_STEPS
+    )
+
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_noise"][ENGINE_N]),
+    full_engine_df=single_engine_full_df,
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+)
 
 # ------------------------------
 # НА НОРМЕ С ЗАШУМЛЕНИЕМ (БЕЛЫЙ ШУМ + ПРОПУСКИ)
 # ------------------------------
+gen_scenarios_norm_both = model.inference(
+    x_past=torch.FloatTensor(df_sequences["Val_norm_both"]), 
+    # last_known_step=torch.FloatTensor(X_val_seq_ls),
+    horizon=SEQ_LENGTH,
+)
+
+# Рисуем графики инференса
+num_engines_to_plot = 3 
+for engine_idx in range(num_engines_to_plot):
+    logging.info(f"Drawing and saving a graph for window (engine) No.{engine_idx}...")
+    
+    # 1. Извлекаем реальные данные (10, 26) для текущего двигателя
+    y_true_single = df_sequences["Val_norm_both"][engine_idx]
+    y_clean=df_sequences["Scaled_Val_norm"][engine_idx]
+    
+    # 2. Извлекаем сгенерированные сценарии (10, 26) конкретно для этого двигателя
+    # Заходим в каждый из сэмплированных вариантов будущего и берем строку [engine_idx]
+    single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_both]
+    
+    # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
+    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_both_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    
+    # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
+    # так как туда поступает чистая двухмерная матрица для одного двигателя)
+    plot_inference_multi_features(
+        y_true=y_true_single,
+        y_clean=y_clean,
+        scenarios=single_engine_scenarios,
+        plot_name="Инференс на норме С зашумлением (белый шум и пропуски)",
+        feature_indices=[6, 13],
+        feature_names=["Sensor 2", "Sensor 9"],
+        save_path=current_save_path,
+        past_steps=PAST_STEPS
+    )
+
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_both"][ENGINE_N]),
+    full_engine_df=single_engine_full_df,
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+)
 
 # ------------------------------
 # НА АНОМАЛИИ БЕЗ СГЛАЖИВАНИЯ

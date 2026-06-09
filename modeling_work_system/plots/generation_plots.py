@@ -303,6 +303,10 @@ def plot_recursive_lifetime_forecast(
                 model_input_hist = current_history.unsqueeze(0)
                 model_input_last = last_step.unsqueeze(0)
                 
+                current_device = next(model.parameters()).device
+                model_input_hist = model_input_hist.to(current_device)
+                model_input_last = model_input_last.to(current_device)
+                
                 # Модель предсказывает следующий шаг. На выходе получаем (1, 1, 26)
                 y_next_pred, _, _ = model(model_input_hist, model_input_last)
                 

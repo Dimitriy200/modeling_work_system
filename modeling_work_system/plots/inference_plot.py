@@ -77,9 +77,11 @@ def plot_inference_multi_features(
         y_true, 
         scenarios,
         plot_name: str,
+        y_clean=None,
         feature_indices=[2, 9], 
         feature_names=["Sensor 2", "Sensor 9"],
-        save_path=None):
+        save_path=None,
+        past_steps=5):
     """
     Строит графики для нескольких датчиков одного двигателя на одном холсте (друг под другом).
     
@@ -94,6 +96,12 @@ def plot_inference_multi_features(
     feature_names : list of str
         Названия датчиков для заголовков панелей
     """
+    if hasattr(y_true, 'values'): y_true = y_true.values
+    if hasattr(y_true, 'cpu'): y_true = y_true.cpu().numpy()
+    if y_clean is not None:
+        if hasattr(y_clean, 'values'): y_clean = y_clean.values
+        if hasattr(y_clean, 'cpu'): y_clean = y_clean.cpu().numpy()
+    
     num_features = len(feature_indices)
     total_cycles = y_true.shape[0] 
     cycles = np.arange(1, total_cycles + 1) 
@@ -113,6 +121,11 @@ def plot_inference_multi_features(
         # 1. Рисуем реальные данные для текущего датчика (черная линия)
         ax.plot(cycles, y_true[:, f_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные (NASA)')
         logging.info(f"Real data = {y_true[:, f_idx]}")
+
+        # Если данные зашумлены - рисуем чистые значения
+        if y_clean is not None:
+            ax.plot(cycles, y_clean[:, f_idx], color='darkgray', linewidth=2.0, linestyle='--', label='Чистые данные', zorder=1)
+            logging.info(f"Clean ground truth data = {y_clean[:, f_idx]}")
         
         # 2. Рисуем веер альтернативных сценариев VAE (розовые линии)
         for i, scenario in enumerate(scenarios):
@@ -126,7 +139,7 @@ def plot_inference_multi_features(
                 logging.info(f"Gen data = {gen_data}")
                 
         # 3. Вертикальная линия разделения после 5-го шага известной истории
-        ax.axvline(x=5, color='darkgray', linestyle='--', linewidth=2)
+        ax.axvline(x=past_steps, color='darkgray', linestyle='--', linewidth=2)
         
         # Разметка подписей "История" / "Прогноз" только для верхнего графика, чтобы не дублировать
         if idx == 0:
