@@ -117,6 +117,7 @@ class TimeSeriesMambaSSM(nn.Module):
         self.eval()
         batch_size = x_past.size(0)
         scenarios = []
+        past_len = int(x_past.size(1) / 2)
         
         with torch.no_grad():
             for s in range(num_scenarios):
@@ -124,14 +125,14 @@ class TimeSeriesMambaSSM(nn.Module):
                 generated_window = []
                 
                 # Копируем известное прошлое (шаги 1-5)
-                for t in range(5):
+                for t in range(past_len):
                     generated_window.append(x_past[:, t].unsqueeze(1))
                 
                 mu, log_var, h_last = self.encode(x_past)
                 h_t = F.relu(self.fc_init_state(h_last))
                 
                 # Генерация будущего (шаги 6-10)
-                for t in range(5, horizon):
+                for t in range(past_len, horizon):
                     last_step = current_history[:, -1]
                     z_t = self.reparameterize(mu, log_var)
                     
