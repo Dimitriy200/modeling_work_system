@@ -518,69 +518,59 @@ class Preprocess:
     # ======================================================
     def apply_stress_to_data(
             self,
-            df,
-            sensor_columns,
-            noise_type="both",
-            noise_level=0.1,
-            drop_rate=0.2,
+            df, 
+            sensor_columns, 
+            noise_type="both", 
+            noise_level=0.0, 
+            drop_rate=0.0, 
             fill_value=0.0):
         """
         Искусственно добавляет Гауссов шум и симулирует пропуски данных 
-        в сыром pd.DataFrame до этапа нарезки окон.
+        в отмасштабированном pd.DataFrame до этапа нарезки окон.
         
         Параметры:
         ----------
         df : pd.DataFrame
-            Ваша исходная плоская таблица (например, валидационный сет NASA Turbofans)
+            Ваша отмасштабированная плоская таблица (значения датчиков от 0.0 до 1.0).
         sensor_columns : list of str
-            Список названий колонок, которые являются датчиками и операционными настройками
+            Список названий колонок, которые являются датчиками (например, ['s_2', 's_9']).
+            Служебные колонки ('unit_number', 'cycle') сюда передавать НЕЛЬЗЯ.
         noise_type : str
-            Тип применяемого искажения:
-            - 'noise' : Только белый нормальный шум.
-            - 'drop'  : Только пропуск значений (отключение датчиков).
-            - 'both'  : Все вместе (и шум, и пропуски).
-        noise_level : float
-            Интенсивность Гауссова шума (стандартное отклонение).
-            Используется при noise_type='noise' или 'both'.
-        drop_rate : float
-            Процент пропущенных данных в каналах (от 0.0 до 1.0).
-            Используется при noise_type='drop' or 'both'.
-        fill_value : float
-            Чем заполнять пропуски (NaN) перед отправкой в сеть (обычно 0.0).
-            
-        Возвращает:
-        -----------
-        df_stressed : pd.DataFrame
-            Испорченная копия DataFrame, готовая к нарезке окон.
+            Тип дефекта: 'noise' (только шум), 'drop' (только пропуски), 'both' (все вместе).
         """
-        # Проверяем корректность переданного типа шума
         valid_types = ['noise', 'drop', 'both']
         if noise_type not in valid_types:
             raise ValueError(f"Неверный noise_type='{noise_type}'. Допустимые варианты: {valid_types}")
 
-        # Делаем глубокую копию, чтобы не сломать оригинальный датасет
+        # Создаем глубокую изолированную копию, чтобы не испортить исходный DataFrame
         df_stressed = df.copy()
         
-        # БЛОК 1: НАКЛАДЫВАЕМ БЕЛОГО ШУМА (если выбран 'noise' или 'both')
+        # 1. БЛОК БЕЛОГО ШУМА (Вибрация датчиков)
         if noise_type in ['noise', 'both'] and noise_level > 0:
             for col in sensor_columns:
                 if col in df_stressed.columns:
+                    # Генерируем нормальный шум под размер DataFrame
                     noise = np.random.normal(loc=0.0, scale=noise_level, size=len(df_stressed))
                     df_stressed[col] = df_stressed[col] + noise
                     
-        # БЛОК 2: ГЕНЕРИРУЕМ ПРОПУСКИ (если выбран 'drop' или 'both')
+        # 2. БЛОК АППАРАТНЫХ ПРОПУСКОВ (Отключение датчиков)
         if noise_type in ['drop', 'both'] and drop_rate > 0:
             for col in sensor_columns:
                 if col in df_stressed.columns:
+                    # Случайным образом выбираем строки, которые будут пропущены
+                    # .sample возвращает случайные индексы строк
                     sampled_indices = df_stressed.sample(frac=drop_rate).index
+                    
+                    # Ставим туда честные NaN (пропуски) строго в выбранные ячейки
                     df_stressed.loc[sampled_indices, col] = np.nan
                     
-        # БЛОК 3: ЗАПОЛНЯЕМ ПРОПУСКИ (Обязательно для предобработки)
-        # fillna сработает только если в таблице физически появились NaN от Блока 2
+        # 3. ФИНАЛЬНАЯ ОБРАБОТКА (Зануление и усечение диапазонов)
+        # Заменяем все сгенерированные NaN на жесткий аппаратно зануленный сигнал (0.0)
         df_stressed[sensor_columns] = df_stressed[sensor_columns].fillna(fill_value)
         
-        # Жестко зажимаем данные в диапазоне [0.0, 1.0], чтобы шум не улетал в минус
-        df_stressed[sensor_columns] = np.clip(df_stressed[sensor_columns], 0.0, 1.0)
+        # Ограничиваем значения в диапазоне [0.0, 1.0].
+        # Это защищает нормализованные данные от улета в минус из-за Гауссова шума!
+        # df_stressed[sensor_columns] = df_stressed[sensor_columns].clip(0.0, 1.0)
         
         return df_stressed
 

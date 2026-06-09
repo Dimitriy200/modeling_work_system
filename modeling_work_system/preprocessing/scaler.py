@@ -183,7 +183,7 @@ class Scaler():
                 if not pd.api.types.is_float_dtype(dataframe_out[col]):
                     dataframe_out[col] = dataframe_out[col].astype(np.float32)  # или float64, если точность критична
 
-            logging.info(f"Scaler successfully applied. Example values ​​for {feature_columns[0]}: "
+            logging.info(f"Scaler successfully applied. Example values for {feature_columns[0]}: "
                         f"{dataframe_out[feature_columns[0]].iloc[:3].tolist()}")
             
         except Exception as e:
