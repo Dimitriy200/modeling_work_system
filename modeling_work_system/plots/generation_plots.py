@@ -326,13 +326,13 @@ def plot_recursive_lifetime_forecast(
     plt.figure(figsize=(15, 6))
     
     # СИНЯЯ ЛИНИЯ - Истинные реальные значения (NASA)
-    plt.plot(cycles_axis, real_trend, color='royalblue', linewidth=3.0, label='Реальные значения (NASA)')
+    plt.plot(cycles_axis, real_trend, color='royalblue', linewidth=3.0, label='Реальные значения')
     
     # СЕРЫЕ ЛИНИИ - Автономные рекурсивные генерации VAE
     for s in range(num_scenarios):
         if s == 0:
             plt.plot(cycles_axis, all_scenarios_continuous[s], color='darkgray', alpha=0.7, 
-                     linewidth=1.5, linestyle='-', label='Рекурсивная генерация VAE')
+                     linewidth=1.5, linestyle='-', label='Рекурсивная генерация')
         else:
             plt.plot(cycles_axis, all_scenarios_continuous[s], color='darkgray', alpha=0.7, linewidth=1.5, linestyle='-')
             

@@ -115,6 +115,8 @@ class TimeSeriesVRNN(nn.Module):
         batch_size = x_past.size(0)
         scenarios = []
         
+        past_len = int(x_past.size(1) / 2)
+
         with torch.no_grad():
             for s in range(num_scenarios):
                 h = torch.zeros(batch_size, self.hidden_dim, device=x_past.device)
@@ -123,7 +125,7 @@ class TimeSeriesVRNN(nn.Module):
                 generated_window = []
                 
                 # Этап 1: "Прогреваем" память LSTM реальной историей (шаги 1-5)
-                for t in range(5):
+                for t in range(past_len):
                     x_t = x_past[:, t, :]
                     generated_window.append(x_t.unsqueeze(1))
                     
@@ -140,7 +142,7 @@ class TimeSeriesVRNN(nn.Module):
                 
                 # Этап 2: Чистая генерация будущего (шаги 6-10)
                 # Модель генерирует x_t, опираясь ТОЛЬКО на PRIOR (свои предчувствия из памяти h)
-                for t in range(5, horizon):
+                for t in range(past_len, horizon):
                     prior_params = self.prior(h)
                     prior_mu, prior_log_var = torch.chunk(prior_params, 2, dim=-1)
                     

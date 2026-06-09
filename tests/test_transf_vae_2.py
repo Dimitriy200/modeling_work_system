@@ -17,7 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.lstm_vae import TimeSeriesIterativeVAE
+from modeling_work_system.models.VAE.transformer_vae import TimeSeriesTransformerVAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -61,13 +61,13 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG_LSTM = os.path.join(PATH_IMG, "lstm_vae")
-PATH_TRAIN_PROCESSED_LSTM = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
+PATH_IMG_TRANSFORMER = os.path.join(PATH_IMG, "transformer_vae")
+PATH_TRAIN_PROCESSED_TRANSFORMER = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
 
 SAVE_MODEL = False              # Сохранение модели в файл
 LOAD_MODEL = False
 
-MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
+MODEL_NAME = "transformer_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------
@@ -105,7 +105,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesIterativeVAE(
+model = TimeSeriesTransformerVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -437,7 +437,7 @@ else:
         verbose_step = 5,
     )
 
-    plot_vae_training_history(history, save_path=os.path.join(PATH_IMG_LSTM, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
+    plot_vae_training_history(history, save_path=os.path.join(PATH_IMG_TRANSFORMER, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # ------------------------------
 # Сохраняем модель
@@ -471,7 +471,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_norm_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -499,7 +499,7 @@ plot_recursive_lifetime_forecast(
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_ft_norm_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 
@@ -526,7 +526,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_drop]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_drop_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_norm_drop_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -548,7 +548,7 @@ plot_recursive_lifetime_forecast(
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_drop_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_ft_norm_drop_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------
@@ -574,7 +574,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_noise]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_noise_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_norm_noise_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -596,7 +596,7 @@ plot_recursive_lifetime_forecast(
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------
@@ -622,7 +622,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_both]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_both_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_norm_both_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -644,7 +644,7 @@ plot_recursive_lifetime_forecast(
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_TRANSFORMER, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------

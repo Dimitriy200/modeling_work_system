@@ -107,6 +107,7 @@ class TimeSeriesTransformerVAE(nn.Module):
     def inference(self, x_past, horizon=10, num_scenarios=5):
         self.eval()
         scenarios = []
+        past_len = int(x_past.size(1) / 2) 
         
         with torch.no_grad():
             for s in range(num_scenarios):
@@ -114,11 +115,11 @@ class TimeSeriesTransformerVAE(nn.Module):
                 generated_window = []
                 
                 # Заполняем первые 5 циклов известной историей
-                for t in range(5):
+                for t in range(past_len):
                     generated_window.append(x_past[:, t].unsqueeze(1))
                 
                 # Пошаговая генерация будущего (6-10 шаги)
-                for t in range(5, horizon):
+                for t in range(past_len, horizon):
                     last_step = current_history[:, -1]
                     
                     # Генерируем ровно один следующий шаг

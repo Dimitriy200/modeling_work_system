@@ -17,7 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.lstm_vae import TimeSeriesIterativeVAE
+from modeling_work_system.models.VAE.vrnn_vae import TimeSeriesVRNN
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -27,7 +27,7 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_vrnn_lifetime_forecast_nv
 from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing, plot_sensor_stress_testing
 from modeling_work_system.plots.generation_plots import plot_recursive_lifetime_forecast
 
@@ -61,13 +61,13 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG_LSTM = os.path.join(PATH_IMG, "lstm_vae")
-PATH_TRAIN_PROCESSED_LSTM = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
+PATH_IMG_VRNN = os.path.join(PATH_IMG, "vrnn_vae")
+PATH_TRAIN_PROCESSED_VRNN = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
 
 SAVE_MODEL = False              # Сохранение модели в файл
 LOAD_MODEL = False
 
-MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
+MODEL_NAME = "vrnn_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------
@@ -85,7 +85,7 @@ QUANTILE = 0.90
 # ------------------------------
 SEQ_LENGTH = 20                 # Длина окна 
 STRIDE = 1                      # Шаг сдвига.
-PAST_STEPS = 10                  # Первая часть окна - прошлое
+PAST_STEPS = 10                 # Первая часть окна - прошлое
 
 # ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
@@ -96,7 +96,7 @@ LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.1 #0.15
+KL_MINIMUM = 0.1 #0.3
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -105,7 +105,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesIterativeVAE(
+model = TimeSeriesVRNN(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -428,16 +428,14 @@ if LOAD_MODEL:
     model.eval()
 else:
     history = model.fit(
-        x_train=torch.FloatTensor(df_sequences_past["Train_norm_both"]),          # Чистое (незашумленное) прошлое Scaled_Train_norm
-        last_steps_train=torch.FloatTensor(df_sequences_ls["Scaled_Train_norm"]),   # Чистая (незашумленная) граница
-        y_train=torch.FloatTensor(df_sequences_future["Scaled_Train_norm"]),        # Чистое (незашумленное) будущее
+        x_full_window=torch.FloatTensor(df_sequences["Train_norm_both"]),          # Чистое (незашумленное) прошлое Scaled_Train_norm
         epochs=EPOCHS,
         lr=LEARNING_RATE,
         tau=KL_MINIMUM,
         verbose_step = 5,
     )
 
-    plot_vae_training_history(history, save_path=os.path.join(PATH_IMG_LSTM, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
+    plot_vae_training_history(history, save_path=os.path.join(PATH_IMG_VRNN, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
 # ------------------------------
 # Сохраняем модель
@@ -471,7 +469,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_norm_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -492,14 +490,14 @@ unique_engine_ids = df_scaled["Val_norm"][unit_col].unique()
 target_scaled_id = unique_engine_ids[ENGINE_N - 1] 
 single_engine_full_df = df_scaled["Val_norm"][df_scaled["Val_norm"][unit_col] == target_scaled_id]
 
-plot_recursive_lifetime_forecast(
+plot_vrnn_lifetime_forecast_nv(
     model=model,
     start_x_past=torch.FloatTensor(df_sequences_past["Scaled_Val_norm"][ENGINE_N]),
     full_engine_df=single_engine_full_df,
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_ft_norm_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 
@@ -526,7 +524,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_drop]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_drop_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_norm_drop_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -541,14 +539,14 @@ for engine_idx in range(num_engines_to_plot):
         past_steps=PAST_STEPS
     )
 
-plot_recursive_lifetime_forecast(
+plot_vrnn_lifetime_forecast_nv(
     model=model,
     start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_drop"][ENGINE_N]),
     full_engine_df=single_engine_full_df,
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_drop_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_ft_norm_drop_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------
@@ -574,7 +572,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_noise]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_noise_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_norm_noise_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -589,14 +587,14 @@ for engine_idx in range(num_engines_to_plot):
         past_steps=PAST_STEPS
     )
 
-plot_recursive_lifetime_forecast(
+plot_vrnn_lifetime_forecast_nv(
     model=model,
     start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_noise"][ENGINE_N]),
     full_engine_df=single_engine_full_df,
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------
@@ -622,7 +620,7 @@ for engine_idx in range(num_engines_to_plot):
     single_engine_scenarios = [scenario[engine_idx] for scenario in gen_scenarios_norm_both]
     
     # 3. Формируем уникальное имя файла для каждого двигателя (например, engine_0.png, engine_1.png...)
-    current_save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_norm_both_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
+    current_save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_norm_both_{MODEL_NAME}_{MODEL_VERSION}_eng_{engine_idx}.png")
     
     # 4. Вызываем функцию отрисовки (код внутри inference_plot.py менять не нужно, 
     # так как туда поступает чистая двухмерная матрица для одного двигателя)
@@ -637,14 +635,14 @@ for engine_idx in range(num_engines_to_plot):
         past_steps=PAST_STEPS
     )
 
-plot_recursive_lifetime_forecast(
+plot_vrnn_lifetime_forecast_nv(
     model=model,
     start_x_past=torch.FloatTensor(df_sequences_past["Val_norm_both"][ENGINE_N]),
     full_engine_df=single_engine_full_df,
     feature_idx=13,
     feature_name = "sensor measurement 9",
     num_scenarios = 3,
-    save_path = os.path.join(PATH_IMG_LSTM, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
+    save_path = os.path.join(PATH_IMG_VRNN, f"plot_inf_ft_norm_noise_eng({ENGINE_N})_eng_{MODEL_NAME}.png")
 )
 
 # ------------------------------

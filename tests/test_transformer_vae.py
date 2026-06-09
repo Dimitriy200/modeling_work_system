@@ -85,7 +85,7 @@ LEARNING_RATE = 0.001 #5e-5
 WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.5 #0.15
+KL_MINIMUM = 0.1 #0.5
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -327,14 +327,6 @@ df_anom_scaled_seq_smoothong_future = {
 logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
 logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
-# y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
-# y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
-# y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
-
-# logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
-# logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
-# logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
-
 # ------------------------------
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
 # ------------------------------
@@ -369,19 +361,6 @@ logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scal
 logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
 
-
-# X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
-# X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
-# X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
-
-# logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
-# logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
-# logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
-
-# N_FEATURES = X_train_seq.shape[2]
-
-
-
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
@@ -401,9 +380,6 @@ plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_histo
 torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
-# ======================================================
-# III ИНФЕРЕНС
-# ======================================================
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================

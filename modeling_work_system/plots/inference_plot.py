@@ -33,7 +33,7 @@ def plot_inference_results(
     cycles = np.arange(1, total_cycles+1) # 10 циклов суммарно (от 1 до 11)
     
     # 2. Рисуем истинные данные указанного sensor measurement (черная сплошная линия)
-    plt.plot(cycles, y_true[:, feature_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные (NASA)')
+    plt.plot(cycles, y_true[:, feature_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные')
     
     # 3. Рисуем сгенерированные сценарии (цветные полупрозрачные линии)
     # На отрезке 1-5 они будут показывать качество восстановления, на 6-11 - варианты будущего
@@ -42,7 +42,7 @@ def plot_inference_results(
         gen_data = scenario[:, feature_idx]
         
         if i == 0:
-            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o', label='Сценарии VAE')
+            plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o', label='Сценарии')
         else:
             plt.plot(cycles, gen_data, color='crimson', alpha=0.4, linestyle='-', marker='o')
             
@@ -52,12 +52,38 @@ def plot_inference_results(
     # Общая инормация о графике
     plt.title(f"Валидация модели VAE | Окно данных №{window_idx} | {feature_name}", fontsize=14)
 
-    # Подписи разделения на прошлое и будущее
-    plt.text(3.0, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'История\n', 
-             horizontalalignment='center', color='gray', fontweight='bold')
+    # 1. Получаем текущие границы графика по осям X и Y
+    ymin, ymax = plt.gca().get_ylim()
+    xmin, xmax = plt.gca().get_xlim()
     
-    plt.text(8.5, plt.ylim()[0] + (plt.ylim()[1] - plt.ylim()[0])*0.9, 'Прогноз будущего\n', 
-             horizontalalignment='center', color='gray', fontweight='bold')
+    # 2. Вычисляем динамическую высоту для текста (90% от высоты видимой области)
+    text_y_position = ymin + (ymax - ymin) * 0.9
+    # total_cycles — полная длина окна (например, 20)
+    total_cycles = y_true.shape[0] 
+
+    # forecast_len — длина чистого прогноза (например, 10)
+    forecast_len = scenarios[0].shape[0] 
+
+    # past_steps — длина истории (20 - 10 = 10)
+    past_steps = total_cycles - forecast_len 
+    # 3. Рассчитываем центры зон по оси X
+    # Зона истории идет от 1 до PAST_STEPS. Её центр — это (1 + PAST_STEPS) / 2
+    history_center_x = (1 + past_steps) / 2
+    
+    # Зона прогноза идет от PAST_STEPS до полного размера окна (total_cycles). 
+    # Её центр — это (PAST_STEPS + total_cycles) / 2
+    forecast_center_x = (past_steps + total_cycles) / 2
+    
+    # 4. Отрисовываем подписи в вычисленных координатах
+    plt.text(history_center_x, text_y_position, 
+        'История (Вход)', 
+        horizontalalignment='center', color='gray', fontweight='bold'
+    )
+    
+    plt.text(forecast_center_x, text_y_position, 
+        'Прогноз будущего (Генерация)', 
+        horizontalalignment='center', color='gray', fontweight='bold'
+    )
     
     # Оформление графика
     plt.title(f"Генерация временной последовательности для: {feature_name}", fontsize=14)
@@ -119,7 +145,7 @@ def plot_inference_multi_features(
         ax = axes[idx]
         
         # 1. Рисуем реальные данные для текущего датчика (черная линия)
-        ax.plot(cycles, y_true[:, f_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные (NASA)')
+        ax.plot(cycles, y_true[:, f_idx], color='black', marker='o', linewidth=2.5, label='Реальные данные')
         logging.info(f"Real data = {y_true[:, f_idx]}")
 
         # Если данные зашумлены - рисуем чистые значения
@@ -131,7 +157,7 @@ def plot_inference_multi_features(
         for i, scenario in enumerate(scenarios):
             gen_data = scenario[:, f_idx]
             if i == 0:
-                ax.plot(cycles, gen_data, color='crimson', marker='o', alpha=0.4, linestyle='-', label='Сценарии VAE')
+                ax.plot(cycles, gen_data, color='crimson', marker='o', alpha=0.4, linestyle='-', label='Сценарии')
                 logging.info(f"Gen data = {gen_data}")
 
             else:
@@ -142,11 +168,29 @@ def plot_inference_multi_features(
         ax.axvline(x=past_steps, color='darkgray', linestyle='--', linewidth=2)
         
         # Разметка подписей "История" / "Прогноз" только для верхнего графика, чтобы не дублировать
-        if idx == 0:
-            ax.text(3.0, ax.get_ylim()[0] + (ax.get_ylim()[1] - ax.get_ylim()[0])*0.9, 'История (1-5)', 
-                    horizontalalignment='center', color='gray', fontweight='bold')
-            ax.text(8.5, ax.get_ylim()[0] + (ax.get_ylim()[1] - ax.get_ylim()[0])*0.9, 'Прогноз (6-10)', 
-                    horizontalalignment='center', color='gray', fontweight='bold')
+        # 1. Получаем текущие границы графика по осям X и Y
+        ymin, ymax = ax.get_ylim()
+        
+        # 2. Вычисляем динамическую высоту для текста (90% от высоты видимой области)
+        text_y_position = ymin + (ymax - ymin) * 0.95
+        
+        # 3. Рассчитываем центры зон по оси X
+        # Зона истории идет от 1 до PAST_STEPS. Её центр — это (1 + PAST_STEPS) / 2
+        history_center_x = past_steps / 2
+        
+        # Зона прогноза идет от PAST_STEPS до полного размера окна (total_cycles). 
+        # Её центр — это (PAST_STEPS + total_cycles) / 2
+        forecast_center_x = forecast_center_x = past_steps + (total_cycles - past_steps) / 2
+        
+        # 4. Отрисовываем подписи в вычисленных координатах
+        ax.text(history_center_x, text_y_position, 
+            'История', horizontalalignment='center', color='gray', fontweight='bold'
+        )
+        
+        ax.text(forecast_center_x, text_y_position, 
+            'Генерация', 
+            horizontalalignment='center', color='gray', fontweight='bold'
+        )
             
         # Настройка оформления для каждой панели
         ax.set_title(f"{plot_name}, генерация для: {f_name}", fontsize=12, fontweight='bold')
@@ -166,8 +210,6 @@ def plot_inference_multi_features(
         logging.info(f"Multi-chart saved successfully: {save_path}")
         
     plt.show()
-
-
 
 
 def plot_continuous_forecasting(model, X_val_past, X_val_ls, y_val_true, num_scenarios=5, feature_idx=6, feature_name="Sensor 2", save_path=None):
@@ -241,6 +283,70 @@ def plot_continuous_forecasting(model, X_val_past, X_val_ls, y_val_true, num_sce
     plt.show()
 
 
+def plot_vrnn_lifetime_forecast_nv(model, start_x_past, full_engine_df, feature_idx=13, feature_name="Sensor 9", num_scenarios=3, save_path=None):
+    """
+    Генерация и визуализация полного жизненного цикла двигателя строго для архитектуры VRNN.
+    """
+    model.eval()
+    device = next(model.parameters()).device
+    
+    # 1. Извлекаем истинный длинный тренд для подложки графика
+    if hasattr(full_engine_df, 'values'):
+        real_trend = full_engine_df.values[:, 2 + feature_idx] # Сдвиг на 2, если первые - ID и цикл
+    else:
+        real_trend = full_engine_df[:, 2 + feature_idx]
+        
+    total_cycles = len(real_trend)
+    past_len = start_x_past.shape[1] # Длина истории (10 шагов)
+    
+    # 2. Переносим стартовую историю на правильный девайс (GPU/CPU)
+    start_x_past = torch.FloatTensor(start_x_past).to(device)
+    if start_x_past.dim() == 2:
+        start_x_past = start_x_past.unsqueeze(0) # Гарантируем форму (1, past_len, 26)
+
+    logging.info(f"[VRNN_LIFETIME] Starting VRNN inference. Past steps: {past_len}, Total lifetime cycles: {total_cycles}")
+
+    # 3. Вся магия авторегрессии VRNN происходит в одну строчку!
+    with torch.no_grad():
+        # Метод inference сам сгенерирует цепочку нужной длины (horizon = total_cycles)
+        gen_scenarios = model.inference(
+            x_past=start_x_past,
+            horizon=total_cycles,
+            num_scenarios=num_scenarios
+        )
+        
+    # 4. СТРОИМ ГРАФИК
+    plt.figure(figsize=(15, 6))
+    
+    # СИНЯЯ ЛИНИЯ - Истинные реальные значения (NASA)
+    cycles_axis = np.arange(1, total_cycles + 1)
+    plt.plot(cycles_axis, real_trend, color='royalblue', linewidth=3.0, label='Real Values (NASA)')
+    
+    # СЕРЫЕ ЛИНИИ - Автономные стохастические генерации VRNN
+    for s in range(num_scenarios):
+        # gen_scenarios[s] имеет форму (1, total_cycles, 26)
+        scenario_data = gen_scenarios[s][0, :, feature_idx]
+        
+        if s == 0:
+            plt.plot(cycles_axis, scenario_data, color='darkgray', alpha=0.7, linewidth=1.5, label='VRNN Stochastic Generation')
+        else:
+            plt.plot(cycles_axis, scenario_data, color='darkgray', alpha=0.7, linewidth=1.5)
+            
+    # Вертикальная отметка окончания реальной предыстории (на 10-м шаге)
+    plt.axvline(x=past_len, color='gray', linestyle='--', linewidth=1.5)
+    
+    plt.title(f"VRNN Long-Term Stochastic Lifetime Forecast | {feature_name}", fontsize=14, fontweight='bold')
+    plt.xlabel("Flight Cycle", fontsize=12)
+    plt.ylabel("Sensor Value (Normalized)", fontsize=12)
+    plt.grid(True, linestyle=':', alpha=0.6)
+    plt.legend(loc='upper right', fontsize=11)
+    
+    plt.tight_layout()
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        logging.info(f"VRNN lifetime chart saved: {save_path}")
+    plt.show()
+
 
 def plot_consecutive_windows(model, X_val_past, X_val_seq_full, start_window_idx=0, num_windows=5, feature_idx=6, feature_name="Sensor 2", save_path=None):
     """
@@ -292,7 +398,7 @@ def plot_consecutive_windows(model, X_val_past, X_val_seq_full, start_window_idx
             gen_data_window = scenario_data[w, :, feature_idx]
             
             if s == 0 and w == 0:
-                plt.plot(x_scen_cycles, gen_data_window, color='crimson', alpha=0.25, linestyle='-', label='Прогнозы VRNN (5 окон)')
+                plt.plot(x_scen_cycles, gen_data_window, color='crimson', alpha=0.25, linestyle='-', label='Прогнозы')
             else:
                 plt.plot(x_scen_cycles, gen_data_window, color='crimson', alpha=0.15, linestyle='-')
                 

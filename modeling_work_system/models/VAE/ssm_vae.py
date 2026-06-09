@@ -83,6 +83,7 @@ class TimeSeriesDeepSSM(nn.Module):
         self.eval()
         batch_size = x_past.size(0)
         scenarios = []
+        past_len = int(x_past.size(1) / 2)
         
         with torch.no_grad():
             for s in range(num_scenarios):
@@ -90,7 +91,7 @@ class TimeSeriesDeepSSM(nn.Module):
                 generated_window = []
                 
                 # Записываем известную историю (шаги 1-5)
-                for t in range(5):
+                for t in range(past_len):
                     generated_window.append(x_past[:, t].unsqueeze(1))
                 
                 # Извлекаем начальные параметры из истории
@@ -100,7 +101,7 @@ class TimeSeriesDeepSSM(nn.Module):
                 h_t = F.relu(self.fc_init_state(h_last))
                 
                 # Шаг 6-10: Эволюция пространства состояний во времени
-                for t in range(5, horizon):
+                for t in range(past_len, horizon):
                     last_step = current_history[:, -1]
                     
                     # На КАЖДОМ шаге сэмплируем микро-шум в латентном пространстве SSM
