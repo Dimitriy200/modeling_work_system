@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  9 JUN 2026 23:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  10 JUN 2026 00:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -566,7 +566,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip94
 )
-Package hyperref Info: Option `colorlinks' set `false' on input line 64.
+Package hyperref Info: Option `colorlinks' set `false' on input line 66.
  (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip95
@@ -601,27 +601,27 @@ Package babel Info: 'russian' activates 'russian' shorthands.
 )
 \openout1 = `pz_v2.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 151.
-LaTeX Font Info:    ... okay on input line 151.
-LaTeX Info: Redefining \th on input line 151.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 146.
+LaTeX Font Info:    ... okay on input line 146.
+LaTeX Info: Redefining \th on input line 146.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -691,7 +691,7 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 \Gin@req@height=\dimen198
 \Gin@req@width=\dimen199
 )
-Package hyperref Info: Link coloring OFF on input line 151.
+Package hyperref Info: Link coloring OFF on input line 146.
  (pz_v2.out) (pz_v2.out)
 \@outlinefile=\write3
 \openout3 = `pz_v2.out'.
@@ -714,39 +714,33 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {C:/Users/dikor/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [7
 
-] [8]
-<../img/system_architecture.png, id=39, 1828.8325pt x 872.25874pt>
-File: ../img/system_architecture.png Graphic file (type png)
-<use ../img/system_architecture.png>
-Package pdftex.def Info: ../img/system_architecture.png  used on input line 206.
-(pdftex.def)             Requested size: 435.32422pt x 207.61612pt.
+] [8] [9
 
+] [10] [11] [12] [13] [14] [15]
 
-Package caption Warning: Unused \captionsetup[table] on input line 122.
+Package caption Warning: Unused \captionsetup[figure] on input line 122.
 See the caption package documentation for explanation.
 
-[9
-
- <../img/system_architecture.png>] (pz_v2.aux)
+(pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `pz_v2.out' has not changed.
-(rerunfilecheck)             Checksum: 6316C87618CCEA6966D0D9F213191ED3;923.
+(rerunfilecheck)             Checksum: A27108F5605D0F3A42A8D68C0236ED5D;6187.
  ) 
 Here is how much of TeX's memory you used:
- 15457 strings out of 467870
- 248718 string characters out of 5418355
- 669433 words of memory out of 5000000
- 44131 multiletter control sequences out of 15000+600000
+ 15472 strings out of 467870
+ 248604 string characters out of 5418355
+ 670166 words of memory out of 5000000
+ 44123 multiletter control sequences out of 15000+600000
  631126 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,1388b,466s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk>
-Output written on pz_v2.pdf (4 pages, 184144 bytes).
+ 75i,6n,79p,1388b,611s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
+Output written on pz_v2.pdf (10 pages, 98663 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
- 9 named destinations out of 1000 (max. 500000)
- 50 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 277 PDF objects out of 1000 (max. 8388607)
+ 32 named destinations out of 1000 (max. 500000)
+ 117 words of extra memory for PDF output out of 10000 (max. 10000000)
 

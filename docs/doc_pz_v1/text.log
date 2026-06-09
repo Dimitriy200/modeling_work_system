@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  9 JUN 2026 23:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  10 JUN 2026 00:15
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -566,7 +566,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip94
 )
-Package hyperref Info: Option `colorlinks' set `false' on input line 64.
+Package hyperref Info: Option `colorlinks' set `false' on input line 66.
  (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip95
@@ -595,33 +595,33 @@ Package caption Info: hyperref package is loaded.
 ) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count323
-) (text.aux)
+)
+No file text.aux.
 \openout1 = `text.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 152.
+LaTeX Font Info:    ... okay on input line 152.
 Package babel Info: 'russian' activates 'russian' shorthands.
-(babel)             Reported on input line 150.
-LaTeX Info: Redefining \th on input line 150.
-
+(babel)             Reported on input line 152.
+LaTeX Info: Redefining \th on input line 152.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -690,7 +690,7 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 \Gin@req@height=\dimen198
 \Gin@req@width=\dimen199
 )
-Package hyperref Info: Link coloring OFF on input line 150.
+Package hyperref Info: Link coloring OFF on input line 152.
 \@outlinefile=\write3
 \openout3 = `text.out'.
 
@@ -708,658 +708,411 @@ No file text.toc.
 ] [8] [9
 
 ]<<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 205.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 207.
  (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 205.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 207.
  (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Overfull \hbox (31.50269pt too wide) in paragraph at lines 205--206
-[]\T2A/cmr/m/n/14.4 Исследование Chung et al. ^^PDeep Generative Models for Time Series Forecasting^^Q
- []
+) [10] [11] [12] [13] [14] [15] [16
 
-[10] [11] [12]
-Overfull \hbox (1.67368pt too wide) in paragraph at lines 243--244
-[]\T2A/cmr/m/n/14.4 Обеспечение мас-шта-би-ру-е-мо-сти об-ра-бот-ки те-ле-мет-ри-че-ских дан-ных.
- []
+] [17] [18] [19] [20] [21] [22] [23] [24] [25]
+
+LaTeX Warning: Reference `fig:system_architecture' on page 26 undefined on input line 515.
 
 
-Overfull \hbox (9.47676pt too wide) in paragraph at lines 244--245
-[]\T2A/cmr/m/n/14.4 Ускорение внед-ре-ния ме-то-дов ма-шин-но-го обу-че-ния. Мо-дуль-ная струк-
- []
+LaTeX Warning: File `img/system_architecture.png' not found on input line 519.
 
 
-Overfull \hbox (9.28754pt too wide) in paragraph at lines 247--248
-[]\T2A/cmr/m/n/14.4 Возможность неза-ви-си-мо-го ис-поль-зо-ва-ния мо-ду-лей. Ар-хи-тек-ту-ра биб-
- []
-
-[13] [14]
-Overfull \hbox (9.52017pt too wide) in paragraph at lines 272--273
-[]\T2A/cmr/m/n/14.4 Полученные тео-ре-ти-че-ские и ме-то-до-ло-ги-че-ские ре-зуль-та-ты со-зда-ют необ-
- []
-
-[15]
-Overfull \hbox (11.77525pt too wide) in paragraph at lines 285--286
-\T2A/cmr/m/n/14.4 та-сет NASA C-MAPSS (Commercial Modular Aero-Propulsion System Simulation),
- []
-
-
-Overfull \hbox (2.81894pt too wide) in paragraph at lines 294--295
-[]\T2A/cmr/m/n/14.4 Модель долж-на под-дер-жи-вать мо-дуль-ную ин-те-гра-цию: за-груз-ку пре-
- []
-
-[16
-
-]
-Overfull \hbox (10.57605pt too wide) in paragraph at lines 319--320
-[]\T2A/cmr/m/n/14.4 Амортизированный вы-вод ла-тент-но-го со-сто-я-ния. Ко-ди-ров-щик $\OML/cmm/m/it/14.4 q[]$ \T2A/cmr/m/n/14.4 (ней-
- []
-
-[17]
-Overfull \hbox (4.31023pt too wide) in paragraph at lines 338--339
-[]\T2A/cmr/m/n/14.4 Дополнительно си-сте-ма вы-чис-ля-ет ска-ляр-ный ин-ди-ка-тор со-сто-я-ния $\OML/cmm/m/it/14.4 S[] \OMS/cmsy/m/n/14.4 2
- []
-
-[18] [19]
-Overfull \hbox (1.57486pt too wide) in paragraph at lines 407--408
-\T2A/cmr/m/n/14.4 мер-но-сти. Пре-иму-ще-ством яв-ля-ет-ся низ-кая вы-чис-ли-тель-ная слож-ность и про-
- []
-
-[20] [21] [22] [23] [24] [25]
-
-LaTeX Warning: Reference `fig:system_architecture' on page 26 undefined on input line 513.
-
-
-LaTeX Warning: File `img/system_architecture.png' not found on input line 517.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:517: Package pdftex.def Error: File `img/system_architecture.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:519: Package pdftex.def Error: File `img/system_architecture.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.517 ...9\textwidth]{img/system_architecture.png}
+l.519 ...9\textwidth]{img/system_architecture.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 517.
+LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 519.
 (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/cyrillic\t2acmtt.fd
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
 
-LaTeX Warning: Reference `fig:system_architecture' on page 26 undefined on input line 522.
+LaTeX Warning: Reference `fig:system_architecture' on page 26 undefined on input line 524.
 
-[26] [27]
-Overfull \hbox (15.19038pt too wide) in paragraph at lines 538--539
-[]\T2A/cmr/m/n/14.4 Обоснован вы-бор ар-хи-тек-ту-ры ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка (VAE)
- []
-
-[28] [29]
-Overfull \hbox (3.28311pt too wide) in paragraph at lines 558--559
-\T2A/cmr/m/n/14.4 слу-жи-ва-ния тех-но-ло-ги-че-ско-го обо-ру-до-ва-ния. Ар-хи-тек-ту-ра по-стро-е-на по прин-
- []
-
-[30
+[26] [27] [28] [29] [30
 
 ]
-Overfull \hbox (2.71779pt too wide) in paragraph at lines 570--571
-\T2A/cmr/m/n/14.4 ча-ет за-груз-ку сы-рых дан-ных, их пре-до-б-ра-бот-ку, оп-ти-ми-за-цию функ-ции ELBO
- []
+
+LaTeX Warning: File `img/architecture.png' not found on input line 578.
 
 
-LaTeX Warning: File `img/architecture.png' not found on input line 576.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:576: Package pdftex.def Error: File `img/architecture.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:578: Package pdftex.def Error: File `img/architecture.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.576 ...idth=0.6\textwidth]{img/architecture.png}
+l.578 ...idth=0.6\textwidth]{img/architecture.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \hbox (2.48868pt too wide) in paragraph at lines 587--588
+Overfull \hbox (2.48868pt too wide) in paragraph at lines 589--590
 []\T2A/cmr/m/n/14.4 Программный ком-плекс ре-а-ли-зо-ван в ви-де от-кры-той Python-библиотеки
  []
 
 [31]
 
-LaTeX Warning: File `package_structure.png' not found on input line 591.
+LaTeX Warning: File `package_structure.png' not found on input line 593.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:591: Package pdftex.def Error: File `package_structure.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:593: Package pdftex.def Error: File `package_structure.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.591 ...dth=0.9\textwidth]{package_structure.png}
+l.593 ...dth=0.9\textwidth]{package_structure.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [32] [33] [34] [35]
 
-LaTeX Warning: File `data_classes.png' not found on input line 634.
+LaTeX Warning: File `data_classes.png' not found on input line 636.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:634: Package pdftex.def Error: File `data_classes.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:636: Package pdftex.def Error: File `data_classes.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.634 ...cs[width=0.7\textwidth]{data_classes.png}
+l.636 ...cs[width=0.7\textwidth]{data_classes.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[36]
-Overfull \hbox (89.80971pt too wide) in paragraph at lines 641--642
-[]\T2A/cmr/m/n/14.4 Класс DataCleaner ин-кап-су-ли-ру-ет ло-ги-ку очист-ки сиг-на-лов. Ме-тод interpolate_missing
- []
+[36] [37]
 
-[37]
-
-LaTeX Warning: File `pipeline_classes.png' not found on input line 658.
+LaTeX Warning: File `pipeline_classes.png' not found on input line 660.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:658: Package pdftex.def Error: File `pipeline_classes.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:660: Package pdftex.def Error: File `pipeline_classes.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.658 ...dth=0.85\textwidth]{pipeline_classes.png}
+l.660 ...dth=0.85\textwidth]{pipeline_classes.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+[38] [39]
 
-Overfull \hbox (6.79106pt too wide) in paragraph at lines 663--664
-\T2A/cmr/m/n/14.4 гу-ра-ции. Ме-тод load_yaml пар-сит кон-фи-гу-ра-ци-он-ный файл, а override_params
- []
-
-
-Overfull \hbox (0.4129pt too wide) in paragraph at lines 663--664
-\T2A/cmr/m/n/14.4 поз-во-ля-ет про-грамм-но пе-ре-опре-де-лять па-ра-мет-ры во вре-мя за-пус-ка, что необ-
- []
-
-[38]
-Overfull \hbox (49.7283pt too wide) in paragraph at lines 665--666
-\T2A/cmr/m/n/14.4 стви-тель-ны к ано-ма-ли-ям во вход-ных рас-пре-де-ле-ни-ях, по-это-му ме-тод check_nan_ratio
- []
+LaTeX Warning: File `model_classes.png' not found on input line 684.
 
 
-Overfull \hbox (33.06017pt too wide) in paragraph at lines 665--666
-\T2A/cmr/m/n/14.4 про-ве-ря-ет до-лю про-пу-щен-ных зна-че-ний по-сле ин-тер-по-ля-ции. Ме-тод validate_shape
- []
-
-
-Overfull \hbox (0.62784pt too wide) in paragraph at lines 665--666
-\T2A/cmr/m/n/14.4 пол-ни-тель-но ме-тод assert_normal_distribution про-ве-ря-ет, что ста-ти-сти-ки нор-
- []
-
-
-Overfull \hbox (9.75766pt too wide) in paragraph at lines 665--666
-\T2A/cmr/m/n/14.4 ма-ли-за-ции вы-чис-ле-ны на ре-пре-зен-та-тив-ной вы-бор-ке штат-но-го ре-жи-ма, предот-
- []
-
-
-Overfull \hbox (11.06395pt too wide) in paragraph at lines 669--670
-\T2A/cmr/m/n/14.4 немед-лен-но оста-нав-ли-ва-ет-ся с ге-не-ра-ци-ей ди-а-гно-сти-че-ско-го от-че-та, что предот-
- []
-
-
-Overfull \hbox (19.09392pt too wide) in paragraph at lines 678--679
-\T2A/cmr/m/n/14.4 про-грамм-ную ре-а-ли-за-цию ар-хи-тек-ту-ры ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка (VAE),
- []
-
-[39]
-
-LaTeX Warning: File `model_classes.png' not found on input line 682.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:682: Package pdftex.def Error: File `model_classes.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:684: Package pdftex.def Error: File `model_classes.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.682 ...ics[width=1\textwidth]{model_classes.png}
+l.684 ...ics[width=1\textwidth]{model_classes.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[40]
-Overfull \hbox (0.5704pt too wide) in paragraph at lines 697--698
-[]\T2A/cmr/m/n/14.4 Программная ре-а-ли-за-ция мо-ду-ля обес-пе-чи-ва-ет стро-гое со-от-вет-ствие ма-
- []
+[40] [41]
 
-[41]
-
-LaTeX Warning: File `metrics_classes.png' not found on input line 708.
+LaTeX Warning: File `metrics_classes.png' not found on input line 710.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:708: Package pdftex.def Error: File `metrics_classes.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:710: Package pdftex.def Error: File `metrics_classes.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.708 ...s[width=1\textwidth]{metrics_classes.png}
+l.710 ...s[width=1\textwidth]{metrics_classes.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+[42] [43] [44]
 
-Overfull \hbox (15.67787pt too wide) in paragraph at lines 717--718
-\T2A/cmr/m/n/14.4 ния ано-ма-лий на ос-но-ве ска-ляр-но-го ин-ди-ка-то-ра со-сто-я-ния $\OML/cmm/m/it/14.4 S[]$\T2A/cmr/m/n/14.4 . Ме-тод compute_f1
- []
-
-
-Overfull \hbox (8.61974pt too wide) in paragraph at lines 717--718
-\T2A/cmr/m/n/14.4 щадь под ROC-кривой, ха-рак-те-ри-зу-ю-щую спо-соб-ность мо-де-ли раз-де-лять штат-
- []
-
-[42] [43]
-Overfull \hbox (3.05489pt too wide) in paragraph at lines 719--720
-[]\T2A/cmr/m/n/14.4 Класс NASAScore ре-а-ли-зу-ет спе-ци-а-ли-зи-ро-ван-ную функ-цию по-терь, при-
- []
+LaTeX Warning: File `services_classes.png' not found on input line 738.
 
 
-Overfull \hbox (6.59198pt too wide) in paragraph at lines 723--724
-\T2A/cmr/m/n/14.4 зна-че-ния мет-ри-ки с за-дан-ным уров-нем зна-чи-мо-сти. Ме-тод compute_effect_size
- []
-
-[44]
-
-LaTeX Warning: File `services_classes.png' not found on input line 736.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:736: Package pdftex.def Error: File `services_classes.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:738: Package pdftex.def Error: File `services_classes.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.736 ...[width=1\textwidth]{services_classes.png}
+l.738 ...[width=1\textwidth]{services_classes.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [45] [46] [47]
 
-LaTeX Warning: File `component_sequence.png' not found on input line 768.
+LaTeX Warning: File `component_sequence.png' not found on input line 770.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:768: Package pdftex.def Error: File `component_sequence.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:770: Package pdftex.def Error: File `component_sequence.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.768 ...idth=1\textwidth]{component_sequence.png}
+l.770 ...idth=1\textwidth]{component_sequence.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [48]
 
-LaTeX Warning: File `training_sequence.png' not found on input line 789.
+LaTeX Warning: File `training_sequence.png' not found on input line 791.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:789: Package pdftex.def Error: File `training_sequence.png' not found: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.789 ...dth=0.8\textwidth]{training_sequence.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[49] [50]
-Overfull \hbox (0.62265pt too wide) in paragraph at lines 810--811
-\T2A/cmr/m/n/14.4 ра-бо-тан-ной си-сте-мы преду-смот-ре-ны ме-ха-низ-мы ин-те-гра-ции с внеш-ни-ми плат-
- []
-
-[51] [52] [53] [54]
-Overfull \hbox (4.79297pt too wide) in paragraph at lines 859--860
-\T2A/cmr/m/n/14.4 неза-ви-си-мых па-ке-тов с чет-ки-ми ин-тер-фей-са-ми вза-и-мо-дей-ствия. Па-кет src.data
- []
-
-
-Overfull \hbox (2.23883pt too wide) in paragraph at lines 861--862
-[]\T2A/cmr/m/n/14.4 Реализованы ал-го-рит-мы ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка, стро-го со-
- []
-
-
-Overfull \hbox (5.6717pt too wide) in paragraph at lines 861--862
-\T2A/cmr/m/n/14.4 от-вет-ству-ю-щие ма-те-ма-ти-че-ской по-ста-нов-ке за-да-чи, сфор-му-ли-ро-ван-ной во вто-
- []
-
-
-Overfull \hbox (0.7835pt too wide) in paragraph at lines 861--862
-\T2A/cmr/m/n/14.4 рой гла-ве. Класс Encoder ап-прок-си-ми-ру-ет апо-сте-ри-ор-ное рас-пре-де-ле-ние $\OML/cmm/m/it/14.4 q[]\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 z \OMS/cmsy/m/n/14.4 j
- []
-
-
-Overfull \hbox (5.33076pt too wide) in paragraph at lines 863--864
-\T2A/cmr/m/n/14.4 де-ли-ро-ва-ния. Мо-дуль RegressionMetrics вы-чис-ля-ет по-то-чеч-ные ошиб-ки RMSE,
- []
-
-
-Overfull \hbox (33.78297pt too wide) in paragraph at lines 863--864
-\T2A/cmr/m/n/14.4 терь для оцен-ки про-гно-зи-ро-ва-ния оста-точ-но-го ре-сур-са. Мо-дуль ProbabilisticMetrics
- []
-
-[55] [56] [57]
-Overfull \hbox (13.34125pt too wide) in paragraph at lines 885--886
-[]\T2A/cmr/m/n/14.4 Экспериментальное ис-сле-до-ва-ние раз-ра-бо-тан-ных ал-го-рит-мов и про-грамм-
- []
-
-
-Overfull \hbox (39.24821pt too wide) in paragraph at lines 885--886
-\T2A/cmr/m/n/14.4 но-го ком-плек-са вы-пол-не-но на ба-зе от-кры-то-го да-та-се-та NASA C-MAPSS (Commercial
- []
-
-[58
-
-] [59]
-Overfull \hbox (6.09692pt too wide) in paragraph at lines 925--926
-[]\T2A/cmr/m/n/14.4 Для обес-пе-че-ния вос-про-из-во-ди-мо-сти ре-зуль-та-тов за-фик-си-ро-ва-но на-чаль-
- []
-
-[60] [61] [62] [63]
-
-LaTeX Warning: File `elbo_convergence.png' not found on input line 992.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:992: Package pdftex.def Error: File `elbo_convergence.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:791: Package pdftex.def Error: File `training_sequence.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.992 ...idth=0.8\textwidth]{elbo_convergence.png}
+l.791 ...dth=0.8\textwidth]{training_sequence.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+[49] [50] [51] [52] [53] [54] [55] [56] [57] [58
 
-Overfull \hbox (4.20517pt too wide) in paragraph at lines 999--1000
-[]\T2A/cmr/m/n/14.4 Анализ ком-по-нент функ-ции по-терь по-ка-зы-ва-ет сба-лан-си-ро-ван-ный вклад
- []
+] [59] [60] [61] [62] [63]
+
+LaTeX Warning: File `elbo_convergence.png' not found on input line 994.
+
+
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:994: Package pdftex.def Error: File `elbo_convergence.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.994 ...idth=0.8\textwidth]{elbo_convergence.png}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
 
 [64]
 
-LaTeX Warning: File `latent_tsne.png' not found on input line 1007.
+LaTeX Warning: File `latent_tsne.png' not found on input line 1009.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1007: Package pdftex.def Error: File `latent_tsne.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1009: Package pdftex.def Error: File `latent_tsne.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1007 ...cs[width=0.8\textwidth]{latent_tsne.png}
+l.1009 ...cs[width=0.8\textwidth]{latent_tsne.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [65]
 
-LaTeX Warning: File `reconstruction_examples.png' not found on input line 1022.
+LaTeX Warning: File `reconstruction_examples.png' not found on input line 1024.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1022: Package pdftex.def Error: File `reconstruction_examples.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1024: Package pdftex.def Error: File `reconstruction_examples.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1022 ...\textwidth]{reconstruction_examples.png}
+l.1024 ...\textwidth]{reconstruction_examples.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [66] [67]
 
-LaTeX Warning: File `error_distribution.png' not found on input line 1037.
+LaTeX Warning: File `error_distribution.png' not found on input line 1039.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1037: Package pdftex.def Error: File `error_distribution.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1039: Package pdftex.def Error: File `error_distribution.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1037 ...h=0.8\textwidth]{error_distribution.png}
+l.1039 ...h=0.8\textwidth]{error_distribution.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [68] [69]
-Overfull \hbox (204.92789pt too wide) in paragraph at lines 1092--1102
+Overfull \hbox (204.92789pt too wide) in paragraph at lines 1094--1104
  [][] 
  []
 
 
-LaTeX Warning: File `rul_prediction_example.png' not found on input line 1110.
+LaTeX Warning: File `rul_prediction_example.png' not found on input line 1112.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1110: Package pdftex.def Error: File `rul_prediction_example.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1112: Package pdftex.def Error: File `rul_prediction_example.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1110 ...9\textwidth]{rul_prediction_example.png}
+l.1112 ...9\textwidth]{rul_prediction_example.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [70] [71]
-Overfull \hbox (3.48076pt too wide) in paragraph at lines 1141--1142
-\T2A/cmr/m/n/14.4 нор-мы, обес-пе-чи-ва-ет на-деж-ное раз-де-ле-ние клас-сов. Пло-щадь под ROC-кривой
- []
+
+LaTeX Warning: File `indicator_dynamics.png' not found on input line 1157.
 
 
-LaTeX Warning: File `indicator_dynamics.png' not found on input line 1155.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1155: Package pdftex.def Error: File `indicator_dynamics.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1157: Package pdftex.def Error: File `indicator_dynamics.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1155 ...h=0.9\textwidth]{indicator_dynamics.png}
+l.1157 ...h=0.9\textwidth]{indicator_dynamics.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [72] [73]
-Overfull \hbox (3.44283pt too wide) in paragraph at lines 1162--1163
-[]\T2A/cmr/m/n/14.4 Корреляционный ана-лиз по-ка-зы-ва-ет силь-ную по-ло-жи-тель-ную связь (ко-
- []
+
+LaTeX Warning: File `failure_probability.png' not found on input line 1174.
 
 
-LaTeX Warning: File `failure_probability.png' not found on input line 1172.
-
-
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1172: Package pdftex.def Error: File `failure_probability.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1174: Package pdftex.def Error: File `failure_probability.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1172 ...=0.8\textwidth]{failure_probability.png}
+l.1174 ...=0.8\textwidth]{failure_probability.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-
-Overfull \hbox (4.38333pt too wide) in paragraph at lines 1179--1180
-[]\T2A/cmr/m/n/14.4 Полученные ре-зуль-та-ты под-твер-жда-ют, что раз-ра-бо-тан-ная си-сте-ма обес-
- []
-
-
-Overfull \hbox (0.45021pt too wide) in paragraph at lines 1186--1187
-\T2A/cmr/m/n/14.4 дарт-ным де-тер-ми-ни-ро-ван-ным ав-то-ко-ди-ров-щи-ком, ре-кур-рент-ной се-тью LSTM
- []
-
 [74] [75]
-Overfull \hbox (81.21329pt too wide) in paragraph at lines 1208--1218
+Overfull \hbox (81.21329pt too wide) in paragraph at lines 1210--1220
  [][] 
  []
 
 [76]
 
-LaTeX Warning: File `inference_time_comparison.png' not found on input line 1232.
+LaTeX Warning: File `inference_time_comparison.png' not found on input line 1234.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1232: Package pdftex.def Error: File `inference_time_comparison.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1234: Package pdftex.def Error: File `inference_time_comparison.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1232 ...extwidth]{inference_time_comparison.png}
+l.1234 ...extwidth]{inference_time_comparison.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Overfull \hbox (54.5177pt too wide) in paragraph at lines 1249--1258
+Overfull \hbox (54.5177pt too wide) in paragraph at lines 1251--1260
  [][] 
  []
 
-[77] [78]
-Overfull \hbox (15.62137pt too wide) in paragraph at lines 1268--1269
-[]\T2A/cmr/m/n/14.4 Во-вторых, амор-ти-зи-ро-ван-ный вы-вод па-ра-мет-ров рас-пре-де-ле-ния по сколь-
- []
-
-[79]
-Overfull \hbox (4.19406pt too wide) in paragraph at lines 1287--1288
-[]\T2A/cmr/m/n/14.4 Тестирование про-во-ди-лось на всех срав-ни-ва-е-мых ар-хи-тек-ту-рах при фик-
- []
-
-
-Overfull \hbox (77.02087pt too wide) in paragraph at lines 1299--1309
+[77] [78] [79]
+Overfull \hbox (77.02087pt too wide) in paragraph at lines 1301--1311
  [][] 
  []
 
 [80]
 
-LaTeX Warning: File `noise_components_analysis.png' not found on input line 1323.
+LaTeX Warning: File `noise_components_analysis.png' not found on input line 1325.
 
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1323: Package pdftex.def Error: File `noise_components_analysis.png' not found: using draft setting.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1325: Package pdftex.def Error: File `noise_components_analysis.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1323 ...extwidth]{noise_components_analysis.png}
+l.1325 ...extwidth]{noise_components_analysis.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-[81] [82]
-Overfull \hbox (10.68019pt too wide) in paragraph at lines 1344--1345
-[]\T2A/cmr/m/n/14.4 Совокупность пе-ре-чис-лен-ных фак-то-ров объ-яс-ня-ет на-блю-да-е-мую на прак-
- []
+[81] [82] [83] [84] [85] [86] [87
 
-[83] [84]
-Overfull \hbox (20.89621pt too wide) in paragraph at lines 1367--1368
-[]\T2A/cmr/m/n/14.4 Программная ре-а-ли-за-ция си-сте-мы в ви-де мо-дуль-ной Python-библиотеки
- []
-
-
-Overfull \hbox (52.13397pt too wide) in paragraph at lines 1367--1368
-\T2A/cmr/m/n/14.4 сте-мы управ-ле-ния пред-при-я-ти-ем без глу-бо-кой мо-ди-фи-ка-ции легаси-инфраструктуры.
- []
-
-
-Overfull \hbox (3.82666pt too wide) in paragraph at lines 1370--1371
-[]\T2A/cmr/m/n/14.4 Совокупность по-лу-чен-ных экс-пе-ри-мен-таль-ных ре-зуль-та-тов под-твер-жда-
- []
-
-[85] [86
-
-]
-Overfull \hbox (1.19527pt too wide) in paragraph at lines 1394--1395
-\T2A/cmr/m/n/14.4 мен-да-ции по внед-ре-нию. Раз-ра-бо-тан-ный про-грамм-ный ком-плекс го-тов к адап-
- []
-
-
-Overfull \hbox (12.7998pt too wide) in paragraph at lines 1396--1397
-\T2A/cmr/m/n/14.4 рас-ши-ре-ние ме-то-да на муль-ти-мо-даль-ные дан-ные, раз-ра-бот-ка ал-го-рит-мов непре-
- []
-
-[87]
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1415: Missing $ inserted.
+] [88]
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1417: Missing $ inserted.
 <inserted text> 
                 $
-l.1415 ....arc.nasa.gov/m/profile/adeg/data/PHM08_
+l.1417 ....arc.nasa.gov/m/profile/adeg/data/PHM08_
                                                   Challenge_Data_Description...
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-LaTeX Warning: Command \cyrd invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrd invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyra invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyra invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrt invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrt invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyra invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyra invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyro invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyro invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrb invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrb invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrr invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrr invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyra invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyra invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrshch invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrshch invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyre invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyre invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrn invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrn invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyri invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyri invalid in math mode on input line 1417.
 
 
-LaTeX Warning: Command \cyrya invalid in math mode on input line 1415.
+LaTeX Warning: Command \cyrya invalid in math mode on input line 1417.
 
-d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1416: Missing $ inserted.
+d:/yniver/modeling_work_system/docs/doc_pz_v1/text.tex:1418: Missing $ inserted.
 <inserted text> 
                 $
-l.1416 
+l.1418 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1378,108 +1131,63 @@ Missing character: There is no н in font cmr12!
 Missing character: There is no и in font cmr12!
 Missing character: There is no я in font cmr12!
 
-Overfull \hbox (114.24579pt too wide) in paragraph at lines 1415--1416
+Overfull \hbox (114.24579pt too wide) in paragraph at lines 1417--1418
 \T2A/cmr/m/n/14.4 1^^U10. ^^U URL: https://ti.arc.nasa.gov/m/profile/adeg/data/PHM08$[]\OML/cmm/m/it/14.4 hallenge[]ata[]escription:pdf\OT1/cmr/m/n/14.4 ( :
  []
 
 
-Overfull \hbox (87.48949pt too wide) in paragraph at lines 1421--1422
-\T2A/cmr/m/n/14.4 // Neural Computation. ^^U 1997. ^^U Vol. 9, ќ 8. ^^U P. 1735^^U1780. ^^U DOI: 10.1162/neco.1997.9.8.1735. 
+Overfull \hbox (71.32823pt too wide) in paragraph at lines 1427--1428
+\T2A/cmr/m/n/14.4 URL: https://proceedings.neurips.cc/paper/2015/hash/d7322ed717dedf1eb4e6e52a37ea7bcd-
  []
 
-
-Overfull \hbox (8.8162pt too wide) in paragraph at lines 1423--1424
-\T2A/cmr/m/n/14.4 Bengio // Scientific Reports. ^^U 2018. ^^U Vol. 8, ќ 1. ^^U P. 6085. ^^U DOI: 10.1038/s41598-
- []
-
-
-Overfull \hbox (20.10522pt too wide) in paragraph at lines 1425--1426
-[]\T2A/cmr/m/n/14.4 8. Sohn, K. Learning Structured Output Representation using Deep Conditional
- []
-
-
-Overfull \hbox (462.42908pt too wide) in paragraph at lines 1425--1426
-\T2A/cmr/m/n/14.4 Processing Systems (NeurIPS). ^^U 2015. ^^U Vol. 28. ^^U P. 3483^^U3491. ^^U URL: https://proceedings.neurips.cc/paper/2015/hash/d7322ed717dedf1eb4e6e52a37ea7bcd-
- []
-
-[88
+[89
 
 ]
-Overfull \hbox (9.09636pt too wide) in paragraph at lines 1435--1436
+Overfull \hbox (9.09636pt too wide) in paragraph at lines 1437--1438
 \T2A/cmr/m/n/14.4 preprint arXiv:1606.05908. ^^U 2016. ^^U 23 p. ^^U URL: https://arxiv.org/abs/1606.05908
  []
 
 
-Overfull \hbox (170.6828pt too wide) in paragraph at lines 1437--1438
-\T2A/cmr/m/n/14.4 Machine Learning. ^^U 2015. ^^U Vol. 37. ^^U P. 1530^^U1538. ^^U URL: https://proceedings.mlr.press/v37/rezende15.html
- []
-
-
-Overfull \hbox (100.83656pt too wide) in paragraph at lines 1439--1440
-\T2A/cmr/m/n/14.4 Shroff // arXiv preprint arXiv:1607.00148. ^^U 2016. ^^U 11 p. ^^U URL: https://arxiv.org/abs/1607.00148
- []
-
-
-Overfull \hbox (66.3735pt too wide) in paragraph at lines 1441--1442
+Overfull \hbox (66.3735pt too wide) in paragraph at lines 1443--1444
 \T2A/cmr/m/n/14.4 URL: https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-
  []
 
 
-Overfull \hbox (16.6006pt too wide) in paragraph at lines 1443--1444
-[]\T2A/cmr/m/n/14.4 17. Paszke, A. PyTorch: An Imperative Style, High-Performance Deep Learning
+Overfull \hbox (26.01335pt too wide) in paragraph at lines 1445--1446
+\T2A/cmr/m/n/14.4 https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-
  []
 
 
-Overfull \hbox (388.00238pt too wide) in paragraph at lines 1443--1444
-\T2A/cmr/m/n/14.4 Processing Systems. ^^U 2019. ^^U Vol. 32. ^^U P. 8024^^U8035. ^^U URL: https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-
- []
-
-
-Overfull \hbox (34.88611pt too wide) in paragraph at lines 1445--1446
+Overfull \hbox (34.88611pt too wide) in paragraph at lines 1447--1448
 \T2A/cmr/m/n/14.4 2011. ^^U Vol. 12. ^^U P. 2825^^U2830. ^^U URL: https://jmlr.org/papers/v12/pedregosa11a.html
  []
 
-
-Overfull \hbox (27.60376pt too wide) in paragraph at lines 1447--1448
+[90]
+Overfull \hbox (27.60376pt too wide) in paragraph at lines 1449--1450
 \T2A/cmr/m/n/14.4 56^^U61. ^^U URL: https://conference.scipy.org/proceedings/scipy2010/pdfs/mckinney.pdf
  []
 
-[89]
-Overfull \hbox (7.28249pt too wide) in paragraph at lines 1451--1452
+
+Overfull \hbox (7.28249pt too wide) in paragraph at lines 1453--1454
 \T2A/cmr/m/n/14.4 MLflow Documentation. ^^U 2026. ^^U URL: https://mlflow.org/docs/latest/index.html
  []
 
 
-Overfull \hbox (12.89124pt too wide) in paragraph at lines 1453--1454
+Overfull \hbox (12.89124pt too wide) in paragraph at lines 1455--1456
 []\T2A/cmr/m/n/14.4 22. Docker Documentation // Docker. ^^U 2026. ^^U URL: https://docs.docker.com
  []
 
 
-Overfull \hbox (148.12523pt too wide) in paragraph at lines 1455--1456
+Overfull \hbox (148.12523pt too wide) in paragraph at lines 1457--1458
 []\T2A/cmr/m/n/14.4 23. PyTorch Documentation // PyTorch. ^^U 2026. ^^U URL: https://pytorch.org/docs/stable/index.html
  []
 
-
-Overfull \hbox (41.07628pt too wide) in paragraph at lines 1461--1462
-\T2A/cmr/m/n/14.4 / C. Zhang, S. Li, J. Cao, Y. Wen, Y. Zhang, L. Wang // arXiv preprint arXiv:2206.08316.
- []
-
-
-Overfull \hbox (33.65707pt too wide) in paragraph at lines 1461--1462
-\T2A/cmr/m/n/14.4 ^^U 2022. ^^U 28 p. ^^U URL: https://arxiv.org/abs/2206.08316 (да-та об-ра-ще-ния: 15.05.2026). 
- []
-
-
-Overfull \hbox (38.82797pt too wide) in paragraph at lines 1463--1464
-[]\T2A/cmr/m/n/14.4 27. An, J. Variational Autoencoder based Anomaly Detection using Reconstruction
- []
-
-[90]
-Overfull \hbox (136.42165pt too wide) in paragraph at lines 1479--1480
+[91]
+Overfull \hbox (136.42165pt too wide) in paragraph at lines 1481--1482
 \T2A/cmr/m/n/14.4 2672^^U2680. ^^U URL: https://proceedings.neurips.cc/paper/2014/hash/5ca3e9b122f61f8f06494c97b1afccf3-
  []
 
-[91] (text.aux)
+[92] (text.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
@@ -1501,17 +1209,17 @@ Package rerunfilecheck Info: Checksums for `text.out':
 (rerunfilecheck)             After:  3434D2886BE1239167D686E6C75263F5;35408.
  ) 
 Here is how much of TeX's memory you used:
- 16324 strings out of 467870
- 270638 string characters out of 5418355
- 671235 words of memory out of 5000000
- 44752 multiletter control sequences out of 15000+600000
+ 16322 strings out of 467870
+ 270562 string characters out of 5418355
+ 671244 words of memory out of 5000000
+ 44751 multiletter control sequences out of 15000+600000
  634782 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,79p,1738b,615s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,9n,79p,1738b,617s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\latt1440.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\labx1440.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on text.pdf (86 pages, 390518 bytes).
+Output written on text.pdf (87 pages, 391568 bytes).
 PDF statistics:
- 820 PDF objects out of 1000 (max. 8388607)
- 244 named destinations out of 1000 (max. 500000)
+ 824 PDF objects out of 1000 (max. 8388607)
+ 245 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
