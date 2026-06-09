@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import logging
 
+
+
 def plot_sensor_smoothing(
         df_raw, 
         df_smoothed, 
@@ -57,9 +59,15 @@ def plot_sensor_smoothing(
     plt.show()
 
 
-def plot_sensor_stress_testing(array_clean, array_stressed, group_number=1, feature_idx=6, feature_name="sensor measurement 2", save_path=None):
+def plot_sensor_stress_testing(
+        array_clean, 
+        array_stressed, 
+        group_number=1, 
+        feature_idx=6, 
+        feature_name="sensor measurement 2", 
+        save_path=None):
     """
-    Абсолютно защищенная версия. Использует маску чистых данных для обоих массивов.
+    Отрисовывает графиг зашумления данных
     """
     if hasattr(array_clean, 'values'): array_clean = array_clean.values
     if hasattr(array_stressed, 'values'): array_stressed = array_stressed.values
@@ -70,7 +78,7 @@ def plot_sensor_stress_testing(array_clean, array_stressed, group_number=1, feat
         y_clean = array_clean[window_idx, :, feature_idx]
         y_stressed = array_stressed[window_idx, :, feature_idx]
     else:
-        # === ИСПРАВЛЕНИЕ: Единая маска по чистой матрице ===
+        # === Единая маска по чистой матрице ===
         unique_engine_ids = np.unique(array_clean[:, 0])
         target_normalized_id = unique_engine_ids[window_idx]
         
@@ -96,23 +104,46 @@ def plot_sensor_stress_testing(array_clean, array_stressed, group_number=1, feat
     y_stressed = y_stressed[:min_len]
     cycles = np.arange(1, min_len + 1)
 
-    # --- Код отрисовки Matplotlib остаётся без изменений ---
     plt.figure(figsize=(15, 6))
-    plt.plot(cycles, y_clean, color='royalblue', linewidth=2.0, label='Чистый сигнал', zorder=2)
-    plt.plot(cycles, y_stressed, color='crimson', linewidth=1.2, linestyle='--', alpha=0.8, label='Зашумленный сигнал', zorder=3)
+    plt.plot(
+        cycles, 
+        y_clean, 
+        color='royalblue', 
+        linewidth=2.0,
+        label='Чистый сигнал', 
+        zorder=2)
+        
+    plt.scatter(
+        cycles, 
+        y_clean, 
+        color='royalblue', 
+        # alpha=0.5,
+        s=10, 
+        zorder=2)
+    
+    plt.plot(
+        cycles, 
+        y_stressed, 
+        color='darkgray', 
+        linewidth=1.2, 
+        linestyle='--', 
+        alpha=0.8,
+        label='Зашумленный сигнал', 
+        zorder=3)
     
     zero_mask = y_stressed == 0.0
     if np.any(zero_mask):
-        plt.scatter(cycles[zero_mask], y_stressed[zero_mask], color='black', marker='x', s=50, linewidths=2.0, label='Пропуск (0.0)', zorder=4)
-    plt.scatter(cycles[~zero_mask], y_stressed[~zero_mask], color='crimson', alpha=0.5, s=10, zorder=3)
+        plt.scatter(cycles[zero_mask], y_stressed[zero_mask], color='black', marker='x', s=30, linewidths=2.0, label='Пропуск (0.0)', zorder=4)
+    plt.scatter(cycles[~zero_mask], y_stressed[~zero_mask], color='darkgray', alpha=0.5, s=10, zorder=3)
 
-    plt.title(f"Анализ дефектов сигнала | Двигатель №{group_number} | {feature_name}", fontsize=14, fontweight='bold')
+    plt.title(f"Визуализация искуственного зашумленя сигнала | {feature_name}", fontsize=14, fontweight='bold')
     plt.xlabel("Порядковый номер цикла", fontsize=12)
     plt.ylabel("Нормализованное значение", fontsize=12)
     plt.grid(True, linestyle=':', alpha=0.6)
     plt.legend(loc='lower left', fontsize=11)
     
     plt.tight_layout()
+
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.show()

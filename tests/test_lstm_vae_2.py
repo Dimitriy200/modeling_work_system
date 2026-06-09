@@ -58,7 +58,7 @@ metrics = ExperimentMetric()
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG = os.path.join(PATH_IMG, "lstm_vae")
+PATH_IMG_LSTM = os.path.join(PATH_IMG, "lstm_vae")
 SAVE_MODEL = True              # Сохранение модели в файл
 MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
@@ -176,22 +176,22 @@ df_noiseing = {
     "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
 
     # NOISE - БЕЛЫЙ ШУМ
-    "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
-    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
-    "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
+    "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
+    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
+    "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
 
-    "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
-    "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
-    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.2),
+    "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
+    "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
+    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
 
     # BOTH - ВСЕ ВИДЫ ШУМА ВМЕСТЕ
-    "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1),
-    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1),
-    "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1),
+    "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
 
-    "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1),
-    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1),
-    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both", noise_level=0.2, drop_rate=0.1)
+    "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1)
 }
 # logging.inаo()
 
@@ -202,22 +202,24 @@ plot_sensor_stress_testing(
     array_clean=df_scaled['Train_norm'],
     array_stressed=df_noiseing["Train_norm_drop"],
     feature_name="sensor measurement 2",
-    group_number=1,
-    # save_path=os.path.join(PATH_IMG, "proc_data", "plot_stressed.png")
+    group_number=2,
+    save_path=os.path.join(PATH_IMG, "proc_data", "plot_stressed_drop.png")
 )
 
 plot_sensor_stress_testing(
     array_clean=df_scaled['Train_norm'],
     array_stressed=df_noiseing["Train_norm_noise"],
     feature_name = "sensor measurement 2",
-    group_number=1
+    group_number=2,
+    save_path=os.path.join(PATH_IMG, "proc_data", "plot_stressed_noise.png")
 )
 
 plot_sensor_stress_testing(
     array_clean=df_scaled['Train_norm'],
     array_stressed=df_noiseing["Train_norm_both"],
     feature_name = "sensor measurement 2",
-    group_number=1
+    group_number=2,
+    save_path=os.path.join(PATH_IMG, "proc_data", "plot_stressed_both.png")
 )
 
 
@@ -227,10 +229,14 @@ plot_sensor_stress_testing(
 logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
 # Без сглаживания
-df_norm_scaled_sec = {
-#     "Train": processor.create_sequences(df_scaled_norm["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Val": processor.create_sequences(df_scaled_norm["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+df_sequences = {
+    "Scaled_Train_norm": processor.create_sequences(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
+    "Scaled_Val_norm": processor.create_sequences(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
+    "Scaled_Test_norm": processor.create_sequences(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS),
+
+    "Scaled_Train_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
+    "Scaled_Test_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
+    "Scaled_Val_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
 # }
 
 # df_anom_scaled_sec = {
