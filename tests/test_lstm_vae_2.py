@@ -156,8 +156,8 @@ df_scaled = {
     "Test_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS),
 
     "Train_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
-    "Test_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
-    "Val_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+    "Val_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
+    "Test_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
 }
 logging.info(f"Std of features: {df_scaled['Train_norm'].std().mean():.4f}")
 
@@ -172,8 +172,8 @@ df_noiseing = {
     "Test_norm_drop": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
 
     "Train_anom_drop": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
+    "Val_anom_drop": processor.apply_stress_to_data(df_scaled['Val_anom'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
     "Test_anom_drop": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
-    "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="drop", drop_rate=0.1),
 
     # NOISE - БЕЛЫЙ ШУМ
     "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
@@ -181,8 +181,8 @@ df_noiseing = {
     "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
 
     "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
+    "Val_anom_noise": processor.apply_stress_to_data(df_scaled['Val_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
     "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
-    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise", noise_level=0.1),
 
     # BOTH - ВСЕ ВИДЫ ШУМА ВМЕСТЕ
     "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
@@ -190,8 +190,8 @@ df_noiseing = {
     "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
 
     "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1)
+    "Val_anom_both": processor.apply_stress_to_data(df_scaled['Val_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1)
 }
 # logging.inаo()
 
@@ -230,148 +230,182 @@ logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
 # Без сглаживания
 df_sequences = {
-    "Scaled_Train_norm": processor.create_sequences(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
-    "Scaled_Val_norm": processor.create_sequences(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
-    "Scaled_Test_norm": processor.create_sequences(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS),
+    # ЧИСТЫЕ - ДЛЯ ОБУЧЕНИЯ
+    "Scaled_Train_norm": processor.create_sequences(df_scaled["Train_norm"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Scaled_Val_norm": processor.create_sequences(df_scaled["Val_norm"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Scaled_Test_norm": processor.create_sequences(df_scaled["Test_norm"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
 
-    "Scaled_Train_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
-    "Scaled_Test_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
-    "Scaled_Val_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
-# }
+    "Scaled_Train_anom": processor.create_sequences(df_scaled["Train_anom"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Scaled_Val_anom": processor.create_sequences(df_scaled["Val_anom"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Scaled_Test_anom": processor.create_sequences(df_scaled["Test_anom"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
 
-# df_anom_scaled_sec = {
-#     "Train": processor.create_sequences(df_scaled_anom["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Val": processor.create_sequences(df_scaled_anom["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Test": processor.create_sequences(df_scaled_anom["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
-# }
-# logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
-# logging.info(f"df_anom_scaled_sec: {df_anom_scaled_sec['Train'].shape}")
+    # ЗАШУМЛЕННЫЕ - ДЛЯ ИНФЕРЕНСА
+    # ПРОПУСКИ
+    "Train_norm_drop": processor.create_sequences(df_noiseing["Train_norm_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_norm_drop": processor.create_sequences(df_noiseing["Val_norm_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_norm_drop": processor.create_sequences(df_noiseing["Test_norm_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
 
-# # Со сглаживанием
-# df_norm_scaled_sec_smoothing = {
-#     "Train": processor.create_sequences(X_scaled_norm_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Val": processor.create_sequences(X_scaled_norm_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
-# }
+    "Train_anom_drop": processor.create_sequences(df_noiseing["Train_anom_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_anom_drop": processor.create_sequences(df_noiseing["Val_anom_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_anom_drop": processor.create_sequences(df_noiseing["Test_anom_drop"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
 
-# df_anom_scaled_sec_smoothing = {
-#     "Train": processor.create_sequences(X_scaled_anom_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Val": processor.create_sequences(X_scaled_anom_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-#     "Test": processor.create_sequences(X_scaled_anom_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+    # БЕЛЫЙ ШУМ
+    "Train_norm_noise": processor.create_sequences(df_noiseing["Train_norm_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_norm_noise": processor.create_sequences(df_noiseing["Val_norm_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_norm_noise": processor.create_sequences(df_noiseing["Test_norm_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+
+    "Train_anom_noise": processor.create_sequences(df_noiseing["Train_anom_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_anom_noise": processor.create_sequences(df_noiseing["Val_anom_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_anom_noise": processor.create_sequences(df_noiseing["Test_anom_noise"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+
+    # BМЕСТЕ
+    "Train_norm_both": processor.create_sequences(df_noiseing["Train_norm_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_norm_both": processor.create_sequences(df_noiseing["Val_norm_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_norm_both": processor.create_sequences(df_noiseing["Test_norm_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+
+    "Train_anom_both": processor.create_sequences(df_noiseing["Train_anom_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Val_anom_both": processor.create_sequences(df_noiseing["Val_anom_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+    "Test_anom_both": processor.create_sequences(df_noiseing["Test_anom_both"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
 }
-logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
-logging.info(f"df_anom_scaled_sec_smoothing: {df_anom_scaled_sec_smoothing['Train'].shape}")
 
-logging.info(f"df_norm_scaled_sec['Train']  is: {type(df_norm_scaled_sec['Train'])}")
+logging.info(f"df_sequences: {df_sequences['Scaled_Train_norm'].shape}")
 
 
 # ------------------------------
 # Выделяем первую часть окна - прошлое.
 # ------------------------------
-df_norm_scaled_seq_past = {
-    "Train": df_norm_scaled_sec["Train"][:, :PAST_STEPS],
-    "Val": df_norm_scaled_sec["Val"][:, :PAST_STEPS],
-    "Test": df_norm_scaled_sec["Test"][:, :PAST_STEPS]
+df_sequences_past = {
+    # ЧИСТЫЕ - ДЛЯ ОБУЧЕНИЯ
+    "Scaled_Train_norm":    df_sequences["Scaled_Train_norm"][:, :PAST_STEPS],
+    "Scaled_Val_norm":      df_sequences["Scaled_Val_norm"][:, :PAST_STEPS],
+    "Scaled_Test_norm":     df_sequences["Scaled_Test_norm"][:, :PAST_STEPS],
+
+    "Scaled_Train_anom":    df_sequences["Scaled_Train_anom"][:, :PAST_STEPS],
+    "Scaled_Val_anom":      df_sequences["Scaled_Val_anom"][:, :PAST_STEPS],
+    "Scaled_Test_anom":     df_sequences["Scaled_Test_anom"][:, :PAST_STEPS],
+    
+
+    # ЗАШУМЛЕННЫЕ - ДЛЯ ИНФЕРЕНСА
+    # ПРОПУСКИ
+    "Train_norm_drop":      df_sequences["Train_norm_drop"][:, :PAST_STEPS],
+    "Val_norm_drop":        df_sequences["Val_norm_drop"][:, :PAST_STEPS],
+    "Test_norm_drop":       df_sequences["Test_norm_drop"][:, :PAST_STEPS],
+
+    "Train_anom_drop":      df_sequences["Train_anom_drop"][:, :PAST_STEPS],
+    "Val_anom_drop":        df_sequences["Val_anom_drop"][:, :PAST_STEPS],
+    "Test_anom_drop":       df_sequences["Test_anom_drop"][:, :PAST_STEPS],
+
+    # БЕЛЫЙ ШУМ
+    "Train_norm_noise":     df_sequences["Train_norm_noise"][:, :PAST_STEPS],
+    "Val_norm_noise":       df_sequences["Val_norm_noise"][:, :PAST_STEPS],
+    "Test_norm_noise":      df_sequences["Test_norm_noise"][:, :PAST_STEPS],
+
+    "Train_anom_noise":     df_sequences["Train_anom_noise"][:, :PAST_STEPS],
+    "Val_anom_noise":       df_sequences["Val_anom_noise"][:, :PAST_STEPS],
+    "Test_anom_noise":      df_sequences["Test_anom_noise"][:, :PAST_STEPS],
+
+    # BМЕСТЕ
+    "Train_norm_both":      df_sequences["Train_norm_both"][:, :PAST_STEPS],
+    "Val_norm_both":        df_sequences["Val_norm_both"][:, :PAST_STEPS],
+    "Test_norm_both":       df_sequences["Test_norm_both"][:, :PAST_STEPS],
+
+    "Train_anom_both":      df_sequences["Train_anom_both"][:, :PAST_STEPS],
+    "Val_anom_both":        df_sequences["Val_anom_both"][:, :PAST_STEPS],
+    "Test_anom_both":       df_sequences["Test_anom_both"][:, :PAST_STEPS]
 }
-
-df_anom_scaled_seq_past = {
-    "Train": df_anom_scaled_sec["Train"][:, :PAST_STEPS],
-    "Val": df_anom_scaled_sec["Val"][:, :PAST_STEPS],
-    "Test": df_anom_scaled_sec["Test"][:, :PAST_STEPS]
-}
-
-logging.info(f"df_norm_scaled_seq_past['Train']:  {df_norm_scaled_seq_past['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_past['Train']:  {df_anom_scaled_seq_past['Train'].shape}")
-
-df_norm_scaled_seq_smoothong_past = {
-    "Train": df_norm_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
-    "Val": df_norm_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
-    "Test": df_norm_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
-}
-
-df_anom_scaled_seq_smoothong_past = {
-    "Train": df_anom_scaled_sec_smoothing["Train"][:, :PAST_STEPS],
-    "Val": df_anom_scaled_sec_smoothing["Val"][:, :PAST_STEPS],
-    "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
-}
-
-logging.info(f"df_norm_scaled_seq_past_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
-
+logging.info(f"df_norm_scaled_seq_past['Train']:  {df_sequences_past['Scaled_Train_norm'].shape}")
+logging.info(f"df_anom_scaled_seq_past['Train']:  {df_sequences_past['Train_norm_both'].shape}")
 
 # ------------------------------
 #  Будущее - для итеративного инференса
 # ------------------------------
-df_norm_scaled_seq_future = {
-    "Train": df_norm_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Val": df_norm_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Test": df_norm_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
+df_sequences_future = {
+    # ЧИСТЫЕ - ДЛЯ ОБУЧЕНИЯ
+    "Scaled_Train_norm":    df_sequences["Scaled_Train_norm"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Scaled_Val_norm":      df_sequences["Scaled_Val_norm"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Scaled_Test_norm":     df_sequences["Scaled_Test_norm"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    "Scaled_Train_anom":    df_sequences["Scaled_Train_anom"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Scaled_Val_anom":      df_sequences["Scaled_Val_anom"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Scaled_Test_anom":     df_sequences["Scaled_Test_anom"][:, int(PAST_STEPS)][:, np.newaxis],
+    
+
+    # ЗАШУМЛЕННЫЕ - ДЛЯ ИНФЕРЕНСА
+    # ПРОПУСКИ
+    "Train_norm_drop":      df_sequences["Train_norm_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_norm_drop":        df_sequences["Val_norm_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_norm_drop":       df_sequences["Test_norm_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    "Train_anom_drop":      df_sequences["Train_anom_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_anom_drop":        df_sequences["Val_anom_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_anom_drop":       df_sequences["Test_anom_drop"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    # БЕЛЫЙ ШУМ
+    "Train_norm_noise":     df_sequences["Train_norm_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_norm_noise":       df_sequences["Val_norm_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_norm_noise":      df_sequences["Test_norm_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    "Train_anom_noise":     df_sequences["Train_anom_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_anom_noise":       df_sequences["Val_anom_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_anom_noise":      df_sequences["Test_anom_noise"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    # BМЕСТЕ
+    "Train_norm_both":      df_sequences["Train_norm_both"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_norm_both":        df_sequences["Val_norm_both"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_norm_both":       df_sequences["Test_norm_both"][:, int(PAST_STEPS)][:, np.newaxis],
+
+    "Train_anom_both":      df_sequences["Train_anom_both"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Val_anom_both":        df_sequences["Val_anom_both"][:, int(PAST_STEPS)][:, np.newaxis],
+    "Test_anom_both":       df_sequences["Test_anom_both"][:, int(PAST_STEPS)][:, np.newaxis]
 }
+logging.info(f"df_norm_scaled_seq_past['Train']:  {df_sequences_future['Scaled_Train_norm'].shape}")
+logging.info(f"df_anom_scaled_seq_past['Train']:  {df_sequences_future['Train_norm_both'].shape}")
 
-df_anom_scaled_seq_future = {
-    "Train": df_anom_scaled_sec["Train"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Val": df_anom_scaled_sec["Val"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Test": df_anom_scaled_sec["Test"][:, int(PAST_STEPS)][:, np.newaxis]
-}
-
-logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
-
-df_norm_scaled_seq_past_smoothong_future = {
-    "Train": df_norm_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Val": df_norm_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Test": df_norm_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
-}
-
-df_anom_scaled_seq_smoothong_future = {
-    "Train": df_anom_scaled_sec_smoothing["Train"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Val": df_anom_scaled_sec_smoothing["Val"][:, int(PAST_STEPS)][:, np.newaxis],
-    "Test": df_anom_scaled_sec_smoothing["Test"][:, int(PAST_STEPS)][:, np.newaxis]
-}
-
-logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
-
-# y_train_sec_future = X_train_seq[:, int(PAST_STEPS)][:, np.newaxis]
-# y_val_sec_future = X_val_seq[:, int(PAST_STEPS)][:, np.newaxis]
-# y_test_sec_future = X_test_seq[:, int(PAST_STEPS)][:, np.newaxis]
-
-# logging.info(f"y_train_sec_future:  {y_train_sec_future.shape}")
-# logging.info(f"y_val_sec_future:  {y_val_sec_future.shape}")
-# logging.info(f"y_test_sec_future:  {y_test_sec_future.shape}")
 
 # ------------------------------
 # Берем середину окна. Это должно уменьшить разброс при генерации в начале будущего.
 # ------------------------------
-df_norm_scaled_seq_ls = {
-    "Train": df_norm_scaled_sec["Train"][:, PAST_STEPS - 1],
-    "Val": df_norm_scaled_sec["Val"][:, PAST_STEPS - 1],
-    "Test": df_norm_scaled_sec["Test"][:, PAST_STEPS - 1]
+df_sequences_ls = {
+    # ЧИСТЫЕ - ДЛЯ ОБУЧЕНИЯ
+    "Scaled_Train_norm":    df_sequences["Scaled_Train_norm"][:, PAST_STEPS - 1],
+    "Scaled_Val_norm":      df_sequences["Scaled_Val_norm"][:, PAST_STEPS - 1],
+    "Scaled_Test_norm":     df_sequences["Scaled_Test_norm"][:, PAST_STEPS - 1],
+
+    "Scaled_Train_anom":    df_sequences["Scaled_Train_anom"][:, PAST_STEPS - 1],
+    "Scaled_Val_anom":      df_sequences["Scaled_Val_anom"][:, PAST_STEPS - 1],
+    "Scaled_Test_anom":     df_sequences["Scaled_Test_anom"][:, PAST_STEPS - 1],
+    
+
+    # ЗАШУМЛЕННЫЕ - ДЛЯ ИНФЕРЕНСА
+    # ПРОПУСКИ
+    "Train_norm_drop":      df_sequences["Train_norm_drop"][:, PAST_STEPS - 1],
+    "Val_norm_drop":        df_sequences["Val_norm_drop"][:, PAST_STEPS - 1],
+    "Test_norm_drop":       df_sequences["Test_norm_drop"][:, PAST_STEPS - 1],
+
+    "Train_anom_drop":      df_sequences["Train_anom_drop"][:, PAST_STEPS - 1],
+    "Val_anom_drop":        df_sequences["Val_anom_drop"][:, PAST_STEPS - 1],
+    "Test_anom_drop":       df_sequences["Test_anom_drop"][:, PAST_STEPS - 1],
+
+    # БЕЛЫЙ ШУМ
+    "Train_norm_noise":     df_sequences["Train_norm_noise"][:, PAST_STEPS - 1],
+    "Val_norm_noise":       df_sequences["Val_norm_noise"][:, PAST_STEPS - 1],
+    "Test_norm_noise":      df_sequences["Test_norm_noise"][:, PAST_STEPS - 1],
+
+    "Train_anom_noise":     df_sequences["Train_anom_noise"][:, PAST_STEPS - 1],
+    "Val_anom_noise":       df_sequences["Val_anom_noise"][:, PAST_STEPS - 1],
+    "Test_anom_noise":      df_sequences["Test_anom_noise"][:, PAST_STEPS - 1],
+
+    # BМЕСТЕ
+    "Train_norm_both":      df_sequences["Train_norm_both"][:, PAST_STEPS - 1],
+    "Val_norm_both":        df_sequences["Val_norm_both"][:, PAST_STEPS - 1],
+    "Test_norm_both":       df_sequences["Test_norm_both"][:, PAST_STEPS - 1],
+
+    "Train_anom_both":      df_sequences["Train_anom_both"][:, PAST_STEPS - 1],
+    "Val_anom_both":        df_sequences["Val_anom_both"][:, PAST_STEPS - 1],
+    "Test_anom_both":       df_sequences["Test_anom_both"][:, PAST_STEPS - 1]
 }
-
-df_anom_scaled_seq_ls = {
-    "Train": df_anom_scaled_sec["Train"][:, PAST_STEPS - 1],
-    "Val": df_anom_scaled_sec["Val"][:, PAST_STEPS - 1],
-    "Test": df_anom_scaled_sec["Test"][:, PAST_STEPS - 1]
-}
-
-logging.info(f"df_norm_scaled_seq_future['Train']:  {df_norm_scaled_seq_future['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_future['Train']:  {df_anom_scaled_seq_future['Train'].shape}")
-
-df_norm_scaled_seq_past_smoothong_ls = {
-    "Train": df_norm_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
-    "Val": df_norm_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
-    "Test": df_norm_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
-}
-
-df_anom_scaled_seq_smoothong_ls = {
-    "Train": df_anom_scaled_sec_smoothing["Train"][:, PAST_STEPS - 1],
-    "Val": df_anom_scaled_sec_smoothing["Val"][:, PAST_STEPS - 1],
-    "Test": df_anom_scaled_sec_smoothing["Test"][:, PAST_STEPS - 1]
-}
-
-logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scaled_seq_past_smoothong_future['Train'].shape}")
-logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past['Train']:  {df_sequences_ls['Scaled_Train_norm'].shape}")
+logging.info(f"df_anom_scaled_seq_past['Train']:  {df_sequences_ls['Train_norm_both'].shape}")
 
 
 # ======================================================
