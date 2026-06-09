@@ -45,11 +45,20 @@ from modeling_work_system.config import (
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
+from modeling_work_system.metrics.metrics_vae import evaluate_model_noise_robustness_advanced
 
 
 # ======================================================
 # ПОДГОТОВКА ПЕРЕМЕННЫХ
 # ======================================================
+logging.basicConfig(
+    level = logging.INFO,
+    filename =  Path(PATH_LOG).joinpath('logs_lstm_vae.log'),
+    filemode = "w",
+    format = "%(asctime)s %(levelname)s [%(filename)s:%(lineno)d] %(message)s"
+)
+
+
 loader = LoadDataTrain()
 scaler_manager = Scaler()
 processor = Preprocess()
@@ -425,7 +434,7 @@ if LOAD_MODEL:
     model.eval()
 else:
     history = model.fit(
-        x_train=torch.FloatTensor(df_sequences_past["Scaled_Train_norm"]),          # Чистое (незашумленное) прошлое
+        x_train=torch.FloatTensor(df_sequences_past["Train_norm_both"]),          # Чистое (незашумленное) прошлое Scaled_Train_norm
         last_steps_train=torch.FloatTensor(df_sequences_ls["Scaled_Train_norm"]),   # Чистая (незашумленная) граница
         y_train=torch.FloatTensor(df_sequences_future["Scaled_Train_norm"]),        # Чистое (незашумленное) будущее
         epochs=EPOCHS,
@@ -655,3 +664,39 @@ plot_recursive_lifetime_forecast(
 # ======================================================
 # IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
 # ======================================================
+
+# ------------------------------
+# НА НОРМЕ БЕЗ ЗАШУМЛЕНИЯ
+# ------------------------------
+evaluate_model_noise_robustness_advanced(
+    model=model,
+    X_stressed_past=df_sequences_past["Scaled_Test_norm"],
+    Y_clean_full=df_sequences["Scaled_Test_norm"]
+)
+
+# ------------------------------
+# НА НОРМЕ С ЗАШУМЛЕНИЕМ (ПРОПУСКИ)
+# ------------------------------
+evaluate_model_noise_robustness_advanced(
+    model=model,
+    X_stressed_past=df_sequences_past["Test_norm_drop"],
+    Y_clean_full=df_sequences["Scaled_Test_norm"]
+)
+
+# ------------------------------
+# НА НОРМЕ С ЗАШУМЛЕНИЕМ (БЕЛЫЙ ШУМ)
+# ------------------------------
+evaluate_model_noise_robustness_advanced(
+    model=model,
+    X_stressed_past=df_sequences_past["Test_norm_noise"],
+    Y_clean_full=df_sequences["Scaled_Test_norm"]
+)
+
+# ------------------------------
+# НА НОРМЕ С ЗАШУМЛЕНИЕМ (БЕЛЫЙ ШУМ + ПРОПУСКИ)
+# ------------------------------
+evaluate_model_noise_robustness_advanced(
+    model=model,
+    X_stressed_past=df_sequences_past["Test_norm_both"],
+    Y_clean_full=df_sequences["Scaled_Test_norm"]
+)

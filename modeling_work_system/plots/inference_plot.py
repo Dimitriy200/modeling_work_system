@@ -124,7 +124,7 @@ def plot_inference_multi_features(
 
         # Если данные зашумлены - рисуем чистые значения
         if y_clean is not None:
-            ax.plot(cycles, y_clean[:, f_idx], color='darkgray', linewidth=2.0, linestyle='--', label='Чистые данные', zorder=1)
+            ax.plot(cycles, y_clean[:, f_idx], color='forestgreen', marker='o', linewidth=1.5, linestyle='-', label='Чистые данные', zorder=1)
             logging.info(f"Clean ground truth data = {y_clean[:, f_idx]}")
         
         # 2. Рисуем веер альтернативных сценариев VAE (розовые линии)
