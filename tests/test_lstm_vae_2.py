@@ -17,8 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.vrnn_vae import TimeSeriesVRNN
-
+from modeling_work_system.models.VAE.lstm_vae import TimeSeriesIterativeVAE
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -28,9 +27,9 @@ from modeling_work_system.metrics.generation_metrics import (
     run_generation_comparison_table,
     log_generation_report
 )
-from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features, plot_consecutive_windows
-from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing
-
+from modeling_work_system.plots.inference_plot import plot_inference_results, plot_inference_multi_features
+from modeling_work_system.plots.pocess_data_plots import plot_sensor_smoothing, plot_sensor_stress_testing
+from modeling_work_system.plots.generation_plots import plot_recursive_lifetime_forecast
 
 from modeling_work_system.metrics.statistic_compare import paired_t_test
 
@@ -40,12 +39,11 @@ from modeling_work_system.config import (
     PATH_SKALERS,
     PATH_IMG,
 
-    PATH_TRAIN_RAW
+    PATH_TRAIN_RAW,
 )
 
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
-
 
 
 # ======================================================
@@ -56,12 +54,13 @@ scaler_manager = Scaler()
 processor = Preprocess()
 metrics = ExperimentMetric()
 
+
 # ------------------------------
 # ОБЩИЕ ПАРАМЕТРЫ
 # ------------------------------
-PATH_IMG = os.path.join(PATH_IMG, "vrnn_vae")
-SAVE_MODEL = False              # Сохранение модели в файл
-MODEL_NAME = "vrnn_vae"         # Имя модели при сохранении
+PATH_IMG = os.path.join(PATH_IMG, "lstm_vae")
+SAVE_MODEL = True              # Сохранение модели в файл
+MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
 
 # ------------------------------
@@ -69,6 +68,10 @@ MODEL_VERSION = "v2"
 # ------------------------------
 N_LAST_ANOM = 50
 QUANTILE = 0.90
+# STRESS = # ["noise", "drop", "both"]Тип применяемого искажения:
+# #                                       - 'noise' : Только белый нормальный шум.
+# #                                       - 'drop'  : Только пропуск значений (отключение датчиков).
+# #                                       - 'both'  : Все вместе (и шум, и пропуски).
 
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН
@@ -77,15 +80,16 @@ SEQ_LENGTH = 10                 # Длина окна
 STRIDE = 1                      # Шаг сдвига.
 PAST_STEPS = 5                  # Первая часть окна - прошлое
 
+# ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
+# ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 150
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
-
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.1 #0.3
+KL_MINIMUM = 0.1 #0.15
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
@@ -94,7 +98,7 @@ FEATURE_DIM = 26
 LATENT_DIM = 4
 N_LAYERS = 2
 
-model = TimeSeriesVRNN(
+model = TimeSeriesIterativeVAE(
     feature_dim = FEATURE_DIM,
     latent_dim = LATENT_DIM
 )
@@ -126,9 +130,6 @@ print("=" * 50)
 # ======================================================
 # I ПОДГОТОВКА ДАННЫХ
 # ======================================================
-# ======================================================
-# I ПОДГОТОВКА ДАННЫХ
-# ======================================================
 raw_df = loader.data_raw_load(PATH_TRAIN_RAW)
 no_null_df = processor.delete_nan(raw_df)
 
@@ -147,84 +148,76 @@ FEATURE_COLS = raw_df.columns.tolist()
 std_scaler = scaler_manager.fit_scaler(splited_dataframes["X_train_norm"], FEATURE_COLS) # Обучаем Scaller только на нормальных и TRAIN данных !!!
 
 # ------------------------------
-# Проводим сглаживание 
-# ------------------------------
-df_norm_smoothing = {
-    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_norm'], sensor_columns=FEATURE_COLS),
-    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_norm'], sensor_columns=FEATURE_COLS),
-    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_norm'], sensor_columns=FEATURE_COLS)
-}
-
-df_anom_smoothing = {
-    "Train": processor.smoothing_by_engine(df=splited_dataframes['X_train_anom'], sensor_columns=FEATURE_COLS),
-    "Val": processor.smoothing_by_engine(df=splited_dataframes['X_val_anom'], sensor_columns=FEATURE_COLS),
-    "Test": processor.smoothing_by_engine(df=splited_dataframes['X_test_anom'], sensor_columns=FEATURE_COLS)
-}
-
-# Смотрим результат сглаживания
-CHECK_SENSORS = ["sensor measurement 2", "sensor measurement 7", "sensor measurement 8", "sensor measurement 9",]
-for sensor in CHECK_SENSORS:
-    plot_sensor_smoothing(
-        df_raw=splited_dataframes['X_train_norm'],
-        df_smoothed=df_norm_smoothing["Train"],
-        engine_id = 1,
-        feature_name = sensor,
-        save_path=os.path.join(PATH_IMG, "smoothing data.png")
-    )
-
-for sensor in CHECK_SENSORS:
-    plot_sensor_smoothing(
-        df_raw=splited_dataframes['X_train_anom'],
-        df_smoothed=df_anom_smoothing["Train"],
-        engine_id = 1,
-        feature_name = sensor,
-        save_path=os.path.join(PATH_IMG, "smoothing data.png")
-    )
-
-
-# ------------------------------
 # Применение Scaler
 # ------------------------------
-# Без сглаживания
-X_scaled_norm = {
-    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
-    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
-    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS) 
+df_scaled = {
+    "Train_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_norm'], FEATURE_COLS),
+    "Val_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_norm'], FEATURE_COLS),
+    "Test_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_norm'], FEATURE_COLS),
+
+    "Train_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
+    "Test_anom": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
+    "Val_norm": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
 }
+logging.info(f"Std of features: {df_scaled['Train_norm'].std().mean():.4f}")
 
-X_scaled_anom = {
-    "Train": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_train_anom'], FEATURE_COLS),
-    "Test": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_val_anom'], FEATURE_COLS),
-    "Val": scaler_manager.apply_scaler(std_scaler, splited_dataframes['X_test_anom'], FEATURE_COLS)
+
+# ------------------------------
+# Добавление шума
+# ------------------------------
+df_noiseing = {
+    # DROP - ПРОПУСК
+    "Train_norm_drop": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="drop"),
+    "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="drop"),
+    "Test_norm_drop": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="drop"),
+
+    "Train_anom_drop": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="drop"),
+    "Test_anom_drop": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="drop"),
+    "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="drop"),
+
+    # NOISE - БЕЛЫЙ ШУМ
+    "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="noise"),
+    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise"),
+    "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="noise"),
+
+    "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="noise"),
+    "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="noise"),
+    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="noise"),
+
+    # BOTH - ВСЕ ВИДЫ ШУМА ВМЕСТЕ
+    "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], FEATURE_COLS, noise_type="both"),
+    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both"),
+    "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], FEATURE_COLS, noise_type="both"),
+
+    "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], FEATURE_COLS, noise_type="both"),
+    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], FEATURE_COLS, noise_type="both"),
+    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], FEATURE_COLS, noise_type="both")
 }
-logging.info(f"Mean of features: {X_scaled_norm['Train'].mean().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_norm['Test'].std().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_norm['Val'].std().mean():.4f}")
+# logging.inаo()
 
-logging.info(f"Mean of features: {X_scaled_anom['Train'].mean().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_anom['Test'].std().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_anom['Val'].std().mean():.4f}")
+# СМОТРИМ РЕЗУЛЬТАТЫ ДОБАВЛЕНИЯ ШУМА
+# CHECK_SENSORS = ["sensor measurement 2", "sensor measurement 7", "sensor measurement 8", "sensor measurement 9",]
+# for sensor in CHECK_SENSORS:
+plot_sensor_stress_testing(
+    array_clean=df_scaled['Val_norm'],
+    array_stressed=df_noiseing["Val_norm_drop"],
+    feature_name="sensor measurement 2",
+    group_number=1
+)
 
-# Со сглаживанием
-X_scaled_norm_smoothing = {
-    "Train": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Train'], FEATURE_COLS),
-    "Val": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Val'], FEATURE_COLS),
-    "Test": scaler_manager.apply_scaler(std_scaler, df_norm_smoothing['Test'], FEATURE_COLS) 
-}
+plot_sensor_stress_testing(
+    array_clean=df_scaled['Train_norm'],
+    array_stressed=df_noiseing["Train_norm_noise"],
+    feature_name = "sensor measurement 2",
+    group_number=1
+)
 
-X_scaled_anom_smoothing = {
-    "Train": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Train'], FEATURE_COLS),
-    "Test": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Val'], FEATURE_COLS),
-    "Val": scaler_manager.apply_scaler(std_scaler, df_anom_smoothing['Test'], FEATURE_COLS)
-}
-
-logging.info(f"Mean of features: {X_scaled_norm_smoothing['Train'].mean().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_norm_smoothing['Test'].std().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_norm_smoothing['Val'].std().mean():.4f}")
-
-logging.info(f"Mean of features: {X_scaled_anom_smoothing['Train'].mean().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_anom_smoothing['Test'].std().mean():.4f}")
-logging.info(f"Std of features: {X_scaled_anom_smoothing['Val'].std().mean():.4f}")
+plot_sensor_stress_testing(
+    array_clean=df_scaled['Train_norm'],
+    array_stressed=df_noiseing["Train_norm_both"],
+    feature_name = "sensor measurement 2",
+    group_number=1
+)
 
 
 # ------------------------------
@@ -234,30 +227,30 @@ logging.info("=== FINAL DATA FORMS FOR VAE ===")
 
 # Без сглаживания
 df_norm_scaled_sec = {
-    "Train": processor.create_sequences(X_scaled_norm["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Val": processor.create_sequences(X_scaled_norm["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
-}
+#     "Train": processor.create_sequences(df_scaled_norm["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Val": processor.create_sequences(df_scaled_norm["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# }
 
-df_anom_scaled_sec = {
-    "Train": processor.create_sequences(X_scaled_anom["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Val": processor.create_sequences(X_scaled_anom["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Test": processor.create_sequences(X_scaled_anom["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
-}
-logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
-logging.info(f"df_anom_scaled_sec: {df_anom_scaled_sec['Train'].shape}")
+# df_anom_scaled_sec = {
+#     "Train": processor.create_sequences(df_scaled_anom["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Val": processor.create_sequences(df_scaled_anom["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Test": processor.create_sequences(df_scaled_anom["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# }
+# logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
+# logging.info(f"df_anom_scaled_sec: {df_anom_scaled_sec['Train'].shape}")
 
-# Со сглаживанием
-df_norm_scaled_sec_smoothing = {
-    "Train": processor.create_sequences(X_scaled_norm_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Val": processor.create_sequences(X_scaled_norm_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
-}
+# # Со сглаживанием
+# df_norm_scaled_sec_smoothing = {
+#     "Train": processor.create_sequences(X_scaled_norm_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Val": processor.create_sequences(X_scaled_norm_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Test": processor.create_sequences(X_scaled_norm_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# }
 
-df_anom_scaled_sec_smoothing = {
-    "Train": processor.create_sequences(X_scaled_anom_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Val": processor.create_sequences(X_scaled_anom_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
-    "Test": processor.create_sequences(X_scaled_anom_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
+# df_anom_scaled_sec_smoothing = {
+#     "Train": processor.create_sequences(X_scaled_anom_smoothing["Train"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Val": processor.create_sequences(X_scaled_anom_smoothing["Val"], SEQ_LENGTH, STRIDE, FEATURE_COLS),
+#     "Test": processor.create_sequences(X_scaled_anom_smoothing["Test"], SEQ_LENGTH, STRIDE, FEATURE_COLS)
 }
 logging.info(f"df_norm_scaled_sec: {df_norm_scaled_sec['Train'].shape}")
 logging.info(f"df_anom_scaled_sec_smoothing: {df_anom_scaled_sec_smoothing['Train'].shape}")
@@ -295,7 +288,7 @@ df_anom_scaled_seq_smoothong_past = {
     "Test": df_anom_scaled_sec_smoothing["Test"][:, :PAST_STEPS]
 }
 
-logging.info(f"df_norm_scaled_seq_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
+logging.info(f"df_norm_scaled_seq_past_smoothong_past['Train']:  {df_norm_scaled_seq_smoothong_past['Train'].shape}")
 logging.info(f"df_anom_scaled_seq_smoothong_past['Train']:  {df_anom_scaled_seq_smoothong_past['Train'].shape}")
 
 
@@ -374,38 +367,28 @@ logging.info(f"df_norm_scaled_seq_past_smoothong_future['Train']:  {df_norm_scal
 logging.info(f"df_anom_scaled_seq_smoothong_future['Train']:  {df_anom_scaled_seq_smoothong_future['Train'].shape}")
 
 
-
-# X_train_seq_ls = X_train_seq[:, PAST_STEPS - 1]
-# X_val_seq_ls = X_val_seq[:, PAST_STEPS - 1]
-# X_test_seq_ls = X_test_seq[:, PAST_STEPS - 1]
-
-# logging.info(f"X_train_seq_ls:  {X_train_seq_ls.shape}")
-# logging.info(f"X_val_seq_ls:  {X_val_seq_ls.shape}")
-# logging.info(f"X_test_seq_ls:  {X_test_seq_ls.shape}")
-
-# N_FEATURES = X_train_seq.shape[2]
-
-
 # ======================================================
 # II ОБУЧЕНИЕ МОДЕЛЕЙ
 # ======================================================
 history = model.fit(
-    x_full_window=torch.FloatTensor(df_norm_scaled_sec["Train"]),
+    x_train=torch.FloatTensor(df_anom_scaled_seq_past["Train"]),                    # Сырое прошлое
+    last_steps_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_ls["Train"]),   # Сглаженная граница
+    y_train=torch.FloatTensor(df_anom_scaled_seq_smoothong_future["Train"]),        # Сглаженное будущее
     epochs=EPOCHS,
     lr=LEARNING_RATE,
     tau=KL_MINIMUM,
     verbose_step = 5,
 )
 
-plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, 'plot_histore_vrnn_vae_v1.png'))
+plot_vae_training_history(history, save_path=os.path.join(PATH_IMG, f"plot_history_{MODEL_NAME}_{MODEL_VERSION}.png"))
 
+# ------------------------------
 # Сохраняем модель
-torch.save(model.state_dict(), os.path.join(PATH_MODELS, "model_vrnn_vae_v2_2.pth"))
+# ------------------------------
+if SAVE_MODEL:
+    torch.save(model.state_dict(), os.path.join(PATH_MODELS, f"model_{MODEL_NAME}_{MODEL_VERSION}.pth"))
 
 
-# ======================================================
-# III ИНФЕРЕНС
-# ======================================================
 # ======================================================
 # III ИНФЕРЕНС
 # ======================================================
@@ -443,6 +426,17 @@ for engine_idx in range(num_engines_to_plot):
         feature_names=["Sensor 2", "Sensor 9"],
         save_path=current_save_path
     )
+
+ENGINE_N = 0
+plot_recursive_lifetime_forecast(
+    model=model,
+    start_x_past=torch.FloatTensor(df_norm_scaled_seq_past["Val"][ENGINE_N]),
+    full_engine_df=df_scaled_norm["Val"],
+    feature_idx=13,
+    feature_name = "sensor measurement 9",
+    num_scenarios = 3,
+    save_path = os.path.join(PATH_IMG, f"plot_inference_full_time_engine({ENGINE_N})_{MODEL_NAME}_{MODEL_VERSION}_norm.png")
+)
 
 
 # ------------------------------

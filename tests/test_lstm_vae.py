@@ -45,6 +45,7 @@ from modeling_work_system.config import (
 from modeling_work_system.plots.history_vae_2 import plot_vae_training_history
 from modeling_work_system.plots.vae_evaluation import evaluate_and_plot_vae
 
+
 # ======================================================
 # ПОДГОТОВКА ПЕРЕМЕННЫХ
 # ======================================================
@@ -67,6 +68,10 @@ MODEL_VERSION = "v2"
 # ------------------------------
 N_LAST_ANOM = 50
 QUANTILE = 0.90
+# STRESS = # ["noise", "drop", "both"]Тип применяемого искажения:
+# #                                       - 'noise' : Только белый нормальный шум.
+# #                                       - 'drop'  : Только пропуск значений (отключение датчиков).
+# #                                       - 'both'  : Все вместе (и шум, и пропуски).
 
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН

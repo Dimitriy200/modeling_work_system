@@ -4,6 +4,8 @@ import torch.nn.functional as F
 import numpy as np
 import logging
 
+
+
 class TimeSeriesVRNN(nn.Module):
     def __init__(self, feature_dim, latent_dim, hidden_dim=64):
         super(TimeSeriesVRNN, self).__init__()

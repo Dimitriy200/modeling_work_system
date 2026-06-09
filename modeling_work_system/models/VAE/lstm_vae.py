@@ -4,6 +4,10 @@ import torch.nn.functional as F
 import numpy as np
 import logging
 
+
+
+# Пересмотреть дектодер - нужен слой lstm
+
 class TimeSeriesIterativeVAE(nn.Module):
     def __init__(self, feature_dim, latent_dim, hidden_dim=64):
         super(TimeSeriesIterativeVAE, self).__init__()
