@@ -114,6 +114,12 @@
 % НАСТРОЙКА РИСУНКОВ
 \usepackage[russian]{babel}
 \usepackage{caption}
+\captionsetup[table]{
+    singlelinecheck=off,
+    justification=raggedleft,
+    labelsep=colon,
+    skip=6pt
+}
 
 % Переопределение формата: Рисунок 1 - Название
 \DeclareCaptionLabelSeparator{hyphen}{ --- }
