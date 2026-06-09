@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  10 JUN 2026 01:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  10 JUN 2026 01:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -737,31 +737,31 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [10] [11] [12] [13] [14] [15] [16
 
-]
+] [17] [18] [19]
 
 Package caption Warning: Unused \captionsetup[figure] on input line 123.
 See the caption package documentation for explanation.
 
-[17] (pz_v2.aux)
+[20] (pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `pz_v2.out' has not changed.
-(rerunfilecheck)             Checksum: DAB8BF75E6A4A9A5F2D17039D1A58E5F;6797.
+(rerunfilecheck)             Checksum: FCDFE59B90B812FCBAE0A58F3049EB15;7333.
  ) 
 Here is how much of TeX's memory you used:
- 15626 strings out of 467870
- 250888 string characters out of 5418355
- 673986 words of memory out of 5000000
- 44253 multiletter control sequences out of 15000+600000
- 632051 words of font info for 55 fonts, out of 8000000 for 9000
+ 15658 strings out of 467870
+ 251313 string characters out of 5418355
+ 677986 words of memory out of 5000000
+ 44262 multiletter control sequences out of 15000+600000
+ 634528 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,79p,1388b,607s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (12 pages, 168572 bytes).
+ 75i,10n,79p,1388b,617s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on pz_v2.pdf (15 pages, 217025 bytes).
 PDF statistics:
- 341 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
- 133 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 436 PDF objects out of 1000 (max. 8388607)
+ 62 named destinations out of 1000 (max. 500000)
+ 149 words of extra memory for PDF output out of 10000 (max. 10000000)
 
