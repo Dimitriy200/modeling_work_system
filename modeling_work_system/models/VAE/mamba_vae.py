@@ -3,13 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import logging
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
-import logging
-
+import math
 
 class TimeSeriesMambaSSM(nn.Module):
     def __init__(self, feature_dim, latent_dim, state_dim=32):
@@ -25,17 +19,16 @@ class TimeSeriesMambaSSM(nn.Module):
         
         self.z_to_state = nn.Linear(latent_dim, state_dim, bias=False)
         
-        # Базовая матрица переходов A
+        # Стабильная отрицательная инициализация матрицы A
         A = torch.arange(1, state_dim + 1, dtype=torch.float32).repeat(state_dim, 1)
         self.A_log = nn.Parameter(torch.log(A)) 
         
-        # Проекция контекста
-        self.x_proj = nn.Linear(state_dim + latent_dim, state_dim * 3, bias=False)
-        self.dt_proj = nn.Linear(state_dim + latent_dim, state_dim, bias=True)
+        # ИСПРАВЛЕНИЕ 1: Селективность строится СТРОГО на базе латентного входа latent_dim (Z)
+        # Убираем state_dim из входной размерности, чтобы ликвидировать петлю обратной связи!
+        self.x_proj = nn.Linear(latent_dim, state_dim * 3, bias=False)
+        self.dt_proj = nn.Linear(latent_dim, state_dim, bias=True)
         nn.init.constant_(self.dt_proj.bias, -2.0)
         
-        # ИСПРАВЛЕНИЕ: Эмиссионная сеть теперь один в один повторяет логику DeepSSM (LSTM)
-        # Она должна принимать скрытое состояние износа и переводить в дельту 26 датчиков
         self.emission_net = nn.Sequential(
             nn.Linear(state_dim, state_dim),
             nn.ReLU(),
@@ -56,12 +49,11 @@ class TimeSeriesMambaSSM(nn.Module):
         return mu + eps * std
 
     def _mamba_step(self, h_prev, z_t):
-        ctx = torch.cat([h_prev, z_t], dim=-1)
-        
-        selective_params = self.x_proj(ctx)
+        # ИСПРАВЛЕНИЕ 2: Генерируем матрицы СТРОГО из текущего z_t
+        selective_params = self.x_proj(z_t)
         dt_raw, B_mat, C_mat = torch.split(selective_params, [self.state_dim, self.state_dim, self.state_dim], dim=-1)
         
-        dt = F.softplus(self.dt_proj(ctx) + dt_raw)
+        dt = F.softplus(self.dt_proj(z_t) + dt_raw)
         dt = torch.clamp(dt, min=1e-3, max=0.5)
         
         A = -torch.exp(torch.clamp(self.A_log, min=-5.0, max=5.0)) 
@@ -70,12 +62,13 @@ class TimeSeriesMambaSSM(nn.Module):
         z_projected = self.z_to_state(z_t)
         B_t_z_t = (dt.unsqueeze(-1) * B_mat.unsqueeze(1)) * z_projected.unsqueeze(-1)
         
-        # Эволюция физики состояния
+        # Рекуррентное обновление h_next устойчиво, так как А_t гарантированно затухает (< 1)
         h_next = torch.bmm(A_t, h_prev.unsqueeze(-1)).squeeze(-1) + B_t_z_t.sum(dim=-1)
+        
+        # Жесткий зажим для абсолютной стабилизации авторегрессии на длинных горизонтах
         h_next = torch.clamp(h_next, min=-5.0, max=5.0)
         
-        # На выходе получаем строго отфильтрованный вектор состояния
-        y_mamba = h_next * torch.tanh(C_mat)
+        y_mamba = F.relu(h_next * C_mat)
         return h_next, y_mamba
 
     def forward(self, x_past, last_known_step):
@@ -85,55 +78,46 @@ class TimeSeriesMambaSSM(nn.Module):
         h_t = F.relu(self.fc_init_state(h_last))
         h_next, y_mamba = self._mamba_step(h_t, z)
         
-        # Вычисляем дельту
         delta = self.emission_net(y_mamba)
-        
-        # Прогноз = Точка опоры + Дельта из пространства состояний (строго как в LSTM)
         y_pred = last_known_step.unsqueeze(1) + delta.unsqueeze(1)
         return y_pred, mu, log_var
 
     def inference(self, x_past, horizon=10, num_scenarios=5):
-        """
-        Математически выверенный инференс. Полностью синхронизирован с методом forward.
-        """
         self.eval()
         scenarios = []
+        past_len = int(x_past.size(1) / 2)
         
         with torch.no_grad():
             for s in range(num_scenarios):
                 current_history = x_past.clone()
                 generated_window = []
                 
-                # 1. Заполняем первые 5 известных шагов
-                for t in range(5):
+                for t in range(past_len):
                     generated_window.append(x_past[:, t].unsqueeze(1))
                 
-                # 2. Инициализируем контекст из истории
                 mu, log_var, h_last = self.encode(x_past)
                 h_t = F.relu(self.fc_init_state(h_last))
                 
-                # 3. Генерация шагов 6-10 (и далее до горизонта)
-                for t in range(5, horizon):
+                # Точка опоры адаптирована под динамический past_len
+                base_anchor_step = current_history[:, past_len - 1]
+                
+                for t in range(past_len, horizon):
                     last_step = current_history[:, -1]
                     z_t = self.reparameterize(mu, log_var)
                     
-                    # Получаем корректно отфильтрованный вектор выхода y_mamba
                     h_t, y_mamba = self._mamba_step(h_t, z_t)
-                    
-                    # ПЕРЕДАЕМ В EMISSION СТРОГО ВЕКТОР Y_MAMBA, А НЕ МАТРИЦУ H_T!
                     delta = self.emission_net(y_mamba)
                     
-                    # Прогноз = Точка опоры + Выученное смещение
-                    y_next_pred = last_step.unsqueeze(1) + delta.unsqueeze(1)
+                    # Ограничиваем дельту, чтобы зафиксировать рамки датчиков
+                    delta = torch.clamp(delta, min=-1.5, max=1.5)
                     
-                    # Мягкая страховка от вычислительных аномалий
+                    y_next_pred = base_anchor_step.unsqueeze(1) + delta.unsqueeze(1)
+                    
                     if torch.isnan(y_next_pred).any() or torch.isinf(y_next_pred).any():
                         y_next_pred = torch.nan_to_num(y_next_pred, nan=0.0)
                         y_next_pred = torch.where(y_next_pred == 0.0, last_step.unsqueeze(1), y_next_pred)
                     
                     generated_window.append(y_next_pred)
-                    
-                    # Обновляем окно истории для следующей итерации авторегрессии
                     current_history = torch.cat([current_history[:, 1:], y_next_pred], dim=1)
                     
                 scenario_tensor = torch.cat(generated_window, dim=1)
@@ -156,8 +140,20 @@ class TimeSeriesMambaSSM(nn.Module):
             kl_elementwise = -0.5 * (1 + log_var - mu.pow(2) - log_var.exp())
             kl_loss_constrained = torch.clamp(kl_elementwise.mean(dim=0), min=tau).sum()
             
-            start_annealing = int(epochs * 0.4) 
-            kl_weight = 0.0 if epoch < start_annealing else min(0.05, (epoch - start_annealing) / (epochs - start_annealing))
+            # --- ОКОНЧАТЕЛЬНЫЙ КОСИНУСНЫЙ ОТЖИГ КL ---
+            start_annealing = int(epochs * 0.4)  
+            annealing_duration = 120             
+            max_kl_weight = 0.03                 
+
+            if epoch < start_annealing:
+                kl_weight = 0.0
+            elif epoch < (start_annealing + annealing_duration):
+                progress = (epoch - start_annealing) / annealing_duration
+                cosine_fade = 0.5 * (1.0 - math.cos(progress * math.pi))
+                kl_weight = cosine_fade * max_kl_weight
+            else:
+                kl_weight = max_kl_weight
+            # ----------------------------------------
             
             total_loss = mse_loss + (kl_weight * kl_loss_constrained)
             total_loss.backward()

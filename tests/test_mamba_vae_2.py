@@ -89,7 +89,7 @@ PAST_STEPS = 10                  # Первая часть окна - прошл
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 1000
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
