@@ -97,7 +97,8 @@ class TimeSeriesMambaSSM(nn.Module):
         h_next = torch.clamp(h_next, min=-3.0, max=3.0)
         
         # ЗАЩИТА 2: Ограничиваем масштаб вектора, идущего в emission_net
-        y_mamba = torch.tanh(h_next) * torch.tanh(C_mat)
+        # y_mamba = torch.tanh(h_next) * torch.tanh(C_mat)
+        y_mamba = torch.tanh(h_next) * C_mat
         return h_next, y_mamba
 
 
@@ -141,9 +142,10 @@ class TimeSeriesMambaSSM(nn.Module):
                     # delta = torch.clamp(delta, min=-0.1, max=0.1) # добавление
                     
                     # Ограничиваем дельту, чтобы зафиксировать рамки датчиков
-                    delta = torch.clamp(delta, min=-0.05, max=0.05)
+                    delta = torch.clamp(delta, min=-0.07, max=0.07)
                     
-                    y_next_pred = base_anchor_step.unsqueeze(1) + delta.unsqueeze(1)
+                    # y_next_pred = base_anchor_step.unsqueeze(1) + delta.unsqueeze(1)
+                    y_next_pred = last_step.unsqueeze(1) + (delta * 0.1).unsqueeze(1)
                     
                     if torch.isnan(y_next_pred).any() or torch.isinf(y_next_pred).any():
                         y_next_pred = torch.nan_to_num(y_next_pred, nan=0.0)
