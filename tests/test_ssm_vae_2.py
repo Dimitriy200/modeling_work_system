@@ -75,10 +75,9 @@ MODEL_VERSION = "v2"
 # ------------------------------
 N_LAST_ANOM = 50
 QUANTILE = 0.90
-# STRESS = # ["noise", "drop", "both"]Тип применяемого искажения:
-# #                                       - 'noise' : Только белый нормальный шум.
-# #                                       - 'drop'  : Только пропуск значений (отключение датчиков).
-# #                                       - 'both'  : Все вместе (и шум, и пропуски).
+
+DROP_RATE = 0.1
+NOISE_RATE=0.1
 
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН
@@ -91,7 +90,7 @@ PAST_STEPS = 10                  # Первая часть окна - прошл
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 5
+EPOCHS = 300
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
@@ -178,31 +177,31 @@ logging.info(f"Std of features: {df_scaled['Train_norm'].std().mean():.4f}")
 # ------------------------------
 df_noiseing = {
     # DROP - ПРОПУСК
-    "Train_norm_drop": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
-    "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
-    "Test_norm_drop": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
+    "Train_norm_drop": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
+    "Val_norm_drop": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
+    "Test_norm_drop": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
 
-    "Train_anom_drop": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
-    "Val_anom_drop": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
-    "Test_anom_drop": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=0.1),
+    "Train_anom_drop": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
+    "Val_anom_drop": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
+    "Test_anom_drop": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="drop", drop_rate=DROP_RATE),
 
     # NOISE - БЕЛЫЙ ШУМ
-    "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
-    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
-    "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
+    "Train_norm_noise": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
+    "Val_norm_noise": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
+    "Test_norm_noise": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
 
-    "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
-    "Val_anom_noise": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
-    "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=0.1),
+    "Train_anom_noise": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
+    "Val_anom_noise": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
+    "Test_anom_noise": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="noise", noise_level=NOISE_RATE),
 
     # BOTH - ВСЕ ВИДЫ ШУМА ВМЕСТЕ
-    "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
+    "Train_norm_both": processor.apply_stress_to_data(df_scaled['Train_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE),
+    "Val_norm_both": processor.apply_stress_to_data(df_scaled['Val_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE),
+    "Test_norm_both": processor.apply_stress_to_data(df_scaled['Test_norm'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE),
 
-    "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Val_anom_both": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1),
-    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=0.1, drop_rate=0.1)
+    "Train_anom_both": processor.apply_stress_to_data(df_scaled['Train_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE),
+    "Val_anom_both": processor.apply_stress_to_data(df_scaled['Val_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE),
+    "Test_anom_both": processor.apply_stress_to_data(df_scaled['Test_anom'], SENSOES_SETTINGS_COLS, noise_type="both", noise_level=NOISE_RATE, drop_rate=DROP_RATE)
 }
 logging.info(f"df_noiseing[Train_norm_noise] = {df_noiseing["Train_norm_noise"]}")
 
@@ -428,7 +427,7 @@ if LOAD_MODEL:
     model.eval()
 else:
     history = model.fit(
-        x_train=torch.FloatTensor(df_sequences_past["Train_norm_both"]),          # Чистое (незашумленное) прошлое Scaled_Train_norm
+        x_train=torch.FloatTensor(df_sequences_past["Scaled_Train_norm"]),          # Чистое (незашумленное) прошлое Scaled_Train_norm
         last_steps_train=torch.FloatTensor(df_sequences_ls["Scaled_Train_norm"]),   # Чистая (незашумленная) граница
         y_train=torch.FloatTensor(df_sequences_future["Scaled_Train_norm"]),        # Чистое (незашумленное) будущее
         epochs=EPOCHS,
@@ -658,7 +657,8 @@ plot_recursive_lifetime_forecast(
 # ======================================================
 # IV СБОР СТАТИСТИЧЕССКИХ ДАННЫХ
 # ======================================================
-
+logging.info(f"DROP_RATE = {DROP_RATE}")
+logging.info(f"NOISE_RATE = {NOISE_RATE}")
 # ------------------------------
 # НА НОРМЕ БЕЗ ЗАШУМЛЕНИЯ
 # ------------------------------
