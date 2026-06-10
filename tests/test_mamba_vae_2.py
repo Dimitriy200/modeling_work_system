@@ -63,7 +63,7 @@ metrics = ExperimentMetric()
 PATH_IMG_MAMBA = os.path.join(PATH_IMG, "mamba_vae")
 PATH_TRAIN_PROCESSED_MAMBA = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
 
-SAVE_MODEL = False              # Сохранение модели в файл
+SAVE_MODEL = True              # Сохранение модели в файл
 LOAD_MODEL = False
 
 MODEL_NAME = "mamba_vae"         # Имя модели при сохранении
@@ -89,7 +89,7 @@ PAST_STEPS = 10                  # Первая часть окна - прошл
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 1000
+EPOCHS = 500
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5

@@ -68,7 +68,8 @@ class TimeSeriesMambaSSM(nn.Module):
         # Жесткий зажим для абсолютной стабилизации авторегрессии на длинных горизонтах
         h_next = torch.clamp(h_next, min=-5.0, max=5.0)
         
-        y_mamba = F.relu(h_next * C_mat)
+        # y_mamba = F.relu(h_next * C_mat)
+        y_mamba = h_next * C_mat 
         return h_next, y_mamba
 
     def forward(self, x_past, last_known_step):
@@ -79,6 +80,7 @@ class TimeSeriesMambaSSM(nn.Module):
         h_next, y_mamba = self._mamba_step(h_t, z)
         
         delta = self.emission_net(y_mamba)
+        delta = torch.clamp(delta, min=-0.1, max=0.1) 
         y_pred = last_known_step.unsqueeze(1) + delta.unsqueeze(1)
         return y_pred, mu, log_var
 
@@ -107,6 +109,7 @@ class TimeSeriesMambaSSM(nn.Module):
                     
                     h_t, y_mamba = self._mamba_step(h_t, z_t)
                     delta = self.emission_net(y_mamba)
+                    delta = torch.clamp(delta, min=-0.1, max=0.1) # добавление
                     
                     # Ограничиваем дельту, чтобы зафиксировать рамки датчиков
                     delta = torch.clamp(delta, min=-1.5, max=1.5)
