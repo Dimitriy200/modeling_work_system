@@ -69,7 +69,7 @@ class TimeSeriesIterativeVAE(nn.Module):
         # Каждый сценарий будет массивом формы (batch_size, 10, feature_dim)
         scenarios = []
 
-        past_len = int(x_past.size(1) / 2) 
+        past_len = int(x_past.size(1) / 2)
         
         with torch.no_grad():
             for s in range(num_scenarios):
