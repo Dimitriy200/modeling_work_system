@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  10 JUN 2026 13:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  10 JUN 2026 20:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -725,43 +725,93 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
  (D:\ProgrammFiles\MikTex\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-))
+) [6
+
+{C:/Users/user/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}])
 \tf@toc=\write4
 \openout4 = `pz_v2.toc'.
 
- [6
+ [7] [8
 
-{C:/Users/user/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [7
+] [9] [10
 
-] [8] [9
+] [11] [12] [13] [14] [15] [16] [17
 
-] [10] [11] [12] [13] [14] [15] [16
+] [18] [19] [20] [21] [22
 
-] [17] [18] [19]
+]
+<../img/architecture.jpg, id=329, 788.9475pt x 501.875pt>
+File: ../img/architecture.jpg Graphic file (type jpg)
+<use ../img/architecture.jpg>
+Package pdftex.def Info: ../img/architecture.jpg  used on input line 434.
+(pdftex.def)             Requested size: 483.69687pt x 307.69786pt.
 
-Package caption Warning: Unused \captionsetup[figure] on input line 123.
-See the caption package documentation for explanation.
+Overfull \hbox (2.48868pt too wide) in paragraph at lines 445--446
+[]\T2A/cmr/m/n/14.4 Программный ком-плекс ре-а-ли-зо-ван в ви-де от-кры-той Python-библиотеки
+ []
 
-[20] (pz_v2.aux)
+[23]
+<../img/package_structure.png, id=334, 2165.08875pt x 848.16875pt>
+File: ../img/package_structure.png Graphic file (type png)
+<use ../img/package_structure.png>
+Package pdftex.def Info: ../img/package_structure.png  used on input line 449.
+(pdftex.def)             Requested size: 483.69687pt x 189.48376pt.
+ [24 <../img/architecture.jpg>] [25 <../img/package_structure.png>] [26]
+<../img/classes_ replace______.png, id=351, 1449.415pt x 502.87875pt>
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 492.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [27] [28 <../img/classes_ replace______.png>]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 516.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [29]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 540.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [30] [31]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 566.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [32] [33] [34]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 594.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [35]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 626.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [36] [37]
+File: ../img/classes_ replace______.png Graphic file (type png)
+<use ../img/classes_ replace______.png>
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 647.
+(pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
+ [38] [39] [40] [41] [42] [43] [44] [45] (pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `pz_v2.out' has not changed.
-(rerunfilecheck)             Checksum: FCDFE59B90B812FCBAE0A58F3049EB15;7333.
+(rerunfilecheck)             Checksum: 197B828D3F0FBCF080494B0FE7FBB981;15886.
  ) 
 Here is how much of TeX's memory you used:
- 15658 strings out of 467871
- 247302 string characters out of 5428480
- 677986 words of memory out of 5000000
- 44261 multiletter control sequences out of 15000+600000
+ 15787 strings out of 467871
+ 249423 string characters out of 5428480
+ 681051 words of memory out of 5000000
+ 44326 multiletter control sequences out of 15000+600000
  634528 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,1388b,617s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1739b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmex10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (15 pages, 217025 bytes).
+Output written on pz_v2.pdf (40 pages, 537657 bytes).
 PDF statistics:
- 436 PDF objects out of 1000 (max. 8388607)
- 62 named destinations out of 1000 (max. 500000)
- 149 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 701 PDF objects out of 1000 (max. 8388607)
+ 126 named destinations out of 1000 (max. 500000)
+ 356 words of extra memory for PDF output out of 10000 (max. 10000000)
 
