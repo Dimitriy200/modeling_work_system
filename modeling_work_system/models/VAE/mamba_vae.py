@@ -111,7 +111,8 @@ class TimeSeriesMambaSSM(nn.Module):
         
         delta = self.emission_net(y_mamba)
         # delta = torch.clamp(delta, min=-0.1, max=0.1) 
-        y_pred = last_known_step.unsqueeze(1) + delta.unsqueeze(1)
+        # y_pred = last_known_step.unsqueeze(1) + delta.unsqueeze(1)
+        y_pred = last_known_step.unsqueeze(1) + (delta * 0.05).unsqueeze(1)
         return y_pred, mu, log_var
 
     def inference(self, x_past, horizon=10, num_scenarios=5):
@@ -139,13 +140,9 @@ class TimeSeriesMambaSSM(nn.Module):
                     
                     h_t, y_mamba = self._mamba_step(h_t, z_t)
                     delta = self.emission_net(y_mamba)
-                    # delta = torch.clamp(delta, min=-0.1, max=0.1) # добавление
                     
-                    # Ограничиваем дельту, чтобы зафиксировать рамки датчиков
-                    delta = torch.clamp(delta, min=-0.07, max=0.07)
-                    
-                    # y_next_pred = base_anchor_step.unsqueeze(1) + delta.unsqueeze(1)
-                    y_next_pred = last_step.unsqueeze(1) + (delta * 0.1).unsqueeze(1)
+                    # Жестко подавляем дрейф тренда через микро-шаг
+                    y_next_pred = base_anchor_step.unsqueeze(1) + (delta * 0.01).unsqueeze(1)
                     
                     if torch.isnan(y_next_pred).any() or torch.isinf(y_next_pred).any():
                         y_next_pred = torch.nan_to_num(y_next_pred, nan=0.0)

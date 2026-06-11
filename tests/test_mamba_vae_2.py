@@ -17,7 +17,7 @@ from modeling_work_system.pipeline.pipeline_fit import PipelineFit
 from modeling_work_system.preprocessing.scaler import Scaler
 from modeling_work_system.preprocessing.load_data_first import LoadDataTrain
 
-from modeling_work_system.models.VAE.mamba_vae import TimeSeriesMambaSSM
+from modeling_work_system.models.VAE.mamba_vae_2 import TimeSeriesMambaSSM
 
 from modeling_work_system.mlflowservice.mlflowservice import Mlflowservice
 from modeling_work_system.metrics.metrics import ExperimentMetric
@@ -83,13 +83,13 @@ NOISE_RATE=0.1
 # ------------------------------
 SEQ_LENGTH = 20                 # Длина окна 
 STRIDE = 1                      # Шаг сдвига.
-PAST_STEPS = 10                  # Первая часть окна - прошлое
+PAST_STEPS = 10                 # Первая часть окна - прошлое
 
 # ------------------------------
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 1500
+EPOCHS = 500
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5

@@ -65,7 +65,7 @@ PATH_IMG_LSTM = os.path.join(PATH_IMG, "lstm_vae")
 PATH_TRAIN_PROCESSED_LSTM = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
 
 SAVE_MODEL = False              # Сохранение модели в файл
-LOAD_MODEL = False
+LOAD_MODEL = True
 
 MODEL_NAME = "lstm_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
@@ -76,8 +76,8 @@ MODEL_VERSION = "v2"
 N_LAST_ANOM = 50
 QUANTILE = 0.90
 
-DROP_RATE = 0.1
-NOISE_RATE=0.1
+DROP_RATE = 0.7
+NOISE_RATE=0.7
 
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН
@@ -90,7 +90,7 @@ PAST_STEPS = 10                  # Первая часть окна - прошл
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 500
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5

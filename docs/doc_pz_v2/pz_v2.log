@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  10 JUN 2026 20:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  11 JUN 2026 16:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -739,79 +739,79 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ] [17] [18] [19] [20] [21
 
-] [22]
-<../img/architecture.jpg, id=358, 788.9475pt x 501.875pt>
+] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39] [40]
+<../img/architecture.jpg, id=463, 788.9475pt x 501.875pt>
 File: ../img/architecture.jpg Graphic file (type jpg)
 <use ../img/architecture.jpg>
-Package pdftex.def Info: ../img/architecture.jpg  used on input line 453.
+Package pdftex.def Info: ../img/architecture.jpg  used on input line 697.
 (pdftex.def)             Requested size: 483.69687pt x 307.69786pt.
 
-Overfull \hbox (2.48868pt too wide) in paragraph at lines 464--465
+Overfull \hbox (2.48868pt too wide) in paragraph at lines 708--709
 []\T2A/cmr/m/n/14.4 Программный ком-плекс ре-а-ли-зо-ван в ви-де от-кры-той Python-библиотеки
  []
 
-[23 <../img/architecture.jpg>]
-<../img/package_structure.png, id=365, 2165.08875pt x 848.16875pt>
+[41]
+<../img/package_structure.png, id=469, 2165.08875pt x 848.16875pt>
 File: ../img/package_structure.png Graphic file (type png)
 <use ../img/package_structure.png>
-Package pdftex.def Info: ../img/package_structure.png  used on input line 468.
+Package pdftex.def Info: ../img/package_structure.png  used on input line 712.
 (pdftex.def)             Requested size: 483.69687pt x 189.48376pt.
- [24 <../img/package_structure.png>] [25] [26]
-<../img/classes_ replace______.png, id=380, 1449.415pt x 502.87875pt>
+ [42 <../img/architecture.jpg>] [43 <../img/package_structure.png>] [44]
+<../img/classes_ replace______.png, id=485, 1449.415pt x 502.87875pt>
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 511.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 755.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [27 <../img/classes_ replace______.png>]
+ [45] [46 <../img/classes_ replace______.png>]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 535.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 779.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [28] [29]
+ [47]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 559.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 803.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [30] [31]
+ [48] [49]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 585.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 829.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [32] [33]
+ [50] [51]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 613.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 857.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [34] [35]
+ [52] [53]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 645.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 889.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [36]
+ [54] [55]
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 666.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 910.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [37] [38] [39] [40] [41] [42] [43] [44] (pz_v2.aux)
+ [56] [57] [58] [59] [60] [61] [62] (pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `pz_v2.out' has not changed.
-(rerunfilecheck)             Checksum: 8BB84E43E238C2E10C67190DA696E78A;18081.
+(rerunfilecheck)             Checksum: D638D02EE7A380EBDB4EF04A850DC26B;19129.
  ) 
 Here is how much of TeX's memory you used:
- 15797 strings out of 467871
- 249552 string characters out of 5428480
- 681051 words of memory out of 5000000
- 44331 multiletter control sequences out of 15000+600000
+ 15849 strings out of 467871
+ 250260 string characters out of 5428480
+ 681239 words of memory out of 5000000
+ 44343 multiletter control sequences out of 15000+600000
  634528 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,1739b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1879b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmex10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (40 pages, 542860 bytes).
+Output written on pz_v2.pdf (58 pages, 614202 bytes).
 PDF statistics:
- 727 PDF objects out of 1000 (max. 8388607)
- 131 named destinations out of 1000 (max. 500000)
- 396 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 845 PDF objects out of 1000 (max. 8388607)
+ 171 named destinations out of 1000 (max. 500000)
+ 412 words of extra memory for PDF output out of 10000 (max. 10000000)
 
