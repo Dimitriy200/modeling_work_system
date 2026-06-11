@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  11 JUN 2026 16:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.10)  11 JUN 2026 17:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -740,7 +740,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ] [17] [18] [19] [20] [21
 
 ] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39] [40]
-<../img/architecture.jpg, id=463, 788.9475pt x 501.875pt>
+<../img/architecture.jpg, id=473, 788.9475pt x 501.875pt>
 File: ../img/architecture.jpg Graphic file (type jpg)
 <use ../img/architecture.jpg>
 Package pdftex.def Info: ../img/architecture.jpg  used on input line 697.
@@ -751,13 +751,13 @@ Overfull \hbox (2.48868pt too wide) in paragraph at lines 708--709
  []
 
 [41]
-<../img/package_structure.png, id=469, 2165.08875pt x 848.16875pt>
+<../img/package_structure.png, id=479, 2165.08875pt x 848.16875pt>
 File: ../img/package_structure.png Graphic file (type png)
 <use ../img/package_structure.png>
 Package pdftex.def Info: ../img/package_structure.png  used on input line 712.
 (pdftex.def)             Requested size: 483.69687pt x 189.48376pt.
  [42 <../img/architecture.jpg>] [43 <../img/package_structure.png>] [44]
-<../img/classes_ replace______.png, id=485, 1449.415pt x 502.87875pt>
+<../img/classes_ replace______.png, id=495, 1449.415pt x 502.87875pt>
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
 Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 755.
@@ -792,26 +792,82 @@ File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
 Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 910.
 (pdftex.def)             Requested size: 483.69687pt x 167.81511pt.
- [56] [57] [58] [59] [60] [61] [62] (pz_v2.aux)
+ [56] [57] [58] [59] [60] [61] [62] [63
+
+]
+LaTeX Font Info:    Trying to load font information for T2A+cmtt on input line 1026.
+ (D:\ProgrammFiles\MikTex\tex/latex/cyrillic\t2acmtt.fd
+File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
+) [64]
+Overfull \hbox (71.32823pt too wide) in paragraph at lines 1036--1037
+\T2A/cmr/m/n/14.4 URL: https://proceedings.neurips.cc/paper/2015/hash/d7322ed717dedf1eb4e6e52a37ea7bcd-
+ []
+
+
+Overfull \hbox (9.09636pt too wide) in paragraph at lines 1046--1047
+\T2A/cmr/m/n/14.4 preprint arXiv:1606.05908. ^^U 2016. ^^U 23 p. ^^U URL: https://arxiv.org/abs/1606.05908
+ []
+
+[65]
+Overfull \hbox (66.3735pt too wide) in paragraph at lines 1052--1053
+\T2A/cmr/m/n/14.4 URL: https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-
+ []
+
+
+Overfull \hbox (26.01335pt too wide) in paragraph at lines 1054--1055
+\T2A/cmr/m/n/14.4 https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-
+ []
+
+
+Overfull \hbox (34.88611pt too wide) in paragraph at lines 1056--1057
+\T2A/cmr/m/n/14.4 2011. ^^U Vol. 12. ^^U P. 2825^^U2830. ^^U URL: https://jmlr.org/papers/v12/pedregosa11a.html
+ []
+
+
+Overfull \hbox (27.60376pt too wide) in paragraph at lines 1058--1059
+\T2A/cmr/m/n/14.4 56^^U61. ^^U URL: https://conference.scipy.org/proceedings/scipy2010/pdfs/mckinney.pdf
+ []
+
+[66]
+Overfull \hbox (7.28249pt too wide) in paragraph at lines 1062--1063
+\T2A/cmr/m/n/14.4 MLflow Documentation. ^^U 2026. ^^U URL: https://mlflow.org/docs/latest/index.html
+ []
+
+
+Overfull \hbox (12.89124pt too wide) in paragraph at lines 1064--1065
+[]\T2A/cmr/m/n/14.4 22. Docker Documentation // Docker. ^^U 2026. ^^U URL: https://docs.docker.com
+ []
+
+
+Overfull \hbox (148.12523pt too wide) in paragraph at lines 1066--1067
+[]\T2A/cmr/m/n/14.4 23. PyTorch Documentation // PyTorch. ^^U 2026. ^^U URL: https://pytorch.org/docs/stable/index.html
+ []
+
+[67]
+Overfull \hbox (136.42165pt too wide) in paragraph at lines 1090--1091
+\T2A/cmr/m/n/14.4 2672^^U2680. ^^U URL: https://proceedings.neurips.cc/paper/2014/hash/5ca3e9b122f61f8f06494c97b1afccf3-
+ []
+
+[68] (pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
 Package rerunfilecheck Info: File `pz_v2.out' has not changed.
-(rerunfilecheck)             Checksum: D638D02EE7A380EBDB4EF04A850DC26B;19129.
+(rerunfilecheck)             Checksum: F017D1022E22B2F8E316BEE8224AB1DB;19559.
  ) 
 Here is how much of TeX's memory you used:
- 15849 strings out of 467871
- 250260 string characters out of 5428480
+ 15885 strings out of 467871
+ 251079 string characters out of 5428480
  681239 words of memory out of 5000000
- 44343 multiletter control sequences out of 15000+600000
- 634528 words of font info for 58 fonts, out of 8000000 for 9000
+ 44366 multiletter control sequences out of 15000+600000
+ 634838 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,1879b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmex10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (58 pages, 614202 bytes).
+ <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\latt1440.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\user\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmex10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmmi12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr12.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmr7.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/ProgrammFiles/MikTex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on pz_v2.pdf (64 pages, 642101 bytes).
 PDF statistics:
- 845 PDF objects out of 1000 (max. 8388607)
- 171 named destinations out of 1000 (max. 500000)
- 412 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 917 PDF objects out of 1000 (max. 8388607)
+ 179 named destinations out of 1000 (max. 500000)
+ 428 words of extra memory for PDF output out of 10000 (max. 10000000)
 
