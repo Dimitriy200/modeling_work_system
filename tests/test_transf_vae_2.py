@@ -65,7 +65,7 @@ PATH_IMG_TRANSFORMER = os.path.join(PATH_IMG, "transformer_vae")
 PATH_TRAIN_PROCESSED_TRANSFORMER = os.path.join(PATH_TRAIN_PROCESSED, "experiments")
 
 SAVE_MODEL = False              # Сохранение модели в файл
-LOAD_MODEL = False
+LOAD_MODEL = True
 
 MODEL_NAME = "transformer_vae"         # Имя модели при сохранении
 MODEL_VERSION = "v2"
@@ -76,8 +76,8 @@ MODEL_VERSION = "v2"
 N_LAST_ANOM = 50
 QUANTILE = 0.90
 
-DROP_RATE = 0.1
-NOISE_RATE=0.1
+DROP_RATE = 0.3
+NOISE_RATE=0.3
 
 # ------------------------------
 # ПАРАМЕТРЫ ОКОН
@@ -90,19 +90,19 @@ PAST_STEPS = 10                  # Первая часть окна - прошл
 # ПАРАМЕТРЫ ОБУЧЕНИЯ
 # ------------------------------
 BATCH_SIZE = 32
-EPOCHS = 300
+EPOCHS = 500
 LEARNING_RATE = 0.001 #5e-5
 # WARMUP_EPOCHS = 10  # Эпохи для KL-Annealing (beta растет от 0 до 1)
 CONTEXT_LEN = 5
 FORECAST_LEN = CONTEXT_LEN
-KL_MINIMUM = 0.05 #0.15
+KL_MINIMUM = 0.1 #0.15
 
 # ------------------------------
 # ПАРАМЕТРЫ АРХИТКТУРЫ МОДЕЛИ
 # ------------------------------
-FEATURE_DIM = 26
-LATENT_DIM = 4
-N_LAYERS = 2
+FEATURE_DIM = 128
+LATENT_DIM = 26
+N_LAYERS = 1
 
 model = TimeSeriesTransformerVAE(
     feature_dim = FEATURE_DIM,
