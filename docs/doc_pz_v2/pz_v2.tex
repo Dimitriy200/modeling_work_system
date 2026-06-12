@@ -727,7 +727,7 @@ y_{mamba} = \tanh(h_{next}) \cdot C_t
 x_{pred\_future}^{(t)} = x_{past\_len} + \delta_t
 \end{equation}
 
-Симметричный жесткий зажим приращений в коридоре $[-0.05; 0.05]$ полностью купирует возникновение аномальных скачков, удерживая стохастические сценарии генерации Mamba-VAE в строгом соответствии с масштабами нормализованного телеметрического поля NASA C-MAPSS.
+Симметричный жесткий зажим приращений в коридоре $[-0.05; 0.05]$ купирует возникновение аномальных скачков, удерживая стохастические сценарии генерации Mamba-VAE в строгом соответствии с масштабами нормализованного телеметрического поля NASA C-MAPSS.
 
 \clearpage
 
@@ -1390,8 +1390,6 @@ h_{next} = \exp(- \exp(A_{log}) \cdot \Delta_t) \cdot h_{prev} + (\Delta_t \cdot
 \item Chauhan, S. Anomaly detection for multivariate time series through modeling temporal dependence of stochastic variables / S. Chauhan, L. M. Vig // Proceedings of the 21st ACM SIGKDD International Conference on Knowledge Discovery and Data Mining. – 2015. – P. 93–102. – DOI: 10.1145/2783258.2788613.
 
 \item Saxena, A. Data-Driven Prognostics Using a Kalman Filter Ensemble of Neural Network Models / A. Saxena, K. Goebel, D. Simon, N. Eklund // 2008 International Conference on Prognostics and Health Management. – 2008. – P. 1–10. – URL: \url{https://ti.arc.nasa.gov/m/profile/adeg/data/PHM08_Challenge_Data_Description.pdf} (дата обращения: 19.04.2026).
-
-
 
 \item Hochreiter, S. Long Short-Term Memory / S. Hochreiter, J. Schmidhuber // Neural Computation. – 1997. – Vol. 9, № 8. – P. 1735–1780. – DOI: 10.1162/neco.1997.9.8.1735.
 
