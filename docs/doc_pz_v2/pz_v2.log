@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.15)  17 JUN 2026 17:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.15)  17 JUN 2026 17:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1638,144 +1638,144 @@ Underfull \hbox (badness 10000) in paragraph at lines 1853--1854
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1858--1859
+Underfull \hbox (badness 10000) in paragraph at lines 1859--1860
 []\T2A/cmr/m/n/14.4 –азработанный про-грамм-ный ком-плекс ре-а-ли-зу-ет мо-дуль-ную
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1860--1861
+Underfull \hbox (badness 10000) in paragraph at lines 1861--1862
 []\T2A/cmr/m/n/14.4  лючевым ар-те-фак-том до-став-ки €в-л€-ет-с€ Python-пакет
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1860--1861
+Underfull \hbox (badness 10000) in paragraph at lines 1861--1862
 \T2A/cmr/m/n/14.4 modeling-work-system, оформ-лен-ный в со-от-вет-ствии со стан-дар-том
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1862--1863
+Underfull \hbox (badness 10000) in paragraph at lines 1863--1864
 []\T2A/cmr/m/n/14.4  онфигурационный файл pyproject.toml со-дер-жит сле-ду-ю-щие
  []
 
 [72]
-Underfull \hbox (badness 10000) in paragraph at lines 1913--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1915--1916
 []\T2A/cmr/m/n/14.4 ƒл€ эф-фек-тив-но-го функ-ци-о-ни-ро-ва-ни€ си-сте-мы мо-де-ли-ро-ва-ни€
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1913--1914
+Underfull \hbox (badness 10000) in paragraph at lines 1915--1916
 \T2A/cmr/m/n/14.4 сфор-му-ли-ро-ва-ны ми-ни-маль-ные и ре-ко-мен-ду-е-мые тре-бо-ва-ни€ к
  []
 
 [73]
-Underfull \hbox (badness 10000) in paragraph at lines 1917--1918
+Underfull \hbox (badness 10000) in paragraph at lines 1919--1920
 \T2A/cmr/m/n/14.4 ак-ти-ва-ций ре-кур-рент-ных сло-ев при об-ра-бот-ке длин-ных вре-мен-ных
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1919--1920
+Underfull \hbox (badness 10000) in paragraph at lines 1921--1922
 []\T2A/cmr/m/n/14.4 “ребовани€ к дис-ко-вой си-сте-ме вклю-ча-ют на-ли-чие быст-ро-го
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1931--1932
+[74]
+Underfull \hbox (badness 10000) in paragraph at lines 1933--1934
 \T2A/cmr/m/n/14.4 ре-а-ли-за-ци€ си-сте-мы мо-де-ли-ро-ва-ни€ со-сто-€-ни€ тех-но-ло-ги-че-ско-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1931--1932
+Underfull \hbox (badness 10000) in paragraph at lines 1933--1934
 \T2A/cmr/m/n/14.4 про-грамм-ный ком-плекс пред-став-л€-ет со-бой за-кон-чен-ное ре-ше-ние,
- []
-
-[74]
-Underfull \hbox (badness 10000) in paragraph at lines 1934--1935
-[]\T2A/cmr/m/n/14.4 —проектирована и ре-а-ли-зо-ва-на мо-дуль-на€ ар-хи-тек-ту-ра
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1934--1935
-\T2A/cmr/m/n/14.4 про-грамм-но-го ком-плек-са, ос-но-ван-на€ на прин-ци-пе раз-де-ле-ни€
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1934--1935
-\T2A/cmr/m/n/14.4 от-вет-ствен-но-сти меж-ду функ-ци-о-наль-ны-ми сло-€-ми. —лой дан-ных
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1936--1937
-\T2A/cmr/m/n/14.4 ин-фор-ма-ции. ѕа-кет src.pipeline ко-ор-ди-ни-ру-ет вы-пол-не-ние кон-вей-е-ра
+[]\T2A/cmr/m/n/14.4 —проектирована и ре-а-ли-зо-ва-на мо-дуль-на€ ар-хи-тек-ту-ра
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1936--1937
+\T2A/cmr/m/n/14.4 про-грамм-но-го ком-плек-са, ос-но-ван-на€ на прин-ци-пе раз-де-ле-ни€
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1936--1937
+\T2A/cmr/m/n/14.4 от-вет-ствен-но-сти меж-ду функ-ци-о-наль-ны-ми сло-€-ми. —лой дан-ных
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1938--1939
-\T2A/cmr/m/n/14.4 обес-пе-чи-ва€ воз-мож-ность об-рат-но-го рас-про-стра-не-ни€ ошиб-ки че-рез
+\T2A/cmr/m/n/14.4 ин-фор-ма-ции. ѕа-кет src.pipeline ко-ор-ди-ни-ру-ет вы-пол-не-ние кон-вей-е-ра
  []
 
 [75]
 Underfull \hbox (badness 10000) in paragraph at lines 1940--1941
+\T2A/cmr/m/n/14.4 обес-пе-чи-ва€ воз-мож-ность об-рат-но-го рас-про-стра-не-ни€ ошиб-ки че-рез
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1942--1943
 \T2A/cmr/m/n/14.4 ћо-дуль NASAScore при-ме-н€-ет спе-ци-а-ли-зи-ро-ван-ную асим-мет-рич-ную
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1942--1943
+Underfull \hbox (badness 10000) in paragraph at lines 1944--1945
 \T2A/cmr/m/n/14.4 но-вых дан-ных, ге-не-ра-цию про-гно-зов и вы-чис-ле-ние ве-ро-€т-но-сти
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1942--1943
+Underfull \hbox (badness 10000) in paragraph at lines 1944--1945
 \T2A/cmr/m/n/14.4 от-ка-за. ѕай-плайн ва-ли-да-ции обес-пе-чи-ва-ет ком-плекс-ную про-вер-ку
  []
 
 [76]
-Underfull \hbox (badness 10000) in paragraph at lines 1944--1945
+Underfull \hbox (badness 10000) in paragraph at lines 1946--1947
 \T2A/cmr/m/n/14.4 обес-пе-че-нию дл€ раз-вер-ты-ва-ни€ си-сте-мы. ѕро-грамм-ные тре-бо-ва-ни€
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1947--1948
+Underfull \hbox (badness 10000) in paragraph at lines 1949--1950
 []\T2A/cmr/m/n/14.4 –азработанный про-грамм-ный ком-плекс про-шел внут-рен-нюю
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1947--1948
+Underfull \hbox (badness 10000) in paragraph at lines 1949--1950
 \T2A/cmr/m/n/14.4 раз-мер-но-стей тен-зо-ров и устой-чи-вость к шу-мо-вым вы-бро-сам во
  []
 
 [77]
-Underfull \hbox (badness 10000) in paragraph at lines 1961--1963
+Underfull \hbox (badness 10000) in paragraph at lines 1963--1965
 []\T2A/cmr/m/n/14.4 ƒоказано, что при-ме-не-ние ал-го-рит-мов ас-со-ци-а-тив-но-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1964--1965
+Underfull \hbox (badness 10000) in paragraph at lines 1966--1967
 \T2A/cmr/m/n/14.4 устой-чи-во-сти. Ќа боль-ших го-ри-зон-тах сле-по-го про-гно-зи-ро-ва-ни€
  []
 
 [78
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1970--1971
+Underfull \hbox (badness 10000) in paragraph at lines 1972--1973
 []\T2A/cmr/m/n/14.4 ѕакет, со-дер-жа-щий го-то-вый кон-вей-ер об-ра-бот-ки дан-ных,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1972--1973
+Underfull \hbox (badness 10000) in paragraph at lines 1974--1975
 \T2A/cmr/m/n/14.4 да-но-го па-ке-та предо-став-л€-ют воз-мож-ность со-хра-н€ть про-ве-ден-ные
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1975--1976
+Underfull \hbox (badness 10000) in paragraph at lines 1977--1978
 \T2A/cmr/m/n/14.4 на ос-но-ве ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка. —и-сте-ма обес-пе-чи-ва-ет
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1975--1976
+Underfull \hbox (badness 10000) in paragraph at lines 1977--1978
 \T2A/cmr/m/n/14.4 ве-ро-€т-ност-ной оцен-ки неопре-де-лЉн-но-сти про-гно-за. –аз-ра-бо-тан-ный
  []
 
 [79]
-Underfull \hbox (badness 10000) in paragraph at lines 2000--2001
+Underfull \hbox (badness 10000) in paragraph at lines 2002--2003
 \T2A/cmr/m/n/14.4 hash / d7322ed717dedf1eb4e6e52a37ea7bcd-[]Abstract . html$[] (да-та об-ра-ще-ни€:
  []
 
@@ -1798,7 +1798,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,1862b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (78 pages, 3766864 bytes).
+Output written on pz_v2.pdf (78 pages, 3766847 bytes).
 PDF statistics:
  1149 PDF objects out of 1200 (max. 8388607)
  265 named destinations out of 1000 (max. 500000)
