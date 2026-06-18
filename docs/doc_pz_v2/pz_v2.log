@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.5.20)  18 JUN 2026 00:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.15)  18 JUN 2026 11:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -7,11 +7,11 @@ entering extended mode
 (d:/yniver/modeling_work_system/docs/doc_pz_v2/pz_v2.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/extsizes\extreport.cls
+(C:\Program Files\MiKTeX\tex/latex/extsizes\extreport.cls
 Document Class: extreport 1996/10/08 v1.0 Non Standard LaTeX document class
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/extsizes\size14.clo
+(C:\Program Files\MiKTeX\tex/latex/extsizes\size14.clo
 File: size14.clo 1999/11/11 v1.4a NON-Standard LaTeX file (size option)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/base\exscale.sty
+) (C:\Program Files\MiKTeX\tex/latex/base\exscale.sty
 Package: exscale 2025/06/05 v2.1i Standard LaTeX package exscale
 LaTeX Font Info:    Redeclaring symbol font `largesymbols' on input line 57.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
@@ -32,24 +32,24 @@ LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen149
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/extsizes\extsizes.sty
+) (C:\Program Files\MiKTeX\tex/latex/extsizes\extsizes.sty
 Package: extsizes 1996/10/08 v1.0 Non Standard LaTeX Package
 
 
 Package ExtSizes Warning: It is better to use one of the extsizes classes,
  if you can.
 
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/extsizes\size14.clo
+(C:\Program Files\MiKTeX\tex/latex/extsizes\size14.clo
 File: size14.clo 1999/11/11 v1.4a NON-Standard LaTeX file (size option)
-)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/cmap\cmap.sty
+)) (C:\Program Files\MiKTeX\tex/latex/cmap\cmap.sty
 Package: cmap 2021/02/06 v1.0j CMap support: searchable PDF
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+) (C:\Program Files\MiKTeX\tex/latex/base\fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/cyrillic\t2aenc.def
+ (C:\Program Files\MiKTeX\tex/latex/cyrillic\t2aenc.def
 File: t2aenc.def 2023/11/07 v1.0k Cyrillic encoding definition file
 Now handling font encoding T2A ...
 ... processing UTF-8 mapping file for font encoding T2A
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/base\t2aenc.dfu
+ (C:\Program Files\MiKTeX\tex/latex/base\t2aenc.dfu
 File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+00A4 (decimal 164)
    defining Unicode char U+00A7 (decimal 167)
@@ -251,13 +251,13 @@ File: t2aenc.dfu 2022/06/07 v1.3c UTF-8 support
    defining Unicode char U+FB06 (decimal 64262)
 ))
 LaTeX Font Info:    Trying to load font information for T2A+cmr on input line 116.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/cyrillic\t2acmr.fd
+ (C:\Program Files\MiKTeX\tex/latex/cyrillic\t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
-)<<t2a.cmap>>) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+)<<t2a.cmap>>) (C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks17
 \inpenc@posthook=\toks18
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+) (C:\Program Files\MiKTeX\tex/generic/babel\babel.sty
 Package: babel 2025/12/11 v25.17 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
 \babel@savecnt=\count284
 LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input line 2068.
@@ -269,7 +269,7 @@ LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) o
 LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) on input line 2101.
 \U@D=\dimen150
 \l@unhyphenated=\language79
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+ (C:\Program Files\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count285
 Package babel Info: Configuration files are deprecated, as
@@ -279,24 +279,24 @@ Package babel Info: Configuration files are deprecated, as
 *************************************
 * Local config file bblopts.cfg used
 *
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+(C:\Program Files\MiKTeX\tex/latex/arabi\bblopts.cfg
 File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of babel
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/ru\babel-russian.tex)
+) (C:\Program Files\MiKTeX\tex/generic/babel/locale/ru\babel-russian.tex)
 Package babel Info: Importing font and identification data for russian
 (babel)             from babel-ru.ini. Reported on input line 4320.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/babel-russian\russianb.ldf
+ (C:\Program Files\MiKTeX\tex/latex/babel-russian\russianb.ldf
 File: russianb.ldf 2021/01/10 1.3m Russian support for the Babel system
 Language: russian 2020/09/09 1.3k Russian support for the Babel system
 Package babel Info: Making " an active character on input line 124.
 Package babel Info: Default for \cyrdash is provided on input line 163.
-)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+)) (C:\Program Files\MiKTeX\tex/latex/geometry\geometry.sty
 Package: geometry 2026/03/07 v6.0 Page Geometry
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+ (C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks19
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+) (C:\Program Files\MiKTeX\tex/generic/iftex\ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+ (C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
 \Gm@cnth=\count286
@@ -311,13 +311,13 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layouthoffset=\dimen157
 \Gm@layoutvoffset=\dimen158
 \Gm@dimlist=\toks20
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty
+ (C:\Program Files\MiKTeX\tex/latex/geometry\geometry.cfg)) (C:\Program Files\MiKTeX\tex/latex/setspace\setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/tools\indentfirst.sty
+) (C:\Program Files\MiKTeX\tex/latex/tools\indentfirst.sty
 Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
+) (C:\Program Files\MiKTeX\tex/latex/tools\tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+ (C:\Program Files\MiKTeX\tex/latex/tools\array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \col@sep=\dimen159
 \ar@mcellbox=\box53
@@ -334,21 +334,21 @@ Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
 \TX@delta=\dimen165
 \TX@cols=\count289
 \TX@ftn=\toks22
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+) (C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty
 Package: amsmath 2025/07/09 v2.17z AMS math features
 \@mathmargin=\skip53
 
 For additional information on amsmath, use the `?' option.
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty
 Package: amstext 2024/11/17 v2.01 AMS text
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+ (C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
 \@emptytoks=\toks23
 \ex@=\dimen166
-)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
+)) (C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen167
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+) (C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
 \inf@bad=\count290
@@ -398,18 +398,18 @@ LaTeX Info: Redefining \Relbar on input line 970.
 \mathdisplay@stack=\toks27
 LaTeX Info: Redefining \[ on input line 2950.
 LaTeX Info: Redefining \] on input line 2951.
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+) (C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+ (C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mathtools.sty
+)) (C:\Program Files\MiKTeX\tex/latex/mathtools\mathtools.sty
 Package: mathtools 2024/10/04 v1.31 mathematical typesetting tools
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+ (C:\Program Files\MiKTeX\tex/latex/tools\calc.sty
 Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
 \calc@Acount=\count302
 \calc@Bcount=\count303
@@ -421,7 +421,7 @@ LaTeX Info: Redefining \setlength on input line 86.
 LaTeX Info: Redefining \addtolength on input line 87.
 \calc@Ccount=\count304
 \calc@Cskip=\skip58
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/mathtools\mhsetup.sty
+) (C:\Program Files\MiKTeX\tex/latex/mathtools\mhsetup.sty
 Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
 )
 \g_MT_multlinerow_int=\count305
@@ -435,7 +435,7 @@ Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
 \l_MT_below_shortintertext_sep=\dimen183
 \xmathstrut@box=\box57
 \xmathstrut@dim=\dimen184
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
+) (C:\Program Files\MiKTeX\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \ttl@box=\box58
 \beforetitleunit=\skip60
@@ -446,7 +446,7 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \titlewidth=\dimen187
 \titlewidthlast=\dimen188
 \titlewidthfirst=\dimen189
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/tocloft\tocloft.sty
+) (C:\Program Files\MiKTeX\tex/latex/tocloft\tocloft.sty
 Package: tocloft 2017/08/31 v2.3i parameterised ToC, etc., typesetting
 Package tocloft Info: The document has chapter divisions on input line 51.
 \cftparskip=\skip62
@@ -485,54 +485,54 @@ Package tocloft Info: The document has chapter divisions on input line 51.
 \cftbeforetabskip=\skip93
 \cfttabindent=\skip94
 \cfttabnumwidth=\skip95
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+) (C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+ (C:\Program Files\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty
+) (C:\Program Files\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+) (C:\Program Files\MiKTeX\tex/generic/pdfescape\pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+ (C:\Program Files\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
+) (C:\Program Files\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.sty
+ (C:\Program Files\MiKTeX\tex/generic/infwarerr\infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
-)) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+)) (C:\Program Files\MiKTeX\tex/latex/hycolor\hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+) (C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
+ (C:\Program Files\MiKTeX\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
+) (C:\Program Files\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+ (C:\Program Files\MiKTeX\tex/latex/kvoptions\kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count308
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+) (C:\Program Files\MiKTeX\tex/latex/etoolbox\etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count309
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.sty
+) (C:\Program Files\MiKTeX\tex/generic/stringenc\stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
 )
 \@linkdim=\dimen190
 \Hy@linkcounter=\count310
 \Hy@pagecounter=\count311
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+ (C:\Program Files\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (C:\Program Files\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count312
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+ (C:\Program Files\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -546,15 +546,15 @@ Package hyperref Info: Backreferencing OFF on input line 4215.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4462.
 \c@Hy@tempcnt=\count313
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+ (C:\Program Files\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4801.
 \XeTeXLinkMargin=\dimen191
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+ (C:\Program Files\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
+ (C:\Program Files\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
 \Fld@menulength=\count314
@@ -572,13 +572,13 @@ Package hyperref Info: PDF/A mode OFF on input line 6108.
 \c@Hfootnote=\count317
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+ (C:\Program Files\MiKTeX\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
 \Fld@listcount=\count318
 \c@bookmark@seq@number=\count319
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
+ (C:\Program Files\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
 Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty
+ (C:\Program Files\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 284.
@@ -586,7 +586,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 \Hy@SectionHShift=\skip96
 )
 Package hyperref Info: Option `colorlinks' set `false' on input line 72.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
+ (C:\Program Files\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip97
 \enit@outerparindent=\dimen194
@@ -594,9 +594,9 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@inbox=\box59
 \enit@count@id=\count320
 \enitdp@description=\count321
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+) (C:\Program Files\MiKTeX\tex/latex/caption\caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
+ (C:\Program Files\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen195
 \captionmargin=\dimen196
@@ -611,7 +611,7 @@ Package caption Info: Standard document class detected.
 \c@caption@flags=\count322
 \c@continuedfloat=\count323
 Package caption Info: hyperref package is loaded.
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+) (C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count324
 ) (pz_v2.aux
@@ -676,19 +676,19 @@ LaTeX Info: Redefining \th on input line 234.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-(C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+ (C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+ (C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
-) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+) (C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+ (C:\Program Files\MiKTeX\tex/latex/graphics-def\pdftex.def
 File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+ (C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count325
 \scratchdimen=\dimen259
@@ -701,10 +701,10 @@ File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 \MPnumerator=\count329
 \makeMPintoPDFobject=\count330
 \everyMPtoPDFconversion=\toks31
-))) (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+))) (C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+ (C:\Program Files\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 \Gin@req@height=\dimen261
@@ -719,11 +719,11 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (pz_v2.toc<<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
 LaTeX Font Info:    Trying to load font information for U+msa on input line 2.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+ (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 2.
- (C:\Users\dikor\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+ (C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 Underfull \hbox (badness 10000) in paragraph at lines 3--3
@@ -737,7 +737,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--5
 
 [5
 
-{C:/Users/dikor/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}])
+{C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}])
 \tf@toc=\write4
 \openout4 = `pz_v2.toc'.
 
@@ -841,421 +841,412 @@ Underfull \hbox (badness 10000) in paragraph at lines 353--354
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--364
+Underfull \hbox (badness 10000) in paragraph at lines 355--359
+\T2A/cmr/m/n/14.4 мо-дель пред-по-ла-га-ет неза-ви-си-мость на-блю-де-ний, что про-ти-во-ре-чит
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 360--361
 []\T2A/cmr/m/n/14.4 Несмотря на ука-зан-ные огра-ни-че-ния, ра-бо-та $\OT1/cmr/m/n/14.4 [$\T2A/cmr/m/n/14.4 2$\OT1/cmr/m/n/14.4 ]$ \T2A/cmr/m/n/14.4 за-ло-жи-ла
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 363--364
+Underfull \hbox (badness 10000) in paragraph at lines 360--361
 \T2A/cmr/m/n/14.4 тео-ре-ти-че-ский фун-да-мент, на ко-то-ром стро-ят-ся все по-сле-ду-ю-щие
  []
 
 [12]
-Overfull \hbox (4.35272pt too wide) detected at line 388
+Overfull \hbox (4.35272pt too wide) detected at line 385
 [][][]\OMS/cmsy/m/n/14.4 L \OT1/cmr/m/n/14.4 = [] []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 390--391
+Underfull \hbox (badness 10000) in paragraph at lines 387--388
 \T2A/cmr/m/n/14.4 спо-соб-ность мо-де-ли-ро-вать слож-ные нели-ней-ные за-ви-си-мо-сти во
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 390--391
+Underfull \hbox (badness 10000) in paragraph at lines 387--388
 \T2A/cmr/m/n/14.4 вре-ме-ни и ге-не-ри-ро-вать прав-до-по-доб-ные мно-го-ша-го-вые тра-ек-то-рии.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 390--391
+Underfull \hbox (badness 10000) in paragraph at lines 387--388
 \T2A/cmr/m/n/14.4 вре-мен-но-го ря-да и филь-тро-вать вы-со-ко-ча-стот-ный шум из-ме-ре-ний.
  []
 
 [13
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 392--393
+Underfull \hbox (badness 10000) in paragraph at lines 389--390
 []\T2A/cmr/m/n/14.4 Также, ав-то-ра-ми уста-нов-ле-но, что ар-хи-тек-ту-ра VRNN име-ет
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 392--393
+Underfull \hbox (badness 10000) in paragraph at lines 389--390
 \T2A/cmr/m/n/14.4 су-ще-ствен-ные недо-стат-ки для за-дач пре-дик-тив-но-го об-слу-жи-ва-ния.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 397--399
+Underfull \hbox (badness 10000) in paragraph at lines 394--396
 []\T2A/cmr/m/n/14.4 1.1.2.3 При-ме-не-ние ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка для
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 402--403
+Underfull \hbox (badness 10000) in paragraph at lines 399--400
 \T2A/cmr/m/n/14.4 со-сто-я-ния кон-цен-три-ру-ют-ся в цен-траль-ной об-ла-сти, а ано-маль-ные
  []
 
 [14]
-Underfull \hbox (badness 10000) in paragraph at lines 404--405
+Underfull \hbox (badness 10000) in paragraph at lines 401--402
 \T2A/cmr/m/n/14.4 (под-мно-же-ство FD001), что обес-пе-чи-ва-ет кор-рект-ное срав-не-ние с
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 406--407
+Underfull \hbox (badness 10000) in paragraph at lines 403--404
 []\T2A/cmr/m/n/14.4 Ключевым пре-иму-ще-ством ра-бо-ты яв-ля-ет-ся де-мон-стра-ция
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 408--409
+Underfull \hbox (badness 10000) in paragraph at lines 405--406
 []\T2A/cmr/m/n/14.4 Однако пред-ло-жен-ный под-ход име-ет ряд ме-то-до-ло-ги-че-ских
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 408--409
+Underfull \hbox (badness 10000) in paragraph at lines 405--406
 \T2A/cmr/m/n/14.4 огра-ни-че-ний. Во-первых, ис-поль-зо-ва-ние ре-грес-си-он-но-го слоя по-верх
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 410--411
+Underfull \hbox (badness 10000) in paragraph at lines 407--408
 []\T2A/cmr/m/n/14.4 Анализ рас-смат-ри-ва-е-мой ра-бо-ты под-твер-жда-ет ак-ту-аль-ность
  []
 
 [15]
-Underfull \hbox (badness 10000) in paragraph at lines 416--417
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
 []\T2A/cmr/m/n/14.4 Сопоставление трјх рас-смот-рен-ных ра-бот поз-во-ля-ет вы-де-лить
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 416--417
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
 \T2A/cmr/m/n/14.4 эво-лю-цию при-ме-не-ния ар-хи-тек-ту-ры ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 416--417
-\T2A/cmr/m/n/14.4 в за-да-чах вре-мен-ных ря-дов. Фун-да-мен-таль-ная мо-дель Kingma и
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
+\T2A/cmr/m/n/14.4 Рас-смат-ри-ва-е-мая ра-бо-та адап-ти-ру-ет ва-ри-а-ци-он-ный ав-то-ко-ди-ров-щик
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 418--419
+Underfull \hbox (badness 10000) in paragraph at lines 415--416
 \T2A/cmr/m/n/14.4 рас-смот-рен-ных ме-то-дов: ве-ро-ят-ност-ная ре-гу-ля-ри-за-ция ла-тент-но-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 421--422
+Underfull \hbox (badness 10000) in paragraph at lines 418--419
 []\T2A/cmr/m/n/14.4 В ра-бо-те $\OT1/cmr/m/n/14.4 [$\T2A/cmr/m/n/14.4 5$\OT1/cmr/m/n/14.4 ]$ \T2A/cmr/m/n/14.4 за-ло-же-ны тео-ре-ти-че-ские ос-но-вы ар-хи-тек-ту-ры
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 421--422
+Underfull \hbox (badness 10000) in paragraph at lines 418--419
 \T2A/cmr/m/n/14.4 оцен-ки (ELBO) обес-пе-чи-ва-ет од-но-вре-мен-ное обу-че-ние ко-ди-ров-щи-ка,
  []
 
 [16]
-Underfull \hbox (badness 10000) in paragraph at lines 426--428
+Underfull \hbox (badness 10000) in paragraph at lines 423--425
 []\T2A/cmr/m/n/14.4 1.1.3 Срав-ни-тель-ный ана-лиз ге-не-ра-тив-ных ар-хи-тек-тур для
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--431
+Underfull \hbox (badness 10000) in paragraph at lines 426--428
 \T2A/cmr/m/n/14.4 и по-сле-ду-ю-щих ра-бо-тах по диф-фу-зи-он-ным мо-де-лям от-ме-ча-ет-ся
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 429--431
-\T2A/cmr/m/n/14.4 вы-со-кое ка-че-ство ге-не-ра-ции слож-ных рас-пре-де-ле-ний. Од-на-ко для
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 429--431
-\T2A/cmr/m/n/14.4 за-дач про-гно-зи-ро-ва-ния цик-лов тех-но-ло-ги-че-ско-го обо-ру-до-ва-ния эти
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 433--433
+Underfull \hbox (badness 10000) in paragraph at lines 430--430
 | \T2A/cmr/m/n/14.4 1.2 Кри-те-рии оцен-ки и ва-ли-да-ции ге-не-ра-тив-ных мо-де-лей в
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--436
+Underfull \hbox (badness 10000) in paragraph at lines 432--433
 []\T2A/cmr/m/n/14.4 Оценка ка-че-ства ге-не-ра-тив-ных мо-де-лей пред-став-ля-ет со-бой
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 435--436
+Underfull \hbox (badness 10000) in paragraph at lines 432--433
 \T2A/cmr/m/n/14.4 клас-си-че-ских ал-го-рит-мов кон-тро-ли-ру-е-мо-го обу-че-ния. Ес-ли для
  []
 
 [17
 
 ] [18]
-Underfull \hbox (badness 10000) in paragraph at lines 478--479
+Underfull \hbox (badness 10000) in paragraph at lines 475--476
 []\T2A/cmr/m/n/14.4 Второй уро-вень $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 спе-ци-а-ли-зи-ро-ван-ная мет-ри-ка NASA Score,
  []
 
 [19]
-Underfull \hbox (badness 10000) in paragraph at lines 496--497
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 []\T2A/cmr/m/n/14.4 Для за-дач пре-дик-тив-но-го об-слу-жи-ва-ния, рас-смат-ри-ва-е-мых в
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 496--497
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 \T2A/cmr/m/n/14.4 по-сколь-ку обес-пе-чи-ва-ет ста-ти-сти-че-ски обос-но-ван-ное срав-не-ние
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 504--505
+Underfull \hbox (badness 10000) in paragraph at lines 501--502
 []\T2A/cmr/m/n/14.4 Ключевым ре-зуль-та-том ра-бо-ты яв-ля-ет-ся де-мон-стра-ция
  []
 
 [20]
-Underfull \hbox (badness 10000) in paragraph at lines 522--523
+Underfull \hbox (badness 10000) in paragraph at lines 519--520
 []\T2A/cmr/m/n/14.4 Авторы по-ка-зы-ва-ют, что для мно-го-мер-ных вре-мен-ных ря-дов
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 531--532
+Underfull \hbox (badness 10000) in paragraph at lines 528--529
 []\T2A/cmr/m/n/14.4 Установлено, что тра-ди-ци-он-ные де-тер-ми-ни-ро-ван-ные ме-то-ды
  []
 
 [21] [22]
-Underfull \hbox (badness 10000) in paragraph at lines 556--557
+Underfull \hbox (badness 10000) in paragraph at lines 553--554
 []\T2A/cmr/m/n/14.4 Реализация си-сте-мы долж-на ба-зи-ро-вать-ся на ар-хи-тек-ту-ре
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 560--561
+Underfull \hbox (badness 10000) in paragraph at lines 557--558
 []\T2A/cmr/m/n/14.4 В си-сте-ме долж-на быть ре-а-ли-зо-ва-на ав-то-ма-ти-зи-ро-ван-ная
  []
 
 [23
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 570--571
+Underfull \hbox (badness 10000) in paragraph at lines 567--568
 []\T2A/cmr/m/n/14.4 Исходным на-бо-ром дан-ных для про-ве-де-ния ис-сле-до-ва-ний
  []
 
 [24]
-Underfull \hbox (badness 10000) in paragraph at lines 592--593
+Underfull \hbox (badness 10000) in paragraph at lines 589--590
 []$\T2A/cmr/m/n/14.4 . Вы-чис-ля-ет-ся до-ля слу-чай-ных яче-ек мат-ри-цы дат-чи-ков
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 600--601
+Underfull \hbox (badness 10000) in paragraph at lines 597--598
 []\T2A/cmr/m/n/14.4 В ком-би-ни-ро-ван-ном ре-жи-ме оба де-фек-та на-кла-ды-ва-ют-ся
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 608--609
+Underfull \hbox (badness 10000) in paragraph at lines 605--606
 \T2A/cmr/m/n/14.4 окон (раз-мер-ность бат-ча) по-сле филь-тра-ции гра-нич-ных цик-лов
  []
 
 [25]
-Underfull \hbox (badness 10000) in paragraph at lines 615--616
+Underfull \hbox (badness 10000) in paragraph at lines 612--613
 []\T2A/cmr/m/n/14.4 Целевым ре-зуль-та-том ра-бо-ты си-сте-мы яв-ля-ет-ся ге-не-ра-ция
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 615--616
+Underfull \hbox (badness 10000) in paragraph at lines 612--613
 \T2A/cmr/m/n/14.4 ве-ро-ят-ност-но-го про-гно-за бу-ду-ще-го со-сто-я-ния обо-ру-до-ва-ния. Вы-ход
  []
 
 [26
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 658--659
+Underfull \hbox (badness 10000) in paragraph at lines 655--656
 []\T2A/cmr/m/n/14.4 Требуется по-стро-ить ге-не-ра-тив-ную мо-дель, спо-соб-ную
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 658--659
+Underfull \hbox (badness 10000) in paragraph at lines 655--656
 \T2A/cmr/m/n/14.4 ап-прок-си-ми-ро-вать сов-мест-ное рас-пре-де-ле-ние ве-ро-ят-но-стей бу-ду-щей
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 663--664
+Underfull \hbox (badness 10000) in paragraph at lines 660--661
 \T2A/cmr/m/n/14.4 по-ме-ха-ми, де-тер-ми-ни-ро-ван-ное по-то-чеч-ное пред-ска-за-ние на боль-ших
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 663--664
+Underfull \hbox (badness 10000) in paragraph at lines 660--661
 \T2A/cmr/m/n/14.4 ин-тер-ва-лах вре-ме-ни те-ря-ет фи-зи-че-ский смысл. Для раз-ре-ше-ния
  []
 
 [27]
-Overfull \hbox (1.19164pt too wide) detected at line 668
+Overfull \hbox (1.19164pt too wide) detected at line 665
 [][][][] \OML/cmm/m/it/14.4 P\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 X[]\OMS/cmsy/m/n/14.4 j\OML/cmm/m/it/14.4 X[]\OT1/cmr/m/n/14.4 ) \OMS/cmsy/m/n/14.4 ^^U \OML/cmm/m/it/14.4 E[]\OT1/cmr/m/n/14.4 [[] \OML/cmm/m/it/14.4 P[]\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 X[]\OMS/cmsy/m/n/14.4 j\OML/cmm/m/it/14.4 Z\OT1/cmr/m/n/14.4 )] \OMS/cmsy/m/n/14.4 ^^@ \OML/cmm/m/it/14.4 D[]\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 q[]\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 Z\OMS/cmsy/m/n/14.4 j\OML/cmm/m/it/14.4 X[]\OT1/cmr/m/n/14.4 ) \OMS/cmsy/m/n/14.4 k \OML/cmm/m/it/14.4 P\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 Z\OT1/cmr/m/n/14.4 ))\OML/cmm/m/it/14.4 ;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 668--670
+Underfull \hbox (badness 10000) in paragraph at lines 665--667
 \T2A/cmr/m/n/14.4 где $\OML/cmm/m/it/14.4 q[]\OT1/cmr/m/n/14.4 (\OML/cmm/m/it/14.4 Z\OMS/cmsy/m/n/14.4 j\OML/cmm/m/it/14.4 X[]\OT1/cmr/m/n/14.4 )$ \T2A/cmr/m/n/14.4 пред-став-ля-ет со-бой па-ра-мет-ри-че-ское рас-пре-де-ле-ние
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 677--684
+Underfull \hbox (badness 10000) in paragraph at lines 671--672
+[]\T2A/cmr/m/n/14.4 Требование к ав-то-ре-грес-си-он-ной ста-биль-но-сти $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 ре-зуль-тат
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 674--681
 \T2A/cmr/m/n/14.4 па-ра-мет-ров ва-ри-а-ци-он-но-го ко-ди-ро-ва-ния $\OML/cmm/m/it/14.4 ^^^$ \T2A/cmr/m/n/14.4 и де-ко-ди-ро-ва-ния $\OML/cmm/m/it/14.4 ^^R$\T2A/cmr/m/n/14.4 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 677--684
+Underfull \hbox (badness 10000) in paragraph at lines 674--681
 \T2A/cmr/m/n/14.4 сиг-на-лов при од-но-вре-мен-ном обес-пе-че-нии спо-соб-но-сти мо-де-ли к
  []
 
 [28]
-Underfull \hbox (badness 10000) in paragraph at lines 688--689
+Underfull \hbox (badness 10000) in paragraph at lines 685--686
 \OML/cmm/m/it/14.4 X[] \OMS/cmsy/m/n/14.4 2 \OML/cmm/m/it/14.4 R[]$ \T2A/cmr/m/n/14.4 пре-об-ра-зу-ет-ся скры-ты-ми сло-я-ми ко-ди-ров-щи-ка,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 691--693
+Underfull \hbox (badness 10000) in paragraph at lines 688--690
 \T2A/cmr/m/n/14.4 где мат-ри-цы ве-сов $\OML/cmm/m/it/14.4 W[]$ \T2A/cmr/m/n/14.4 и $\OML/cmm/m/it/14.4 W[]$ \T2A/cmr/m/n/14.4 под-ле-жат сов-мест-ной гра-ди-ент-ной
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 691--693
+Underfull \hbox (badness 10000) in paragraph at lines 688--690
 \T2A/cmr/m/n/14.4 за-щи-ту от экс-по-нен-ци-аль-но-го взры-ва дис-пер-сии. Фор-ми-ро-ва-ние
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 698--699
+Underfull \hbox (badness 10000) in paragraph at lines 695--696
 \T2A/cmr/m/n/14.4 ди-на-ми-че-ской си-сте-мы осу-ществ-ля-ет-ся че-рез слой ини-ци-а-ли-за-ции,
  []
 
 [29]
-Underfull \hbox (badness 10000) in paragraph at lines 705--706
+Underfull \hbox (badness 10000) in paragraph at lines 702--703
 []\T2A/cmr/m/n/14.4 Основой ма-те-ма-ти-че-ской мо-де-ли яв-ля-ет-ся урав-не-ние пе-ре-хо-да
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 714--715
-\T2A/cmr/m/n/14.4 крат-ко-сроч-ной па-мя-ти для де-тер-ми-ни-ро-ван-но-го про-гно-зи-ро-ва-ния
- []
-
 [30]
-Underfull \hbox (badness 10000) in paragraph at lines 742--744
+Underfull \hbox (badness 10000) in paragraph at lines 739--741
 \T2A/cmr/m/n/14.4 где мат-ри-ца $\OML/cmm/m/it/14.4 A$ \T2A/cmr/m/n/14.4 па-ра-мет-ри-зу-ет-ся ло-га-риф-ми-че-ски для обес-пе-че-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 746--747
+Underfull \hbox (badness 10000) in paragraph at lines 743--744
 []\T2A/cmr/m/n/14.4 После об-нов-ле-ния скры-то-го со-сто-я-ния, оно про-еци-ру-ет-ся в
  []
 
 [31]
-Underfull \hbox (badness 10000) in paragraph at lines 763--764
+Underfull \hbox (badness 10000) in paragraph at lines 760--761
 []\T2A/cmr/m/n/14.4 Вычисление ша-га дис-кре-ти-за-ции непре-рыв-но-го вре-ме-ни $\OT1/cmr/m/n/14.4 ^^A[]$ \T2A/cmr/m/n/14.4 и
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 773--774
+Underfull \hbox (badness 10000) in paragraph at lines 770--771
 []\T2A/cmr/m/n/14.4 Перевод непре-рыв-ных диф-фе-рен-ци-аль-ных урав-не-ний из-но-са в
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 788--789
+Underfull \hbox (badness 10000) in paragraph at lines 785--786
 []\T2A/cmr/m/n/14.4 Для предот-вра-ще-ния дол-го-вре-мен-но-го на-коп-ле-ния ошиб-ки
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 792--794
+Underfull \hbox (badness 10000) in paragraph at lines 789--791
 \T2A/cmr/m/n/14.4 функ-цию ги-пер-бо-ли-че-ско-го тан-ген-са и взве-ши-ва-ни-ем се-лек-тив-ной
  []
 
 [32]
-Underfull \hbox (badness 10000) in paragraph at lines 799--800
+Underfull \hbox (badness 10000) in paragraph at lines 796--797
 \T2A/cmr/m/n/14.4 де-ко-ди-ров-щи-ка для ге-не-ра-ции цен-три-ро-ван-ной дель-ты из-ме-не-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 815--816
+Underfull \hbox (badness 10000) in paragraph at lines 812--813
 []\T2A/cmr/m/n/14.4 В рам-ках вто-рой гла-вы вы-пол-не-но про-ек-ти-ро-ва-ние си-сте-мы
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 815--816
+Underfull \hbox (badness 10000) in paragraph at lines 812--813
 \T2A/cmr/m/n/14.4 мо-де-ли-ро-ва-ния со-сто-я-ния слож-но-го тех-но-ло-ги-че-ско-го обо-ру-до-ва-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 815--816
+Underfull \hbox (badness 10000) in paragraph at lines 812--813
 \T2A/cmr/m/n/14.4 и раз-ра-бо-та-на ма-те-ма-ти-че-ская мо-дель, ле-жа-щая в ос-но-ве еј
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 819--820
+Underfull \hbox (badness 10000) in paragraph at lines 816--817
 []\T2A/cmr/m/n/14.4 Определена струк-ту-ра вы-ход-ных дан-ных си-сте-мы $\OMS/cmsy/m/n/14.4 ^^@$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 819--820
+Underfull \hbox (badness 10000) in paragraph at lines 816--817
 \T2A/cmr/m/n/14.4 по-сле-до-ва-тель-ность сге-не-ри-ро-ван-ных век-то-ров на-блю-де-ний для $\OML/cmm/m/it/14.4 k$
  []
 
 [33]
-Underfull \hbox (badness 10000) in paragraph at lines 821--822
+Underfull \hbox (badness 10000) in paragraph at lines 818--819
 []\T2A/cmr/m/n/14.4 Сформулированы тре-бо-ва-ния к про-грамм-но-му ком-плек-су для
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 821--822
+Underfull \hbox (badness 10000) in paragraph at lines 818--819
 \T2A/cmr/m/n/14.4 ар-хи-тек-ту-ре ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка, под-держ-ка мо-дуль-ной
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 823--824
+Underfull \hbox (badness 10000) in paragraph at lines 820--821
 \T2A/cmr/m/n/14.4 ис-чис-ле-ния и сто-ха-сти-че-ско-го мо-де-ли-ро-ва-ния вре-мен-ных ря-дов.
  []
 
 [34]
-Underfull \hbox (badness 10000) in paragraph at lines 838--839
+Underfull \hbox (badness 10000) in paragraph at lines 835--836
 \T2A/cmr/m/n/14.4 про-грамм-ных бло-ка: ко-ди-ров-щик $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 сеть ко-ди-ро-ва-ния, ла-тент-ное
  []
 
-<../img/lstmlearninghistory.png, id=371, 1199.48125pt x 365.365pt>
+<../img/lstmlearninghistory.png, id=372, 1199.48125pt x 365.365pt>
 File: ../img/lstmlearninghistory.png Graphic file (type png)
 <use ../img/lstmlearninghistory.png>
-Package pdftex.def Info: ../img/lstmlearninghistory.png  used on input line 848.
+Package pdftex.def Info: ../img/lstmlearninghistory.png  used on input line 847.
 (pdftex.def)             Requested size: 483.69687pt x 147.33089pt.
-[35
-
- <../img/lstmlearninghistory.png>]
-<../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png, id=383, 1075.1367pt x 424.9476pt>
+<../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png, id=376, 1075.1367pt x 424.9476pt>
 File: ../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png Graphic file (type png)
 <use ../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png>
-Package pdftex.def Info: ../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png  used on input line 886.
+Package pdftex.def Info: ../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png  used on input line 883.
 (pdftex.def)             Requested size: 483.69687pt x 191.17926pt.
- [36 <../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png>]
+[35
+
+] [36 <../img/lstmlearninghistory.png> <../img/plot_inf_ft_norm_noise_eng_eng_lstm_vae.png>]
 <../img/plot_history_transformer_vae_v2.png, id=392, 1149.093pt x 353.1594pt>
 File: ../img/plot_history_transformer_vae_v2.png Graphic file (type png)
 <use ../img/plot_history_transformer_vae_v2.png>
-Package pdftex.def Info: ../img/plot_history_transformer_vae_v2.png  used on input line 908.
+Package pdftex.def Info: ../img/plot_history_transformer_vae_v2.png  used on input line 905.
 (pdftex.def)             Requested size: 483.69687pt x 148.66002pt.
 <../img/plot_inf_ft_norm_eng_eng_transformer_vae.png, id=396, 1075.3776pt x 424.9476pt>
 File: ../img/plot_inf_ft_norm_eng_eng_transformer_vae.png Graphic file (type png)
 <use ../img/plot_inf_ft_norm_eng_eng_transformer_vae.png>
-Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_transformer_vae.png  used on input line 943.
+Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_transformer_vae.png  used on input line 941.
 (pdftex.def)             Requested size: 483.69687pt x 191.14035pt.
  [37 <../img/plot_history_transformer_vae_v2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 948--949
+Underfull \hbox (badness 10000) in paragraph at lines 946--947
 \T2A/cmr/m/n/14.4 гло-баль-ные за-ви-си-мо-сти по-ве-де-ния дан-ных, но те-ря-ет ло-каль-ные
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 952--955
-[]\T2A/cmr/m/n/14.4 3.3.1 Осо-бен-но-сти ар-хи-тек-ту-ры мо-де-ли VRNN-VAE В дан-ной
  []
 
 [38 <../img/plot_inf_ft_norm_eng_eng_transformer_vae.png>]
 <../img/plot_inf_ft_norm_eng_eng_transformer_vrnn.png, id=414, 1126.2075pt x 478.78876pt>
 File: ../img/plot_inf_ft_norm_eng_eng_transformer_vrnn.png Graphic file (type png)
 <use ../img/plot_inf_ft_norm_eng_eng_transformer_vrnn.png>
-Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_transformer_vrnn.png  used on input line 988.
+Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_transformer_vrnn.png  used on input line 989.
 (pdftex.def)             Requested size: 483.69687pt x 205.63406pt.
- [39]
+ [39
+
+]
 <../img/plot_history_ssm_vae_v2.png, id=422, 1149.093pt x 353.1594pt>
 File: ../img/plot_history_ssm_vae_v2.png Graphic file (type png)
 <use ../img/plot_history_ssm_vae_v2.png>
-Package pdftex.def Info: ../img/plot_history_ssm_vae_v2.png  used on input line 1005.
+Package pdftex.def Info: ../img/plot_history_ssm_vae_v2.png  used on input line 1006.
 (pdftex.def)             Requested size: 483.69687pt x 148.66002pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1010--1011
+Underfull \hbox (badness 10000) in paragraph at lines 1011--1012
 []\T2A/cmr/m/n/14.4 Из га-фи-ка []6[] вид-но, что уве-ли-че-ние ве-са ди-вер-ген-ции
  []
 
@@ -1263,175 +1254,179 @@ Underfull \hbox (badness 10000) in paragraph at lines 1010--1011
 <../img/plot_inf_ft_norm_eng_eng_ssm_vae.png, id=433, 1075.3776pt x 424.9476pt>
 File: ../img/plot_inf_ft_norm_eng_eng_ssm_vae.png Graphic file (type png)
 <use ../img/plot_inf_ft_norm_eng_eng_ssm_vae.png>
-Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_ssm_vae.png  used on input line 1046.
+Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_ssm_vae.png  used on input line 1047.
 (pdftex.def)             Requested size: 483.69687pt x 191.14035pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 1057--1058
+ [41 <../img/plot_inf_ft_norm_eng_eng_ssm_vae.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1059--1060
 []\T2A/cmr/m/n/14.4 Архитектура мо-де-ли MAMBA-VAE яв-ля-ет-ся под-ви-дом SSM
  []
 
-[41 <../img/plot_inf_ft_norm_eng_eng_ssm_vae.png>]
 <../img/plot_history_mamba_vae_v2.png, id=443, 1598.97375pt x 490.83376pt>
 File: ../img/plot_history_mamba_vae_v2.png Graphic file (type png)
 <use ../img/plot_history_mamba_vae_v2.png>
-Package pdftex.def Info: ../img/plot_history_mamba_vae_v2.png  used on input line 1062.
+Package pdftex.def Info: ../img/plot_history_mamba_vae_v2.png  used on input line 1064.
 (pdftex.def)             Requested size: 483.69687pt x 148.47954pt.
 <../img/plot_inf_ft_norm_eng_eng_mamba_vae.png, id=445, 1501.61pt x 604.2575pt>
 File: ../img/plot_inf_ft_norm_eng_eng_mamba_vae.png Graphic file (type png)
 <use ../img/plot_inf_ft_norm_eng_eng_mamba_vae.png>
-Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_mamba_vae.png  used on input line 1099.
+Package pdftex.def Info: ../img/plot_inf_ft_norm_eng_eng_mamba_vae.png  used on input line 1101.
 (pdftex.def)             Requested size: 483.69687pt x 194.63873pt.
- [42 <../img/plot_history_mamba_vae_v2.png> <../img/plot_inf_ft_norm_eng_eng_mamba_vae.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1106--1107
+
+Underfull \hbox (badness 10000) in paragraph at lines 1108--1109
 \T2A/cmr/m/n/14.4 Transformer VAE и VRNN по клю-че-во-му кри-те-рию объ-яс-ня-ю-щей
  []
 
-[43]
-Underfull \hbox (badness 10000) in paragraph at lines 1118--1119
+[42 <../img/plot_history_mamba_vae_v2.png>] [43 <../img/plot_inf_ft_norm_eng_eng_mamba_vae.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1121--1122
 \T2A/cmr/m/n/14.4 ин-тер-пре-ти-ру-е-мость, ли-ней-ная слож-ность), про-де-мон-стри-ро-ва-ли
  []
 
-[44]
-Underfull \hbox (badness 10000) in paragraph at lines 1135--1136
+[44] [45]
+Underfull \hbox (badness 10000) in paragraph at lines 1137--1138
 \T2A/cmr/m/n/14.4 жиз-нен-но-го цик-ла пре-дик-тив-но-го об-слу-жи-ва-ния тех-но-ло-ги-че-ско-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1135--1136
+Underfull \hbox (badness 10000) in paragraph at lines 1137--1138
 \T2A/cmr/m/n/14.4 обо-ру-до-ва-ния. Ар-хи-тек-ту-ра по-стро-е-на по прин-ци-пу раз-де-ле-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1143--1144
+Underfull \hbox (badness 10000) in paragraph at lines 1145--1146
 []\T2A/cmr/m/n/14.4 Пакет мет-рик от-ве-ча-ет за ко-ли-че-ствен-ную оцен-ку ка-че-ства
  []
 
-[45
+[46
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1147--1148
+Underfull \hbox (badness 10000) in paragraph at lines 1149--1150
 []\T2A/cmr/m/n/14.4 Архитектура под-дер-жи-ва-ет три ос-нов-ных сце-на-рия
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1149--1150
+Underfull \hbox (badness 10000) in paragraph at lines 1151--1152
 []\T2A/cmr/m/n/14.4 Подобная мо-дуль-ная ор-га-ни-за-ция обес-пе-чи-ва-ет гиб-кость
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1149--1150
+Underfull \hbox (badness 10000) in paragraph at lines 1151--1152
 \T2A/cmr/m/n/14.4 ин-те-гра-ции с про-мыш-лен-ны-ми си-сте-ма-ми мо-ни-то-рин-га. Де-таль-ная
  []
 
-<../img/architecture.jpg, id=470, 788.9475pt x 501.875pt>
+<../img/architecture.jpg, id=471, 788.9475pt x 501.875pt>
 File: ../img/architecture.jpg Graphic file (type jpg)
 <use ../img/architecture.jpg>
-Package pdftex.def Info: ../img/architecture.jpg  used on input line 1153.
+Package pdftex.def Info: ../img/architecture.jpg  used on input line 1155.
 (pdftex.def)             Requested size: 483.69687pt x 307.69786pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1163--1164
+Underfull \hbox (badness 10000) in paragraph at lines 1165--1166
 []\T2A/cmr/m/n/14.4 Программный ком-плекс ре-а-ли-зо-ван в ви-де от-кры-той
  []
 
-<../img/package_structure.png, id=471, 1576.89125pt x 829.0975pt>
+<../img/package_structure.png, id=472, 1576.89125pt x 829.0975pt>
 File: ../img/package_structure.png Graphic file (type png)
 <use ../img/package_structure.png>
-Package pdftex.def Info: ../img/package_structure.png  used on input line 1167.
+Package pdftex.def Info: ../img/package_structure.png  used on input line 1169.
 (pdftex.def)             Requested size: 483.69687pt x 254.31026pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1172--1173
+Underfull \hbox (badness 10000) in paragraph at lines 1174--1175
 \T2A/cmr/m/n/14.4 па-ке-тов Python по-сле кло-ни-ро-ва-ния ре-по-зи-то-рия. За-ви-си-мо-сти
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1172--1173
+Underfull \hbox (badness 10000) in paragraph at lines 1174--1175
 \T2A/cmr/m/n/14.4 си-сте-ма-ми. Струк-ту-ра ис-ход-но-го ко-да со-про-вож-да-ет-ся мо-дуль-ны-ми
  []
 
-[46] [47 <../img/architecture.jpg> <../img/package_structure.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1184--1185
+[47] [48 <../img/architecture.jpg> <../img/package_structure.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1186--1187
 []\T2A/cmr/m/n/14.4 Первый этап $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 очист-ка и вос-ста-нов-ле-ние дан-ных. Сы-рые
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1184--1185
+Underfull \hbox (badness 10000) in paragraph at lines 1186--1187
 \T2A/cmr/m/n/14.4 дан-ные по тре-бо-ва-нию поль-зо-ва-те-ля. Для ре-жи-ма сгла-жи-ва-ния
  []
 
-[48]
-Underfull \hbox (badness 10000) in paragraph at lines 1188--1189
+[49]
+Underfull \hbox (badness 10000) in paragraph at lines 1190--1191
 []\T2A/cmr/m/n/14.4 Третим эта-пом яв-ля-ет-ся фор-ми-ро-ва-ние сколь-зя-щих окон.
  []
 
-<../img/classes_ replace______.png, id=488, 1394.20876pt x 824.07875pt>
+<../img/classes_ replace______.png, id=489, 1394.20876pt x 824.07875pt>
 File: ../img/classes_ replace______.png Graphic file (type png)
 <use ../img/classes_ replace______.png>
-Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 1195.
+Package pdftex.def Info: ../img/classes_ replace______.png  used on input line 1197.
 (pdftex.def)             Requested size: 483.69687pt x 285.89185pt.
-[49] [50 <../img/classes_ replace______.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1213--1214
+[50] [51 <../img/classes_ replace______.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1215--1216
 []\T2A/cmr/m/n/14.4 Модуль пай-плай-на ре-а-ли-зу-ет па-кет src.pipeline и вы-пол-ня-ет
  []
 
-<../img/packet_preprocessing.png, id=500, 834.11626pt x 327.2225pt>
+<../img/packet_preprocessing.png, id=501, 834.11626pt x 327.2225pt>
 File: ../img/packet_preprocessing.png Graphic file (type png)
 <use ../img/packet_preprocessing.png>
-Package pdftex.def Info: ../img/packet_preprocessing.png  used on input line 1217.
+Package pdftex.def Info: ../img/packet_preprocessing.png  used on input line 1219.
 (pdftex.def)             Requested size: 483.69687pt x 189.75423pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1222--1223
+Underfull \hbox (badness 10000) in paragraph at lines 1224--1225
 \T2A/cmr/m/n/14.4 к плат-фор-ме управ-ле-ния экс-пе-ри-мен-та-ми и на-строй-ку си-сте-мы
  []
 
-[51 <../img/packet_preprocessing.png>]
-<../img/algorithm_diff_enj.png, id=508, 839.135pt x 1305.87875pt>
+[52 <../img/packet_preprocessing.png>]
+<../img/algorithm_diff_enj.png, id=509, 839.135pt x 1305.87875pt>
 File: ../img/algorithm_diff_enj.png Graphic file (type png)
 <use ../img/algorithm_diff_enj.png>
-Package pdftex.def Info: ../img/algorithm_diff_enj.png  used on input line 1251.
+Package pdftex.def Info: ../img/algorithm_diff_enj.png  used on input line 1253.
 (pdftex.def)             Requested size: 435.32422pt x 677.44685pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1248--1255
+Underfull \hbox (badness 10000) in paragraph at lines 1250--1257
 []\T2A/cmr/m/n/14.4 Метод split_by_engine_train_test_val() ре-а-ли-зу-ет стра-те-гию
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1256--1257
+Underfull \hbox (badness 10000) in paragraph at lines 1258--1259
 \T2A/cmr/m/n/14.4 от спе-ци-а-ли-зи-ро-ван-но-го ме-то-да create_anomaly_sequences(), ко-то-рый
  []
 
-[52] [53 <../img/algorithm_diff_enj.png>]
-<../img/algotithm_create_sec.png, id=521, 552.0625pt x 1510.64375pt>
+[53] [54 <../img/algorithm_diff_enj.png>]
+<../img/algotithm_create_sec.png, id=522, 552.0625pt x 1510.64375pt>
 File: ../img/algotithm_create_sec.png Graphic file (type png)
 <use ../img/algotithm_create_sec.png>
-Package pdftex.def Info: ../img/algotithm_create_sec.png  used on input line 1284.
+Package pdftex.def Info: ../img/algotithm_create_sec.png  used on input line 1286.
 (pdftex.def)             Requested size: 241.84843pt x 661.78094pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1289--1291
+Underfull \hbox (badness 10000) in paragraph at lines 1291--1293
 \T2A/cmr/m/n/14.4 ис-кус-ствен-но-го ис-ка-же-ния те-ле-мет-ри-че-ских дан-ных для оцен-ки
  []
 
-[54] [55 <../img/algotithm_create_sec.png>]
-<../img/diagr_posled_preprocess.png, id=540, 1012.78375pt x 599.23875pt>
+[55] [56 <../img/algotithm_create_sec.png>]
+<../img/diagr_posled_preprocess.png, id=541, 1012.78375pt x 599.23875pt>
 File: ../img/diagr_posled_preprocess.png Graphic file (type png)
 <use ../img/diagr_posled_preprocess.png>
 Package pdftex.def Info: ../img/diagr_posled_preprocess.png  used on input line 1306.
 (pdftex.def)             Requested size: 483.69687pt x 286.18663pt.
-<../img/diagr_pac_models.png, id=542, 1176.395pt x 515.9275pt>
+<../img/diagr_pac_models.png, id=543, 1176.395pt x 515.9275pt>
 File: ../img/diagr_pac_models.png Graphic file (type png)
 <use ../img/diagr_pac_models.png>
 Package pdftex.def Info: ../img/diagr_pac_models.png  used on input line 1328.
 (pdftex.def)             Requested size: 483.69687pt x 212.12994pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 1333--1334
-[]\T2A/cmr/m/n/14.4 Метод encode яв-ля-ет-ся пер-вым эта-пом ра-бо-ты ар-хи-тек-ту-ры
- []
-
-[56 <../img/diagr_posled_preprocess.png>]
+ [57 <../img/diagr_posled_preprocess.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 1345--1347
 \T2A/cmr/m/n/14.4 При-мер ре-а-ли-за-ции ме-то-да encode() для LSTM-VAE ар-хи-тек-ту-ры
  []
 
-[57 <../img/diagr_pac_models.png>]
+[58 <../img/diagr_pac_models.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1360--1361
+[]\T2A/cmr/m/n/14.4 Метод reparameterize() ре-ша-ет за-да-чу ге-не-ра-ции кон-крет-но-го
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1360--1361
+\T2A/cmr/m/n/14.4 (ме-то-да encode()), при этом со-хра-няя воз-мож-ность об-рат-но-го
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 1370--1371
 []\T2A/cmr/m/n/14.4 Метод обес-пе-чи-ва-ет ба-ланс меж-ду сто-ха-стич-но-стью ге-не-ра-ции
  []
@@ -1446,24 +1441,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 1375--1382
 []\T2A/cmr/m/n/14.4 Данный ме-тод ак-ку-му-ли-ру-ет ра-нее опи-сан-ные ком-по-нен-ты:
  []
 
-[58]
+[59]
 Underfull \hbox (badness 10000) in paragraph at lines 1397--1398
-[]\T2A/cmr/m/n/14.4 Метод inference ре-ша-ет за-да-чу ге-не-ра-ции несколь-коль-ких
+[]\T2A/cmr/m/n/14.4 Метод inference() ре-ша-ет за-да-чу ге-не-ра-ции несколь-коль-ких
  []
 
-[59 <../img/alg_reparameterize.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1403--1404
-\T2A/cmr/m/n/14.4 из-вест-ных цик-лов ра-бо-ты дви-га-те-ля, со-дер-жа-щее нор-ма-ли-зо-ван-ные
- []
-
-
+[60 <../img/alg_reparameterize.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 1405--1406
-[]\T2A/cmr/m/n/14.4 num_scenarios (Ко-ли-че-ство сце-на-ри-ев) $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 Це-лое чис-ло,
+\T2A/cmr/m/n/14.4 раз-мер ан-сам-бля ге-не-ри-ру-е-мых тра-ек-то-рий, где каж-дый сце-на-рий
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1405--1406
-\T2A/cmr/m/n/14.4 опре-де-ля-ю-щее раз-мер ан-сам-бля ге-не-ри-ру-е-мых тра-ек-то-рий. Каж-дый
+Underfull \hbox (badness 10000) in paragraph at lines 1414--1415
+\T2A/cmr/m/n/14.4 га-ран-ти-ру-ет, что раз-ли-чия меж-ду сце-на-ри-я-ми обу-слов-ле-ны толь-ко
  []
 
 <../img/alg_inference.png, id=570, 641.39626pt x 1090.0725pt>
@@ -1471,7 +1461,7 @@ File: ../img/alg_inference.png Graphic file (type png)
 <use ../img/alg_inference.png>
 Package pdftex.def Info: ../img/alg_inference.png  used on input line 1418.
 (pdftex.def)             Requested size: 338.58632pt x 575.4403pt.
-[60] [61 <../img/alg_inference.png>]
+[61] [62 <../img/alg_inference.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 1433--1434
 []\T2A/cmr/m/n/14.4 Метод fit() обес-пе-чи-ва-ет обу-че-ние ней-ро-се-те-вой ге-не-ра-тив-ной
  []
@@ -1479,19 +1469,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 1433--1434
 <../img/alg_fit.png, id=585, 662.475pt x 663.47874pt>
 File: ../img/alg_fit.png Graphic file (type png)
 <use ../img/alg_fit.png>
-Package pdftex.def Info: ../img/alg_fit.png  used on input line 1439.
-(pdftex.def)             Requested size: 483.69687pt x 484.42656pt.
-
+Package pdftex.def Info: ../img/alg_fit.png  used on input line 1437.
+(pdftex.def)             Requested size: 290.22107pt x 290.65593pt.
+[63 <../img/alg_fit.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 1447--1448
-[]\T2A/cmr/m/n/14.4 инициализация оп-ти-ми-за-то-ра: Со-зда-јт-ся оп-ти-ми-за-тор,
+[]\T2A/cmr/m/n/14.4 инициализация оп-ти-ми-за-то-ра $\OMS/cmsy/m/n/14.4 ^^@$ \T2A/cmr/m/n/14.4 со-зда-јт-ся оп-ти-ми-за-тор,
  []
 
-[62] [63 <../img/alg_fit.png>]
-<../img/diagr_posl_models.png, id=597, 928.46875pt x 1019.81pt>
+<../img/diagr_posl_models.png, id=593, 928.46875pt x 1019.81pt>
 File: ../img/diagr_posl_models.png Graphic file (type png)
 <use ../img/diagr_posl_models.png>
 Package pdftex.def Info: ../img/diagr_posl_models.png  used on input line 1456.
-(pdftex.def)             Requested size: 435.32422pt x 478.15926pt.
+(pdftex.def)             Requested size: 290.22107pt x 318.76764pt.
 
 Underfull \hbox (badness 10000) in paragraph at lines 1466--1467
 \T2A/cmr/m/n/14.4 уни-фи-ци-ро-ван-ный ин-тер-фейс для ко-ли-че-ствен-ной оцен-ки ка-че-ства
@@ -1507,29 +1496,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 1466--1467
 \T2A/cmr/m/n/14.4 ве-ро-ят-ност-ную со-гла-со-ван-ность мо-де-ли. Струк-ту-ра клас-сов мо-ду-ля
  []
 
-[64 <../img/diagr_posl_models.png>]
+[64]
 Underfull \hbox (badness 10000) in paragraph at lines 1468--1469
 []\T2A/cmr/m/n/14.4 Класс RegressionMetrics ре-а-ли-зу-ет ба-зо-вые мет-ри-ки точ-но-сти
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 1468--1469
+\T2A/cmr/m/n/14.4 чув-стви-тель-ную к круп-ным от-кло-не-ни-ям. Ме-тод compute_mae()
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1468--1469
+\T2A/cmr/m/n/14.4 к ред-ким вы-бро-сам. Ме-тод compute_r2() опре-де-ля-ет ко-эф-фи-ци-ент
+ []
+
+[65 <../img/diagr_posl_models.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 1472--1473
 []\T2A/cmr/m/n/14.4 Класс ClassificationMetrics обес-пе-чи-ва-ет оцен-ку ка-че-ства
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1472--1473
-\T2A/cmr/m/n/14.4 мо-де-ли раз-де-лять штат-ные и ано-маль-ные ре-жи-мы неза-ви-си-мо от
+\T2A/cmr/m/n/14.4 и пол-но-ты клас-си-фи-ка-ции при за-дан-ном по-ро-го-вом зна-че-нии.
  []
 
-[65]
+
+Underfull \hbox (badness 10000) in paragraph at lines 1472--1473
+\T2A/cmr/m/n/14.4 Ме-тод compute_auc_roc() рас-счи-ты-ва-ет пло-щадь под ROC-кривой,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1472--1473
+\T2A/cmr/m/n/14.4 ха-рак-те-ри-зу-ю-щую спо-соб-ность мо-де-ли раз-де-лять штат-ные и
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 1476--1477
 []\T2A/cmr/m/n/14.4 Класс ProbabilisticMetrics пред-на-зна-чен для оцен-ки ка-че-ства
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1476--1477
-\T2A/cmr/m/n/14.4 соб-ствен-но ге-не-ра-тив-ной мо-де-ли. Ме-тод compute_elbo вы-чис-ля-ет
+\T2A/cmr/m/n/14.4 соб-ствен-но ге-не-ра-тив-ной мо-де-ли. Ме-тод compute_elbo() вы-чис-ля-ет
  []
 
 
@@ -1544,235 +1553,223 @@ Underfull \hbox (badness 10000) in paragraph at lines 1476--1477
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 1476--1477
-\T2A/cmr/m/n/14.4 и ин-тер-пре-ти-ру-е-мо-сти скры-то-го про-стран-ства. Ме-тод compute_nll
+\T2A/cmr/m/n/14.4 и ин-тер-пре-ти-ру-е-мо-сти скры-то-го про-стран-ства. Ме-тод compute_nll()
  []
 
+[66]
 <../img/diag_class_metriks.png, id=612, 1225.57875pt x 385.44pt>
 File: ../img/diag_class_metriks.png Graphic file (type png)
 <use ../img/diag_class_metriks.png>
 Package pdftex.def Info: ../img/diag_class_metriks.png  used on input line 1486.
 (pdftex.def)             Requested size: 483.69687pt x 152.12068pt.
-[66]
+
 Underfull \hbox (badness 10000) in paragraph at lines 1492--1492
 | \T2A/cmr/m/n/14.4 4.7 Мо-дуль ин-те-гра-ции с сер-ви-сом MLFlow и управ-ле-ния
  []
 
-<../img/diag_class_mlflow.png, id=619, 513.92pt x 860.21375pt>
+<../img/diag_class_mlflow.png, id=614, 513.92pt x 860.21375pt>
 File: ../img/diag_class_mlflow.png Graphic file (type png)
 <use ../img/diag_class_mlflow.png>
 Package pdftex.def Info: ../img/diag_class_mlflow.png  used on input line 1499.
-(pdftex.def)             Requested size: 266.03474pt x 445.30548pt.
+(pdftex.def)             Requested size: 193.47578pt x 323.85255pt.
 [67 <../img/diag_class_metriks.png>] [68 <../img/diag_class_mlflow.png>]
-Overfull \hbox (0.65454pt too wide) in paragraph at lines 1517--1519
-[]\T2A/cmr/m/n/14.4 загрузка мо-де-ли. Ме-тод вы-зы-ва-ет mlflow.keras.load_model(model_uri)
- []
-
-<../img/diag_posl_load_model.png, id=631, 633.36626pt x 274.02374pt>
+<../img/diag_posl_load_model.png, id=627, 633.36626pt x 274.02374pt>
 File: ../img/diag_posl_load_model.png Graphic file (type png)
 <use ../img/diag_posl_load_model.png>
-Package pdftex.def Info: ../img/diag_posl_load_model.png  used on input line 1524.
+Package pdftex.def Info: ../img/diag_posl_load_model.png  used on input line 1525.
 (pdftex.def)             Requested size: 386.95897pt x 167.42183pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1529--1531
+Underfull \hbox (badness 10000) in paragraph at lines 1530--1532
 []\T2A/cmr/m/n/14.4 Метод save_model_to_mlflow() ре-а-ли-зу-ет со-хра-не-ние обу-чен-ной
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1529--1531
+Underfull \hbox (badness 10000) in paragraph at lines 1530--1532
 \T2A/cmr/m/n/14.4 мо-де-ли, мет-рик обу-че-ния, ка-либ-ро-воч-но-го по-ро-га де-тек-ти-ро-ва-ния
  []
 
+
+Overfull \hbox (25.83743pt too wide) in paragraph at lines 1537--1538
+\T2A/cmr/m/n/14.4 кон-текст-ный ме-не-джер: with mlflow.start_run(run_name=f"{model_name}_run")
+ []
+
 [69 <../img/diag_posl_load_model.png>]
-<../img/diag_posl_save_model.png, id=639, 681.54625pt x 507.8975pt>
+<../img/diag_posl_save_model.png, id=636, 681.54625pt x 507.8975pt>
 File: ../img/diag_posl_save_model.png Graphic file (type png)
 <use ../img/diag_posl_save_model.png>
-Package pdftex.def Info: ../img/diag_posl_save_model.png  used on input line 1544.
+Package pdftex.def Info: ../img/diag_posl_save_model.png  used on input line 1545.
 (pdftex.def)             Requested size: 386.95897pt x 288.36536pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1549--1550
+Underfull \hbox (badness 10000) in paragraph at lines 1550--1551
 \T2A/cmr/m/n/14.4 ста-ти-стик нор-ма-ли-за-ции (ма-те-ма-ти-че-ское ожи-да-ние и стан-дарт-ное
  []
 
-[70 <../img/diag_posl_save_model.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1556--1556
+
+Underfull \hbox (badness 10000) in paragraph at lines 1557--1557
 | \T2A/cmr/m/n/14.4 4.8 Опи-са-ние при-ме-не-ния мо-ду-лей кон-вей-е-ра ппро-ве-де-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1558--1559
+Underfull \hbox (badness 10000) in paragraph at lines 1559--1560
 \T2A/cmr/m/n/14.4 вы-зо-вов ком-по-нен-тов обес-пе-чи-ва-ет стро-гую на-прав-лен-ность по-то-ков
  []
 
-<../img/pipeline_data.png, id=647, 648.4225pt x 903.375pt>
+[70 <../img/diag_posl_save_model.png>]
+<../img/pipeline_data.png, id=643, 648.4225pt x 903.375pt>
 File: ../img/pipeline_data.png Graphic file (type png)
 <use ../img/pipeline_data.png>
 Package pdftex.def Info: ../img/pipeline_data.png  used on input line 1563.
-(pdftex.def)             Requested size: 386.95897pt x 539.1069pt.
+(pdftex.def)             Requested size: 314.40001pt x 438.02608pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 1560--1568
-[]\T2A/cmr/m/n/14.4 Процесс ини-ци-и-ру-ет-ся ор-кест-ра-то-ром, ко-то-рый за-гру-жа-ет
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1560--1568
+Underfull \hbox (badness 10000) in paragraph at lines 1568--1569
 \T2A/cmr/m/n/14.4 без бло-ки-ров-ки ос-нов-но-го по-то-ка вы-пол-не-ния. По-лу-чен-ные сы-рые
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1560--1568
-\T2A/cmr/m/n/14.4 со-гла-со-ван-ность мас-шта-бов при-зна-ков. Нор-ма-ли-зо-ван-ные дан-ные
+[71 <../img/pipeline_data.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1570--1571
+[]\T2A/cmr/m/n/14.4 Нормализованные дан-ные на-прав-ля-ют-ся в функ-цию со-зда-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1560--1568
-\T2A/cmr/m/n/14.4 по-сле-до-ва-тель-ные цик-лы в тен-зо-ры фик-си-ро-ван-ной раз-мер-но-сти.
- []
-
-[71] [72 <../img/pipeline_data.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1569--1570
+Underfull \hbox (badness 10000) in paragraph at lines 1572--1573
 \T2A/cmr/m/n/14.4 управ-ле-ния экс-пе-ри-мен-та-ми. В хра-ни-ли-ще ар-те-фак-тов со-хра-ня-ют-ся
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1575--1576
+Underfull \hbox (badness 10000) in paragraph at lines 1578--1579
 []\T2A/cmr/m/n/14.4 Разработанный про-грамм-ный ком-плекс ре-а-ли-зу-ет мо-дуль-ную
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1577--1578
-[]\T2A/cmr/m/n/14.4 Ключевым ар-те-фак-том до-став-ки яв-ля-ет-ся Python-пакет
+Underfull \hbox (badness 10000) in paragraph at lines 1580--1581
+[]\T2A/cmr/m/n/14.4 Ключевым ар-те-фак-том до-став-ки яв-ля-ет-ся python-пакет
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1579--1580
+[72]
+Underfull \hbox (badness 10000) in paragraph at lines 1582--1583
 []\T2A/cmr/m/n/14.4 Конфигурационный файл pyproject.toml со-дер-жит сле-ду-ю-щие
  []
 
 [73]
-Underfull \hbox (badness 10000) in paragraph at lines 1632--1633
+Underfull \hbox (badness 10000) in paragraph at lines 1636--1637
 []\T2A/cmr/m/n/14.4 Для эф-фек-тив-но-го функ-ци-о-ни-ро-ва-ния си-сте-мы мо-де-ли-ро-ва-ния
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1632--1633
+Underfull \hbox (badness 10000) in paragraph at lines 1636--1637
 \T2A/cmr/m/n/14.4 сфор-му-ли-ро-ва-ны ми-ни-маль-ные и ре-ко-мен-ду-е-мые тре-бо-ва-ния к
  []
 
-[74]
-Underfull \hbox (badness 10000) in paragraph at lines 1636--1637
+
+Underfull \hbox (badness 10000) in paragraph at lines 1640--1641
 \T2A/cmr/m/n/14.4 необ-хо-ди-мо-стью хра-не-ния гра-ди-ен-тов и про-ме-жу-точ-ных ак-ти-ва-ций
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1638--1639
+Underfull \hbox (badness 10000) in paragraph at lines 1642--1643
 []\T2A/cmr/m/n/14.4 Требования к дис-ко-вой си-сте-ме вклю-ча-ют на-ли-чие быст-ро-го
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1650--1651
+[74]
+Underfull \hbox (badness 10000) in paragraph at lines 1654--1655
 \T2A/cmr/m/n/14.4 ре-а-ли-за-ция си-сте-мы мо-де-ли-ро-ва-ния со-сто-я-ния тех-но-ло-ги-че-ско-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1650--1651
+Underfull \hbox (badness 10000) in paragraph at lines 1654--1655
 \T2A/cmr/m/n/14.4 про-грамм-ный ком-плекс пред-став-ля-ет со-бой за-кон-чен-ное ре-ше-ние,
  []
 
-[75]
-Underfull \hbox (badness 10000) in paragraph at lines 1653--1654
-[]\T2A/cmr/m/n/14.4 Спроектирована и ре-а-ли-зо-ва-на мо-дуль-ная ар-хи-тек-ту-ра
- []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1653--1654
-\T2A/cmr/m/n/14.4 про-грамм-но-го ком-плек-са, ос-но-ван-ная на прин-ци-пе раз-де-ле-ния
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1653--1654
-\T2A/cmr/m/n/14.4 от-вет-ствен-но-сти меж-ду функ-ци-о-наль-ны-ми сло-я-ми. Слой дан-ных
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1655--1656
+Underfull \hbox (badness 10000) in paragraph at lines 1658--1659
 \T2A/cmr/m/n/14.4 ин-фор-ма-ции. Па-кет src.pipeline ко-ор-ди-ни-ру-ет вы-пол-не-ние кон-вей-е-ра
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1657--1658
+[75]
+Underfull \hbox (badness 10000) in paragraph at lines 1660--1661
 \T2A/cmr/m/n/14.4 обес-пе-чи-вая воз-мож-ность об-рат-но-го рас-про-стра-не-ния ошиб-ки че-рез
  []
 
-[76]
-Underfull \hbox (badness 10000) in paragraph at lines 1659--1660
+
+Underfull \hbox (badness 10000) in paragraph at lines 1662--1663
 \T2A/cmr/m/n/14.4 Мо-дуль NASAScore при-ме-ня-ет спе-ци-а-ли-зи-ро-ван-ную асим-мет-рич-ную
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1661--1662
+[76]
+Underfull \hbox (badness 10000) in paragraph at lines 1664--1665
 \T2A/cmr/m/n/14.4 но-вых дан-ных, ге-не-ра-цию про-гно-зов и вы-чис-ле-ние ве-ро-ят-но-сти
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1661--1662
+Underfull \hbox (badness 10000) in paragraph at lines 1664--1665
 \T2A/cmr/m/n/14.4 от-ка-за. Пай-плайн ва-ли-да-ции обес-пе-чи-ва-ет ком-плекс-ную про-вер-ку
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1663--1664
+Underfull \hbox (badness 10000) in paragraph at lines 1666--1667
+[]\T2A/cmr/m/n/14.4 Сформулированы тре-бо-ва-ния к ап-па-рат-но-му и про-грамм-но-му
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1666--1667
 \T2A/cmr/m/n/14.4 обес-пе-че-нию для раз-вер-ты-ва-ния си-сте-мы. Про-грамм-ные тре-бо-ва-ния
  []
 
-[77]
+
 Underfull \hbox (badness 10000) in paragraph at lines 1666--1667
+\T2A/cmr/m/n/14.4 Ап-па-рат-ные тре-бо-ва-ния диф-фе-рен-ци-ро-ва-ны для ре-жи-мов обу-че-ния
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1668--1669
 []\T2A/cmr/m/n/14.4 Разработанный про-грамм-ный ком-плекс про-шел внут-рен-нюю
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1666--1667
+Underfull \hbox (badness 10000) in paragraph at lines 1668--1669
 \T2A/cmr/m/n/14.4 раз-мер-но-стей тен-зо-ров и устой-чи-вость к шу-мо-вым вы-бро-сам во
  []
 
-[78]
-Underfull \hbox (badness 10000) in paragraph at lines 1679--1681
+[77]
+Underfull \hbox (badness 10000) in paragraph at lines 1681--1683
 []\T2A/cmr/m/n/14.4 Доказано, что при-ме-не-ние ал-го-рит-мов ас-со-ци-а-тив-но-го
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1682--1683
+Underfull \hbox (badness 10000) in paragraph at lines 1684--1685
 \T2A/cmr/m/n/14.4 в устой-чи-вый по-ло-жи-тель-ный сек-тор, под-твер-див пер-спек-тив-ность
  []
 
-[79
+[78
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1688--1689
+Underfull \hbox (badness 10000) in paragraph at lines 1690--1691
 []\T2A/cmr/m/n/14.4 пакет, со-дер-жа-щий го-то-вый кон-вей-ер об-ра-бот-ки дан-ных,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1690--1691
+Underfull \hbox (badness 10000) in paragraph at lines 1692--1693
 \T2A/cmr/m/n/14.4 да-но-го па-ке-та предо-став-ля-ют воз-мож-ность со-хра-нять про-ве-ден-ные
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1693--1694
+Underfull \hbox (badness 10000) in paragraph at lines 1695--1696
 \T2A/cmr/m/n/14.4 на ос-но-ве ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка. Си-сте-ма обес-пе-чи-ва-ет
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1693--1694
+Underfull \hbox (badness 10000) in paragraph at lines 1695--1696
 \T2A/cmr/m/n/14.4 ве-ро-ят-ност-ной оцен-ки неопре-де-лјн-но-сти про-гно-за. Раз-ра-бо-тан-ный
  []
 
-[80]
-Underfull \hbox (badness 10000) in paragraph at lines 1716--1717
+[79]
+Underfull \hbox (badness 10000) in paragraph at lines 1718--1719
 \T2A/cmr/m/n/14.4 hash / d7322ed717dedf1eb4e6e52a37ea7bcd-[]Abstract . html$[] (да-та об-ра-ще-ния:
  []
 
-[81
+[80
 
-] [82] (pz_v2.aux)
+] [81] (pz_v2.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
@@ -1781,17 +1778,17 @@ Package rerunfilecheck Info: File `pz_v2.out' has not changed.
 (rerunfilecheck)             Checksum: 0566AB6DAB01A4D4DB89A293C3DE1AC0;11366.
  ) 
 Here is how much of TeX's memory you used:
- 16108 strings out of 467870
- 262241 string characters out of 5418355
+ 16096 strings out of 467871
+ 258231 string characters out of 5428443
  684970 words of memory out of 5000000
- 44530 multiletter control sequences out of 15000+600000
+ 44528 multiletter control sequences out of 15000+600000
  634528 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,1838b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\dikor\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/dikor/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (78 pages, 3745271 bytes).
+ <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on pz_v2.pdf (77 pages, 3742856 bytes).
 PDF statistics:
- 1032 PDF objects out of 1200 (max. 8388607)
- 244 named destinations out of 1000 (max. 500000)
+ 1014 PDF objects out of 1200 (max. 8388607)
+ 233 named destinations out of 1000 (max. 500000)
  399 words of extra memory for PDF output out of 10000 (max. 10000000)
 
