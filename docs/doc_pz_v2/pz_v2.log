@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.15)  18 JUN 2026 11:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.6.15)  18 JUN 2026 12:00
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1732,38 +1732,38 @@ Underfull \hbox (badness 10000) in paragraph at lines 1668--1669
 
 [77]
 Underfull \hbox (badness 10000) in paragraph at lines 1681--1683
-[]\T2A/cmr/m/n/14.4 Доказано, что при-ме-не-ние ал-го-рит-мов ас-со-ци-а-тив-но-го
+\T2A/cmr/m/n/14.4 ска-ни-ро-ва-ния поз-во-ля-ет сни-зить про-стран-ствен-ную и вре-мен-ную
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1684--1685
+Underfull \hbox (badness 10000) in paragraph at lines 1686--1687
 \T2A/cmr/m/n/14.4 в устой-чи-вый по-ло-жи-тель-ный сек-тор, под-твер-див пер-спек-тив-ность
  []
 
 [78
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 1690--1691
+Underfull \hbox (badness 10000) in paragraph at lines 1691--1692
 []\T2A/cmr/m/n/14.4 пакет, со-дер-жа-щий го-то-вый кон-вей-ер об-ра-бот-ки дан-ных,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1692--1693
-\T2A/cmr/m/n/14.4 да-но-го па-ке-та предо-став-ля-ют воз-мож-ность со-хра-нять про-ве-ден-ные
+Underfull \hbox (badness 10000) in paragraph at lines 1693--1694
+[]\T2A/cmr/m/n/14.4 пакет предо-став-ля-ю-щий ин-те-гра-цию с сер-ви-сом MLFlow,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1695--1696
+Underfull \hbox (badness 10000) in paragraph at lines 1696--1697
 \T2A/cmr/m/n/14.4 на ос-но-ве ва-ри-а-ци-он-но-го ав-то-ко-ди-ров-щи-ка. Си-сте-ма обес-пе-чи-ва-ет
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1695--1696
+Underfull \hbox (badness 10000) in paragraph at lines 1696--1697
 \T2A/cmr/m/n/14.4 ве-ро-ят-ност-ной оцен-ки неопре-де-лјн-но-сти про-гно-за. Раз-ра-бо-тан-ный
  []
 
 [79]
-Underfull \hbox (badness 10000) in paragraph at lines 1718--1719
+Underfull \hbox (badness 10000) in paragraph at lines 1719--1720
 \T2A/cmr/m/n/14.4 hash / d7322ed717dedf1eb4e6e52a37ea7bcd-[]Abstract . html$[] (да-та об-ра-ще-ния:
  []
 
@@ -1778,17 +1778,17 @@ Package rerunfilecheck Info: File `pz_v2.out' has not changed.
 (rerunfilecheck)             Checksum: 0566AB6DAB01A4D4DB89A293C3DE1AC0;11366.
  ) 
 Here is how much of TeX's memory you used:
- 16096 strings out of 467871
- 258231 string characters out of 5428443
+ 16092 strings out of 467871
+ 258203 string characters out of 5428443
  684970 words of memory out of 5000000
  44528 multiletter control sequences out of 15000+600000
  634528 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,79p,1838b,666s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\lati1440.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm0700.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1000.pk> <C:\Users\Admin\AppData\Local\MiKTeX\fonts/pk/ljfour/lh/lh-t2a/dpi600\larm1440.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on pz_v2.pdf (77 pages, 3742856 bytes).
+Output written on pz_v2.pdf (77 pages, 3742125 bytes).
 PDF statistics:
- 1014 PDF objects out of 1200 (max. 8388607)
- 233 named destinations out of 1000 (max. 500000)
+ 1010 PDF objects out of 1200 (max. 8388607)
+ 229 named destinations out of 1000 (max. 500000)
  399 words of extra memory for PDF output out of 10000 (max. 10000000)
 
